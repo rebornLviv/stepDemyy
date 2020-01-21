@@ -88,7 +88,7 @@ export default {
             passwordRules:[
                 v=>!!v||'Password is required',
                 v=>(v && v.length>=6)||'Password must be equal or more than 6 characters'
-
+ 
 
             ],
             rePasswordRules:[
@@ -105,21 +105,24 @@ export default {
         OnSubmit(){
             
 if (this.$refs.form.validate()){
+  const reguser ={
+email: this.email,
+    password:this.password
+
+  }
     const user = {
     email: this.email,
-    password: this.password
-
+    password:this.password,
+    courses :[ ]
 
     }
-    const onlyemail={
-        email: this.email
-    }
-    this.$store.dispatch('registerUser',user)
+    
+    this.$store.dispatch('registerUser',reguser)
     .then(
 
         ()=>{
             
-            fb.firestore().collection('User').add(onlyemail)
+            fb.firestore().collection('User').add(user)
 
             this.$router.push('/')
         }

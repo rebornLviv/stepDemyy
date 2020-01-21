@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '@/components/Home'
+import * as fb from 'firebase'
 
 Vue.use(VueRouter)
 
@@ -32,7 +33,26 @@ name:'python',
 component:()=> import ('@/components/Python')
 
 
-  }
+  },
+  {
+    path:'/recover',
+    name:'recover',
+    component:()=> import ('@/components/Recover')
+    
+    
+      },
+      {
+        path:'/courses/:id',
+    name:'course',
+    component:()=> import ('@/components/Course')
+      },
+      {
+        meta: { requiresAuth: true },
+        path:'/courses/:id/:id',
+    name:'lesson',
+    component:()=> import ('@/components/Lesson')
+      }
+
 
 ]
 
@@ -41,5 +61,20 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes
 })
+
+router.beforeEach((to, from, next,store) => {
+  if (to.matched.some(rec => rec.meta.requiresAuth)) {
+    fb.auth().onAuthStateChanged(user => {
+      console.log(user);
+      if (user) {
+        next();
+      } else {
+        next({ name: "home" });
+        router.app.$store.dispatch('setError','You must be loged in to attend a course');
+      }
+      
+    });
+  } else next();
+});
 
 export default router

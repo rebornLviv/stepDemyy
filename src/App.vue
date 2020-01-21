@@ -6,7 +6,7 @@
       dark
       
     >
-  <div class="black--text font-italic mr-5 "><h2 class="font-weight-regular">Stepdemy</h2></div>
+  <div class="black--text font-italic mr-5 "><router-link to="/" tag="h2" class="font-weight-regular logo" >Stepdemy</router-link></div>
   
 <v-menu   offset-y >
   <template v-slot:activator="{on}">
@@ -26,8 +26,8 @@
     
   </template>
   <v-list >
-    <v-list-item to="/python" >Python</v-list-item>
-    <v-list-item>Javascript</v-list-item>
+    <v-list-item v-for="cat in categories" :key="cat" :to="'/courses/' + cat">{{cat}}</v-list-item>
+
   </v-list>
 </v-menu>
       <v-spacer></v-spacer>
@@ -76,11 +76,10 @@
 </template>
 <script>
 
-
+import * as fb from 'firebase'
 
 export default {
   name: 'App',
- 
 
   methods: {
     closeError(){
@@ -108,11 +107,45 @@ return this.$store.getters.error
 
   data: () => ({
     //
+    categories:[],
     idef:'mdi-menu-down',
     idw:'mdi-menu-down',
     iup:'mdi-menu-up',
 
   }),
+  created(){
+    this.$store.dispatch('setTitle',this.$route.path.replace('/courses/',''))
+this.$store.dispatch('setDesc',this.$route.path.replace('/courses/',''))
+this.$store.dispatch('setSrc',this.$route.path.replace('/courses/',''))
+     let lessons=[]
+    fb.firestore().collection('Courses').doc('ZR7WVUbEdGsiRknrRLRY').collection('Lessons').get().then(
+
+      dat=>{
+      console.log('dat',dat)
+        dat.forEach(
+          el=>{
+          console.log(el.id)
+            lessons.push(el.data())
+            console.log(el.data())
+          }
+          
+        )
+        console.log(lessons)
+      }
+    )
+console.log(lessons)
+fb.firestore().collection('Courses').get()
+.then(doc=>{
+doc.forEach( d =>{
+this.categories.push( d.data().category)
+
+})
+  
+  console.log(this.categories)
+})
+
+
+  }
 };
 </script>
 <style  scoped>
@@ -187,6 +220,9 @@ width: 100%;
 width: 100%;
 text-align: center;
 
+}
+.logo:hover{
+  cursor: pointer;
 }
 .blacktm:hover{
 display: none;

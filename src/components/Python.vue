@@ -57,6 +57,7 @@ data() {
 
     methods: {
         changeVideo(){
+            
             var storage = fb.storage();
            var  storageRef= storage.ref('vids/video.mp4')
 

@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '@/components/Home'
+import store from '../store/index'
 import * as fb from 'firebase'
 
 Vue.use(VueRouter)
@@ -9,7 +10,20 @@ const routes = [
   {
     path: '/',
     name: 'home',
-    component:Home
+    component:Home,
+    beforeEnter: (to, from, next) => {
+      // ...
+    // store.dispatch('setCat');
+     // this.$store.dispatch('setCat');
+     
+     setTimeout(() => {
+      router.app.$store.dispatch('setCat');
+     }, 100);
+     
+     
+      console.log('setCat')
+      next()
+    }
   },
   {
     path: '/login',
@@ -28,13 +42,6 @@ const routes = [
    component: () => import(/* webpackChunkName: "about" */ '@/components/Register')
   },
   {
-path:'/python',
-name:'python',
-component:()=> import ('@/components/Python')
-
-
-  },
-  {
     path:'/recover',
     name:'recover',
     component:()=> import ('@/components/Recover')
@@ -44,13 +51,37 @@ component:()=> import ('@/components/Python')
       {
         path:'/courses/:id',
     name:'course',
+    beforeEnter: (to, from, next) => {
+      // ...
+      setTimeout(() => {
+        router.app.$store.dispatch('setCourse',router.app.$route.path.replace('/courses/',''))
+      }, 20);
+      
+      next()
+
+    },
     component:()=> import ('@/components/Course')
       },
       {
         meta: { requiresAuth: true },
         path:'/courses/:id/:id',
     name:'lesson',
+    beforeEnter (to, from, next) {
+      // ...
+      let course=router.app.$route.path.split('/')[2];
+      console.log("Course Name",course)
+      let lesson =router.app.$route.path.split('/')[3]
+      console.log('Lesson Name',lesson)
+      setTimeout(() => {
+        router.app.$store.dispatch('setLessons',{course,lesson})
+      router.app.$store.dispatch('getCurrentLesson',course) 
+      }, 5000);
+     
+      next()
+
+    },
     component:()=> import ('@/components/Lesson')
+
       }
 
 

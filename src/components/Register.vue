@@ -113,7 +113,7 @@ email: this.email,
     const user = {
     email: this.email,
     password:this.password,
-    courses :[ ]
+    courses :{}
 
     }
     
@@ -121,7 +121,7 @@ email: this.email,
     .then(
 
         ()=>{
-            
+                    
             fb.firestore().collection('User').add(user)
 
             this.$router.push('/')

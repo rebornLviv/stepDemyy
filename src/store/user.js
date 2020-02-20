@@ -77,58 +77,6 @@ fb.auth().sendPasswordResetEmail(email)
     
     
 },
-addCourse(payload){
-let id=null;
-
-    fb.firestore().collection('User').where('email','==',fb.auth().currentUser.email).get()
-    .then(
-       doc=>{
-        
-           doc.forEach(
-               el=>{
-
-                 id=el.id
-                   console.log("this users data",el.data())
-                   console.log(id)
-                
-                   el.data().courses.forEach(
-                       e=>{
-                           
-                            console.log("this users eeee",e)
-
-                       }
-                   )
-               }
-           )
-
-           fb.firestore().collection('User').doc(id).update({
-            
-            courses: fb.firestore.FieldValue.arrayUnion({
-    cname:payload.getters.getTitle,
-    cprogress:0,
-    currentlesson:1,
-    lprogress:0          
-    
-            })
-    
-           })
-        
-            }
-    )
-       .catch(
-           e=>{
-               console.log("errrrror",e)
-           }
-       )
-
-       
-/*fb.firestore().collection('User').doc(id).update({
-
-courses:courses.push(course)
-
-})*/
-
-},
 saveProgress(){
 
 

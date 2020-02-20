@@ -21,12 +21,12 @@ align="center"
             sm="8"
             md="4"
           >
- <h1>{{title}}</h1>
+ <h1 ref="titl">{{course.title}}</h1>
 
-<img :src="img" width="200" alt="Course Image">
+<img :src="course.imgSrc" width="200" alt="Course Image">
 
-<p>{{description}}</p>
-<v-btn dark color="green darken-1" :to="'/courses/'+this.$route.path.split('/')[2]+'/' + title.replace(' ','')" @click="manageCourse"> Get started</v-btn>
+<p>{{course.description}}</p>
+<v-btn dark color="green darken-1" :to="'/courses/'+this.$route.path.split('/')[2]+'/' + course.title.replace(' ','')" @click="manageCourse"> Get started</v-btn>
 
           </v-col>
 
@@ -53,35 +53,33 @@ export default {
     },
     methods: {
       manageCourse(){
-      ///  console.log('manage')
+      console.log('manage')
         //const email=fb.auth().currentUser.email;
        // console.log(type(id))
-
-
-        this.$store.dispatch('addCourse',this.$route.path.replace('/courses/','').toString())
+ let course=this.$route.path.replace('/courses/','')
+let title = this.course.title.replace(" ",'')
+        this.$store.dispatch('addCourse',{course,title})
       }
     },
     computed :{
       userId(){
         return this.$store.getters.user.id;
       },
-title(){
-  return  this.$store.getters.getTitle
+course(){
+
+  return  this.$store.getters.getCourse
 },
-description(){
-return  this.$store.getters.getDesc
-},
-img(){
-return  this.$store.getters.getSrc
-}
+
+
+    },
+    beforeCreate(){
+      
 
 
     },
     created(){
 
-this.$store.dispatch('setTitle',this.$route.path.replace('/courses/',''))
-this.$store.dispatch('setDesc',this.$route.path.replace('/courses/',''))
-this.$store.dispatch('setSrc',this.$route.path.replace('/courses/',''))
+
 
     },
    /* updated(){
@@ -93,9 +91,10 @@ this.$store.dispatch('setDesc',this.$route.path.replace('/courses/',''))
 
         $route(to){
             console.log('parid',to.params['id'])
-            this.$store.dispatch('setTitle',this.$route.path.replace('/courses/',''))
-this.$store.dispatch('setDesc',this.$route.path.replace('/courses/',''))
-this.$store.dispatch('setSrc',this.$route.path.replace('/courses/',''))
+  this.$store.dispatch('setCourse',this.$route.path.replace('/courses/',''))
+  //          this.$store.dispatch('setTitle',this.$route.path.replace('/courses/',''))
+//this.$store.dispatch('setDesc',this.$route.path.replace('/courses/',''))
+//this.$store.dispatch('setSrc',this.$route.path.replace('/courses/',''))
 this.id=to.params['id']
 
 

@@ -95,6 +95,14 @@ this.$router.push('/')
   },
  
   computed:{
+
+    categories(){
+     
+return this.$store.getters.getCat
+    
+
+
+    },
     error(){
 return this.$store.getters.error
     },
@@ -107,45 +115,11 @@ return this.$store.getters.error
 
   data: () => ({
     //
-    categories:[],
     idef:'mdi-menu-down',
     idw:'mdi-menu-down',
     iup:'mdi-menu-up',
 
   }),
-  created(){
-    this.$store.dispatch('setTitle',this.$route.path.replace('/courses/',''))
-this.$store.dispatch('setDesc',this.$route.path.replace('/courses/',''))
-this.$store.dispatch('setSrc',this.$route.path.replace('/courses/',''))
-     let lessons=[]
-    fb.firestore().collection('Courses').doc('ZR7WVUbEdGsiRknrRLRY').collection('Lessons').get().then(
-
-      dat=>{
-      console.log('dat',dat)
-        dat.forEach(
-          el=>{
-          console.log(el.id)
-            lessons.push(el.data())
-            console.log(el.data())
-          }
-          
-        )
-        console.log(lessons)
-      }
-    )
-console.log(lessons)
-fb.firestore().collection('Courses').get()
-.then(doc=>{
-doc.forEach( d =>{
-this.categories.push( d.data().category)
-
-})
-  
-  console.log(this.categories)
-})
-
-
-  }
 };
 </script>
 <style  scoped>

@@ -1,8 +1,8 @@
 import  * as fb from 'firebase'
 export default{
-    state:{
+   state:{
         lessons:[],
-        currentlesson:null,
+        currentlesson:[],
         currenttime:0
         },
         mutations:{
@@ -10,43 +10,42 @@ export default{
                 state.lessons=payload
             },
             setCurrentLesson(state,payload){
-                console.log('ples',payload.les)
-                console.log('plesson',payload.lesson)
-                state.currentlesson=payload.lesson
+       
+                state.currentlesson=payload
             },
             setCurrentTime(state,payload){
-                console.log('pctime',payload)
                 state.currenttime=payload;
             }
             
 
         },
         actions:{
-            setLessons({commit},{course,lesson}){
-                console.log('c-l',course,lesson)
-                let les=[]
+            setLessons({commit},payload){
+                console.log('c-l',payload)
+                let lessons=[]
                 let id=''
-                fb.firestore().collection('Courses').where('category','==',course).get()
+                fb.firestore().collection('Courses').where('category','==',payload.course).get()
                .then(
-                  data=>{
-                    console.log('element id 1')
-                      data.forEach(
+                  cdata=>{
+                
+                      cdata.forEach(
                           el=>{
-                              console.log(el.id)
+                              console.log("elid",el.id)
                               id=el.id
                           }
                       )
-                      fb.firestore().collection('Courses').doc(id).collection('Lessons').where('cat','==',lesson).get()
+                      fb.firestore().collection('Courses').doc(id).collection('Lessons').where('cat','==',payload.lesson).get()
                       .then( dat =>{
                         console.log('lesson data :')
                         dat.forEach(
                             el=>{
-                   les.push(el.data())             
+                   lessons.push(el.data())             
                                 console.log(el.data())
 
                             }
                         )
-                        commit('setLessons',les)
+                        console.log("Course Lessons",lessons)
+                        commit('setLessons',lessons)
                       })
                   }
             
@@ -56,6 +55,110 @@ export default{
                 
                
             },
+            getCurrentLesson({commit},payload){
+                let current;
+                fb.firestore().collection("User").where("email","==",fb.auth().currentUser.email).get()
+                .then(
+        
+                    user=>{
+                        user.forEach(
+                            data=>{
+                        console.log("Currrent",data.data().courses[payload])
+                             current=data.data().courses[payload]
+                             commit("setCurrentLesson",current)
+                            }
+                        )
+                    }
+                )
+                
+                },
+                updateLesson({commit},payload){
+                   let  uid=""
+                   let finished=[]
+                   let flessons=[]
+                   console.log("payload finished",payload.flessons.length);
+                   
+                 //  let cprogr=(payload.flessons.size * (100/payload.amount)) +'%'
+                    fb.firestore().collection("User").where("email","==",fb.auth().currentUser.email).get()
+                    .then(
+                        user=>{
+                            user.forEach(
+                                el=>{
+
+                                  uid = el.id
+                                  flessons= el.data().courses[payload.course].flessons
+                                }
+                            )
+                            console.log("db flessons",flessons)
+                            for (let x in payload.flessons){
+                                if(!flessons.includes(x)){
+                            fb.firestore().collection("User").doc(uid).set({
+                                courses:{
+                                [payload.course]:{
+                                    flessons: fb.firestore.FieldValue.arrayUnion(Number(x))
+                                }
+
+                            }
+                        },{merge:true})
+                    }
+                    }
+                            fb.firestore().collection("User").doc(uid).get()
+                            .then(
+                                data=>{
+
+                                  finished=data.data().courses[payload.course].flessons
+
+                                  fb.firestore().collection("User").doc(uid).set({
+                                    courses:{
+        
+                                        [payload.course]:{
+                                    currentlesson:payload.currentLesson,
+                                    lprogress:payload.currentTime,
+                                    cprogress:(finished.length * (100/payload.amount)) +"%" ,
+                                       
+        
+                                        }
+                                    }
+        
+        
+        
+        
+        
+                                    },{merge:true})  
+                                }
+
+
+
+                            )
+                            console.log(finished)
+                            console.log("finished.length",finished.length)
+                            console.log("progress",(finished.length * (100/payload.amount)) +"%");
+                            
+                             
+                        }
+
+                    )
+
+                }
+
+
+        },
+       
+        getters:{
+            getLessons(state){
+                return state.lessons
+               },
+            getCurrentLesson(state){
+               return state.currentlesson 
+            },
+            getCurrentTime(state){
+                return state.currenttime
+            }
+               
+   }
+
+       /*  actions:{
+           ,
             getUserLesson({commit},{less,cs}){
                 let cid=''
                 console.log("------------------------------------------------")
@@ -120,9 +223,6 @@ export default{
                        fb.firestore().collection('User').doc(id).get()
                        .then(
                            doc=>{
-                               
-                               console.log('paylooo',less)
-                            console.log("trrry",tryit)
                             dd.forEach(
                                 el=>{
                                     console.log(el)
@@ -136,10 +236,6 @@ export default{
                                     if(el.cname.replace(" ",'')==less){
                                         console.log('tut')
                                         lesson= el.currentlesson
-                                        console.log('lessonC',lesson)
-                                        console.log('lesssonsC',)
-                                        console.log("currrrent",les[lesson])
-                                        console.log('prog',el.lprogress)
                                          commit('setCurrentLesson',{les,lesson})
                                         commit('setCurrentTime',el.lprogress)
                                     }
@@ -160,20 +256,9 @@ export default{
             }
         
         },
-        getters:{
-            getLessons(state){
-                return state.lessons
-               },
-            getCurrentLesson(state){
-               return state.currentlesson 
-            },
-            getCurrentTime(state){
-                return state.currenttime
-            }
-               
-   }
+       
    
-        
+        */
         }
 
 

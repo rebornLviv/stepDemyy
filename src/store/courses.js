@@ -49,7 +49,7 @@ fb.firestore().collection("User").where("email","==",fb.auth().currentUser.email
 console.log("in else");
 console.log("udata.courses",udata.courses[payload.course])
 
-        fb.firestore().collection("User").doc(uid).set({
+        fb.firestore().collection("User").doc(uid).firestore.set({
             courses:{
 
                 [payload.course]:{  

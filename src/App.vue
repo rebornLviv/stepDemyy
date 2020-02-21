@@ -1,31 +1,110 @@
 <template>
   <v-app>
-    <v-app-bar app color="white" dark>
-      <div class="black--text font-italic mr-5">
-        <router-link to="/" tag="h2" class="font-weight-regular logo">Stepdemy</router-link>
-      </div>
+    <v-app-bar
+      app
+      color="white"
+      dark
+      class="barrr"
+      
+    >
+  <div class="black--text font-italic mr-5 "><router-link to="/" tag="h2" class="font-weight-regular logo" >Stepdemy</router-link></div>
+ <div class="navitems">
+   <div>
+<v-menu   offset-y >
+  <template v-slot:activator="{on}">
+  <v-btn 
+  text
+  
 
-      <v-menu offset-y>
-        <template v-slot:activator="{on}">
-          <v-btn text v-on="on">
-            <span class="black--text">Категорії</span>
+  v-on="on"
+  > 
+  <span class="black--text">Категорії</span>
 
-            <v-icon class="grey--text">{{idef}}</v-icon>
-          </v-btn>
-        </template>
-        <v-list>
-          <v-list-item v-for="cat in categories" :key="cat" :to="'/courses/' + cat">{{cat}}</v-list-item>
-        </v-list>
-      </v-menu>
-      <v-spacer></v-spacer>
+    <v-icon
+   class="grey--text" 
+    >{{idef}}</v-icon>
+  </v-btn>
+      
+    
+  </template>
+  <v-list >
+    <v-list-item v-for="cat in categories" :key="cat" :to="'/courses/' + cat">{{cat}}</v-list-item>
 
-      <v-btn text class="grey--text">
+  </v-list>
+</v-menu>
+</div>
+
+<div>
+<v-menu   offset-y >
+  <template v-slot:activator="{on}">
+  <v-btn 
+  text
+  
+
+  v-on="on"
+  > 
+  <span class="black--text">Категорії</span>
+
+    <v-icon
+   class="grey--text" 
+    >{{idef}}</v-icon>
+  </v-btn>
+      
+    
+  </template>
+  <v-list >
+    <v-list-item v-for="cat in categories" :key="cat" :to="'/courses/' + cat">{{cat}}</v-list-item>
+
+  </v-list>
+</v-menu>
+</div>
+
+<div>
+<v-menu   offset-y >
+  <template v-slot:activator="{on}">
+  <v-btn 
+  text
+  
+
+  v-on="on"
+  > 
+  <span class="black--text">Категорії </span>
+
+    <v-icon
+   class="grey--text" 
+    >{{idef}}</v-icon>
+  </v-btn>
+      
+    
+  </template>
+  <v-list >
+    <v-list-item v-for="cat in categories" :key="cat" :to="'/courses/' + cat">{{cat}}</v-list-item>
+
+  </v-list>
+</v-menu>
+</div>
+
+</div> 
+      
+<div class="log">
+      <v-btn
+        text
+        class="grey--text"
+      >
+        
         <v-icon>mdi-magnify</v-icon>
       </v-btn>
       <v-btn v-if="!isUserLoggedIn" to="/login" text class="black--text">Вхід</v-btn>
       
 
-      <v-btn v-if="isUserLoggedIn" to="/" text @click="onLogout" class="black--text">Вийти</v-btn>
+      <v-btn
+      v-if="isUserLoggedIn"
+      to="/"
+      text
+      @click="onLogout"
+      class="black--text"
+      >Вийти</v-btn>
+      </div>
     </v-app-bar>
     <v-content>
       <router-view></router-view>
@@ -85,7 +164,18 @@ export default {
 
 
 <style  scoped>
-.txt {
+.navitems:nth-child(1){
+  background: red;
+}
+.log{
+  justify-content: end !important;
+}
+.barrr div  {
+  width: 100%;
+  display: flex;
+  justify-content: space-between 
+}
+.txt{
   font-size: 50px;
 }
 .c1 {

@@ -104,7 +104,12 @@ this.clesson=this.$store.getters.getCurrentLesson.currentlesson
 
     },
   beforeCreate(){
-
+     let course=this.$route.path.split('/')[2];
+      console.log("Course Name",course)
+      let lesson =this.$route.path.split('/')[3]
+      console.log('Lesson Name',lesson)
+ this.$store.dispatch('setLessons',{course,lesson})
+      this.$store.dispatch('getCurrentLesson',course) 
         
   },
 

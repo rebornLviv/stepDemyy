@@ -29,11 +29,9 @@
             />
             <div class="pr">
               <router-link tag="a" class="secondary--text sz" to="/recover"
-                >Забули пароль?</router-link
-              >
+                >Забули пароль?</router-link>
               <router-link tag="a" class="secondary--text sz" to="/register"
-                >Зареєструватися</router-link
-              >
+                >Зареєструватися</router-link>
             </div>
           </v-form>
           <v-card-actions class="mt-4 bts">
@@ -44,8 +42,7 @@
               depressed
               color="rgb(20, 19, 19)"
               :disabled="valid === false"
-              >Увійти</v-btn
-            >
+              >Увійти</v-btn>
           </v-card-actions>
         </v-col>
       </v-row>

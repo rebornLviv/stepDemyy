@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import App from '../App.vue'
 import VueRouter from 'vue-router'
 import Home from '@/components/Home'
 import store from '../store/index'
@@ -15,12 +16,9 @@ const routes = [
       // ...
     // store.dispatch('setCat');
      // this.$store.dispatch('setCat');
-     
      setTimeout(() => {
       router.app.$store.dispatch('setCat');
      }, 100);
-     
-     
       console.log('setCat')
       next()
     }

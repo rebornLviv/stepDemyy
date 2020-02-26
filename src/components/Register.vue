@@ -14,14 +14,12 @@ align="center"
        
         <v-row
           align="center"
-          justify="center"
-        >
+          justify="center">
     
           <v-col
             cols="12"
             sm="8"
-            md="4"
-          >
+            md="4">
            
               
             

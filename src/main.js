@@ -8,6 +8,7 @@ import * as fb from 'firebase'
 import VueXgplayer from 'vue-xgplayer'
 import VueVideoPlayer from 'vue-video-player'
 import 'video.js/dist/video-js.css'
+
 Vue.use(VueXgplayer, {
   // globalOptions
   enterLogo: {

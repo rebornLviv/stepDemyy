@@ -27,15 +27,30 @@
     <v-container  fluid  class="mb-12 sm">
  <v-row  >
 <v-col  class="mn" >
-<div class="smen"></div>
+<div class="smen">
+
+    <div class="ibl">
+        <v-icon size="50px">mdi-account</v-icon>
+    </div>
+
+</div>
 
 </v-col>
 <v-col class="mn">
 
-  <div class="smenb"></div>
+  <div class="smenb">
+      <div class="ibl">
+          <v-icon large>mdi-account </v-icon>
+      </div>
+  </div>
 </v-col>
 <v-col class="mn">
-  <div class="smen"></div>
+  <div class="smen">
+
+      <div class="ibl">
+          <v-icon>mdi-account</v-icon>
+      </div>
+  </div>
 </v-col>
 
  </v-row>
@@ -95,6 +110,12 @@ width: 100%;
 
 
 }
+.ibl{
+    width: 162px;
+    height: 162px;
+    border:1px solid black;
+    margin-top: 20px;
+}
 .mn{
   justify-content: center;
 display: flex;
@@ -109,6 +130,8 @@ height: 300px;
 margin-top: 50px;
 border-radius: 10px;
 background: white;
+    display: flex ;
+    justify-content: center;
 
 }
 .smenb{
@@ -117,6 +140,8 @@ background: white;
 width: 300px;
 height: 500px;
 border-radius: 10px;
+    display: flex;
+    justify-content: center;
 
 }
 

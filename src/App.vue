@@ -58,7 +58,7 @@
         <v-btn v-if="!isUserLoggedIn" to="/login" text class="black--text">Вхід</v-btn>
 
         <v-row justify="center">
-          <v-dialog v-model="dialog" persistent max-width="500px">
+          <v-dialog v-model="dialog" max-width="500px">
             <template v-slot:activator="{ on }">
               <v-btn
                 v-if="!isUserLoggedIn"
@@ -67,9 +67,13 @@
                 color="primary"
                 dark
                 v-on="on"
+                @click.stop='dialog = false'
               >Open Dialog</v-btn>
             </template>
             <v-card>
+              <v-btn icon dark @click="dialog = false">
+                  <v-icon>mdi-close</v-icon>
+              </v-btn>
               <v-card-title>
                 <strong class="headline">Вхід</strong>
               </v-card-title>
@@ -112,7 +116,7 @@
                   class="secondary--text sz ma-2"
                   to="/"
                   text
-                  @click="dialog3 = !dialog3"
+                  @click="dialog3 = !dialog3, dialog = !dialog"
                 >Зареєструватися</v-btn>
                 <!-- <v-btn color="blue darken-1" text @click="dialog = false">Вхід</v-btn> -->
                 <v-btn
@@ -145,25 +149,65 @@
               </div>
             </v-card>
           </v-dialog>
+
+          <!-- Register -->
           <v-dialog
             v-model="dialog3"
-            max-width="500px"
+            max-width="600px"
             >
-            <v-card>
+            <v-card class="register-wrap">
+              <v-btn icon dark @click="dialog3 = false">
+                <v-icon>mdi-close</v-icon>
+              </v-btn>
               <v-card-title>
-                <span>Реєстрація</span>
-                <v-spacer></v-spacer>
+                <span>Реєстрація</span>                
               </v-card-title>
               <v-card-actions>
-                <v-btn
-                  color="primary"
-                  text
-                  @click="dialog3 = false">
-                  Close
-                </v-btn>
+                <v-icon>{{ icons.mdiAccount }}</v-icon>
               </v-card-actions>
+              <v-row align="center" justify="center">
+    		        <v-col cols="12" sm="8" md="8">
+    		          <v-form v-model="valid" lazy-validation ref="form">
+    		            <v-text-field
+    		              v-model="email"
+    		              color="secondary"
+    		              name="login"
+    		              :rules="emailRules"
+    		              type="text"
+    		              placeholder="Email"
+    		            />
+
+    		            <v-text-field
+    		              class="pa"
+    		              color="secondary"
+    		              v-model="password"
+    		              id="password"
+    		              :rules="passwordRules"
+    		              placeholder="Password"
+    		              name="password"
+    		              type="password"
+    		            />
+    		            <v-text-field
+    		              class="pa"
+    		              color="secondary"
+    		              id="password"
+    		              v-model="repassword"
+    		              :rules="rePasswordRules"
+    		              placeholder="Confirm password"
+    		              name="password"
+    		              type="password"
+    		            />
+    		          </v-form>
+    		          <v-card-actions class="mt-4 bts">
+    		            <v-btn class="nr ml-2" text color="secondary" @click="dialog3 = false">Закрити</v-btn>
+    		            <v-btn @click="OnRegister" class="nr elevation-0 mr-2" dark>Далі</v-btn>
+    		          </v-card-actions>
+    		        </v-col>
+		          </v-row>
             </v-card>
           </v-dialog>
+          <!-- Register -->
+
         </v-row>
 
         <v-btn v-if="isUserLoggedIn" to="/" text @click="onLogout" class="black--text">Вийти</v-btn>
@@ -189,6 +233,10 @@
 <script>
 import * as fb from "firebase";
 
+import {
+  mdiAccount
+} from '@mdi/js'
+
 export default {
   name: "App",
   data: () => ({
@@ -203,6 +251,7 @@ export default {
     email: "",
     password: "",
     valid: false,
+    repassword: "",
     emailRules: [
       v => !!v || "E-mail is required",
       v =>
@@ -214,7 +263,14 @@ export default {
       v =>
         (v && v.length >= 6) ||
         "Password must be equal or more than 6 characters"
-    ]
+    ],
+    rePasswordRules: [
+      v => !!v || "Please repeat password",
+      v => v === this.password || "Passwords didn`t match"
+    ],
+    icons: {
+      mdiAccount
+    }
   }),
 
   methods: {
@@ -239,6 +295,32 @@ export default {
             this.$router.push("/");
           })
           .catch(err => console.log(err));
+      }
+    },
+    OnRegister() {
+      if (this.$refs.form.validate()) {
+        const reguser = {
+          email: this.email,
+          password: this.password
+        };
+        const user = {
+          email: this.email,
+          password: this.password,
+          courses: {}
+        };
+
+        this.$store
+          .dispatch("registerUser", reguser)
+          .then(() => {
+            fb.firestore()
+              .collection("User")
+              .add(user);
+
+            this.$router.push("/");
+          })
+          .catch(err => console.log(err));
+
+        console.log(user);
       }
     }
   },
@@ -356,7 +438,7 @@ export default {
 }
 
 .v-card {
-  height: 360px;
+  height: 390px;
   overflow-y: hidden;
 }
 .v-card__text {
@@ -428,9 +510,44 @@ export default {
 }
 
 .v-card__title {
+  content: '';
+  width: 100%;
   display: flex;
+  justify-content: center;
+  padding-top: 0px;
+}
+
+.v-dialog > .v-card > .v-card__title {
+  font-size: 30px;
+  padding-top: 5px;
+}
+
+.theme--dark.v-btn.v-btn--icon {
+  color: #707070;
+  float: right;
+}
+
+.v-icon--svg {
+    height: 100px;
+    width: 100px;
+    fill: currentColor;
+    color: #4E5256;
+}
+
+.theme--light.v-icon {
+  color: #4E5256;
+}
+
+.bts {
   justify-content: center;
 }
 
+.v-card {
+  overflow-x: hidden;
+}
+
+.register-wrap {
+  height: 500px;
+}
 
 </style>

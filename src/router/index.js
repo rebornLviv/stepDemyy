@@ -63,8 +63,8 @@ const routes = [
       {
         meta: { requiresAuth: true },
         path:'/courses/:id/:id',
-    name:'lesson',
-    beforeEnter (to, from, next) {
+      name:'lesson',
+      beforeEnter (to, from, next) {
       // ...
       let course=router.app.$route.path.split('/')[2];
       console.log("Course Name",course)
@@ -84,6 +84,7 @@ const routes = [
 
 
 ]
+
 
 const router = new VueRouter({
   mode: 'history',

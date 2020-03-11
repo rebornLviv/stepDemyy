@@ -57,9 +57,9 @@
         </v-btn>
         <!-- <v-btn v-if="!isUserLoggedIn" to="/login" text class="black--text">Вхід</v-btn> -->
 
-        <v-row justify="center">
-          <v-dialog v-model="dialog" max-width="500px">
-            <template v-if="!isUserLoggedIn" v-slot:activator="{ on }">
+        <v-row v-if="!isUserLoggedIn" justify="center">
+          <v-dialog  v-model="dialog" max-width="500px">
+            <template  v-slot:activator="{ on }">
               <v-btn
                 
                 text
@@ -353,8 +353,12 @@ export default {
 
       this.loader = null;
     }
+  },
+  updated(){
+    console.log("Signed?",this.isUserLoggedIn)
   }
 };
+
 </script>
 
 

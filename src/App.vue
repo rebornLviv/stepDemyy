@@ -59,7 +59,6 @@
           <v-dialog v-model="dialog" max-width="500px">
             <template v-if="!isUserLoggedIn" v-slot:activator="{ on }">
               <v-btn
-                
                 text
                 class="black--text"
                 color="primary"
@@ -197,10 +196,9 @@
 		          </v-row>
             </v-card>
           </v-dialog>
+        <v-btn v-if="isUserLoggedIn" to="/" text @click="onLogout" class="black--text">Вийти</v-btn>
         </v-row>
         <!-- Register -->
-
-        <v-btn v-if="isUserLoggedIn" to="/" text @click="onLogout" class="black--text">Вийти</v-btn>
       </div>
     </v-app-bar>
     <v-content>
@@ -301,7 +299,6 @@ export default {
       }
     }
   },
-
   computed: {
     categories() {
       return this.$store.getters.getCat;

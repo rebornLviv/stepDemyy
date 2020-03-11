@@ -55,20 +55,20 @@
         <v-btn text class="grey--text">
           <v-icon>mdi-magnify</v-icon>
         </v-btn>
-        <v-btn v-if="!isUserLoggedIn" to="/login" text class="black--text">Вхід</v-btn>
+        <!-- <v-btn v-if="!isUserLoggedIn" to="/login" text class="black--text">Вхід</v-btn> -->
 
         <v-row justify="center">
           <v-dialog v-model="dialog" max-width="500px">
-            <template v-slot:activator="{ on }">
+            <template v-if="!isUserLoggedIn" v-slot:activator="{ on }">
               <v-btn
-                v-if="!isUserLoggedIn"
+                
                 text
                 class="black--text"
                 color="primary"
                 dark
                 v-on="on"
                 @click.stop='dialog = false'
-              >Open Dialog</v-btn>
+              >Увійти</v-btn>
             </template>
             <v-card>
               <v-btn icon dark @click="dialog = false">
@@ -125,7 +125,7 @@
                   :disabled="loading"
                   color="white-text"
                   text
-                  @click="loader = 'loading', dialog = !dialog"
+                  @click="OnLogin"
                   v-if="!isUserLoggedIn"
                   depressed
                   to="/"
@@ -252,22 +252,6 @@ export default {
     password: "",
     valid: false,
     repassword: "",
-    emailRules: [
-      v => !!v || "E-mail is required",
-      v =>
-        /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) ||
-        "E-mail must be valid"
-    ],
-    passwordRules: [
-      v => !!v || "Password is required",
-      v =>
-        (v && v.length >= 6) ||
-        "Password must be equal or more than 6 characters"
-    ],
-    rePasswordRules: [
-      v => !!v || "Please repeat password",
-      v => v === this.password || "Passwords didn`t match"
-    ],
     icons: {
       mdiAccount
     }
@@ -278,12 +262,13 @@ export default {
       this.$store.dispatch("clearError");
     },
     onLogout() {
+     console.log( this.isUserLoggedIn) 
       this.$store.dispatch("logoutUser").catch(error => {
         console.log(error);
       });
       this.$router.push("/");
     },
-    OnSubmit() {
+    OnLogin() {
       if (this.$refs.form.validate()) {
         const user = {
           email: this.email,
@@ -292,6 +277,8 @@ export default {
         this.$store
           .dispatch("loginUser", user)
           .then(() => {
+            this.loader = 'loading';
+            this.dialog = !this.dialog;
             this.$router.push("/");
           })
           .catch(err => console.log(err));
@@ -315,7 +302,7 @@ export default {
             fb.firestore()
               .collection("User")
               .add(user);
-
+            this.dialog3 = !this.dialog3;
             this.$router.push("/");
           })
           .catch(err => console.log(err));
@@ -334,7 +321,28 @@ export default {
     },
     isUserLoggedIn() {
       return this.$store.getters.isUserLoggedIn;
-    }
+    },
+      emailRules(){
+        return [
+      v => !!v || "E-mail is required",
+      v =>
+        /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) ||
+        "E-mail must be valid"
+    ]},
+    passwordRules(){
+      
+      return [
+      v => !!v || "Password is required",
+      v =>
+        (v && v.length >= 6) ||
+        "Password must be equal or more than 6 characters"
+    ]
+    },
+    rePasswordRules(){ 
+     return [
+      v => !!v || "Please repeat password",
+      v => v === this.password || "Passwords didn`t match"
+    ]},
   },
   watch: {
     loader() {

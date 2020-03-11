@@ -27,7 +27,9 @@ export default{
         }catch(error){
         commit('setLoading',false)
         commit('setError',error.message)
+        console.log(error)
         throw error
+        
 
     }
 
@@ -42,6 +44,7 @@ commit('setLoading',false)
 }catch(error){
     commit('setLoading',false)
     commit('setError',error.message)
+    console.log(error)
     throw error
 
 }
@@ -51,8 +54,15 @@ autoLoginUser({commit},payload){
 commit('setUser',new User(payload.uid))
 },
 logoutUser({commit}){
-    fb.auth().signOut()
-    commit('setUser',null)
+    fb.auth().signOut().then(
+        ()=>{
+            commit('setUser',null)
+        }
+    )
+    .catch(err=>{
+        commit('setError',err.message)
+    })
+    
 },
 recoverUser({commit},email){
     console.log('wwww')

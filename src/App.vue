@@ -121,7 +121,7 @@
                   :disabled="loading"
                   color="white-text"
                   text
-                  @click="loader = 'loading', dialog = false, OnSubmit"
+                  @click="loader = 'loading', dialog = !dialog"
                   v-if="!isUserLoggedIn"
                   depressed
                   to="/"

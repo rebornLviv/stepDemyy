@@ -102,55 +102,57 @@
                           :rules="passwordRules"
                           required
                         />
+                        <v-card-actions>
+                          <!-- <v-btn color="blue darken-1" text @click="dialog = false">Реєстрація</v-btn> -->
+                          <!-- <v-btn class="ma-2" outlined color="indigo" text @click="dialog = false">Реєстрація</v-btn> -->
+                          <v-btn
+                            tag="a"
+                            outlined
+                            class="secondary--text sz ma-2"
+                            to="/"
+                            text
+                            @click="dialog3 = !dialog3, dialog = !dialog"
+                          >Зареєструватися</v-btn>
+                          <!-- <v-btn color="blue darken-1" text @click="dialog = false">Вхід</v-btn> -->
+                          <v-btn
+                            class="ma-2 bg-black"
+                            :loading="loading"
+                            :disabled="loading"
+                            color="white-text"
+                            text
+                            @click="loader = 'loading', dialog = !dialog"
+                            v-if="!isUserLoggedIn"
+                            depressed
+                            to="/"
+                          >Вхід</v-btn>
+                          <!-- <v-btn
+                            class="nr elevation-0 mr-2 disabled white--text"
+                            @click="OnSubmit"
+                            depressed
+                            :disabled="valid === false"
+                          >Увійти</v-btn>-->
+                        </v-card-actions>
+                        <div class="pr">
+                          <v-btn
+                            tag="a"
+                            class="secondary--text sz"
+                            to="/recover"
+                            
+                            text
+                          >Забули логін або пароль?</v-btn>
+                          <!-- <router-link tag="a" class="secondary--text sz" to="/register">Зареєструватися</router-link> -->
+                        </div>
                       </v-form>
                     </v-col>
                   </v-row>
                 </v-container>
               </v-card-text>
-              <v-card-actions>
-                <!-- <v-btn color="blue darken-1" text @click="dialog = false">Реєстрація</v-btn> -->
-                <!-- <v-btn class="ma-2" outlined color="indigo" text @click="dialog = false">Реєстрація</v-btn> -->
-                <v-btn
-                  tag="a"
-                  outlined
-                  class="secondary--text sz ma-2"
-                  to="/"
-                  text
-                  @click="dialog3 = !dialog3, dialog = !dialog"
-                >Зареєструватися</v-btn>
-                <!-- <v-btn color="blue darken-1" text @click="dialog = false">Вхід</v-btn> -->
-                <v-btn
-                  class="ma-2 bg-black"
-                  :loading="loading"
-                  :disabled="loading"
-                  color="white-text"
-                  text
-                  @click="loader = 'loading', dialog = !dialog"
-                  v-if="!isUserLoggedIn"
-                  depressed
-                  to="/"
-                >Вхід</v-btn>
-                <!-- <v-btn
-                  class="nr elevation-0 mr-2 disabled white--text"
-                  @click="OnSubmit"
-                  depressed
-                  :disabled="valid === false"
-                >Увійти</v-btn>-->
-              </v-card-actions>
-              <div class="pr">
-                <v-btn
-                  tag="a"
-                  class="secondary--text sz"
-                  to="/recover"
-                  
-                  text
-                >Забули логін або пароль?</v-btn>
-                <!-- <router-link tag="a" class="secondary--text sz" to="/register">Зареєструватися</router-link> -->
-              </div>
             </v-card>
           </v-dialog>
+        </v-row>
 
           <!-- Register -->
+        <v-row>
           <v-dialog
             v-model="dialog3"
             max-width="600px"
@@ -197,18 +199,17 @@
     		              name="password"
     		              type="password"
     		            />
+                    <v-card-actions class="mt-4 bts">
+                      <v-btn class="nr ml-2" text color="secondary" @click="dialog3 = false">Закрити</v-btn>
+                      <v-btn @click="OnRegister" class="nr elevation-0 mr-2" dark>Далі</v-btn>
+                    </v-card-actions>
     		          </v-form>
-    		          <v-card-actions class="mt-4 bts">
-    		            <v-btn class="nr ml-2" text color="secondary" @click="dialog3 = false">Закрити</v-btn>
-    		            <v-btn @click="OnRegister" class="nr elevation-0 mr-2" dark>Далі</v-btn>
-    		          </v-card-actions>
     		        </v-col>
 		          </v-row>
             </v-card>
           </v-dialog>
-          <!-- Register -->
-
         </v-row>
+          <!-- Register -->
 
         <v-btn v-if="isUserLoggedIn" to="/" text @click="onLogout" class="black--text">Вийти</v-btn>
       </div>

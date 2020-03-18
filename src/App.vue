@@ -269,14 +269,14 @@
                     </v-row>
                   </v-card>
                 </v-dialog>
-                <v-btn v-if="isUserLoggedIn" to="/" text @click="onLogout" class="black--text">Вийти</v-btn>
+        <v-btn v-if="isUserLoggedIn" to="/" text @click="onLogout" class="black--text">Вийти</v-btn>
+                
               </v-row>
             </v-list-item-title>
             <!-- Register -->
           </v-list-item>
         </v-list>
       </v-menu>
-      <!--      </div> -->
     </v-app-bar>
     <v-content>
       <router-view></router-view>
@@ -635,10 +635,6 @@ export default {
   height: 500px;
 }
 
-/* .v-menu__content {
-  margin-top: 45px;
-}
- */
 .v-menu__content--fixed {
   margin-top: 0px;
 }

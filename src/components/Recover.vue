@@ -68,19 +68,16 @@ export default {
     },
     methods: {
      recover(){
-if (this.$refs.form.validate()){
-    this.$store.dispatch('recoverUser',this.email)
-    .then(
-        ()=>{  
-            this.$router.push('/')
-        }
-    )
-    .catch(
-        
+      if (this.$refs.form.validate()){
+          this.$store.dispatch('recoverUser',this.email)
+          .then(
+              ()=>{  
+                  this.$router.push('/')
+              }
+        )
+    .catch(  
         err=>console.log('err',err))
-    
-
-}
+      }
 
         }
     }

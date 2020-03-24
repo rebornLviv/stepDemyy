@@ -4,7 +4,8 @@ import VueRouter from 'vue-router'
 import Home from '@/components/Home'
 import store from '../store/index'
 import * as fb from 'firebase'
-
+import Settings from '@/components/Settings'
+import UserCoures from '@/components/UserCourses'
 Vue.use(VueRouter)
 
 const routes = [
@@ -80,6 +81,22 @@ const routes = [
     },
     component:()=> import ('@/components/Lesson')
 
+      },
+      {
+        path:'/profile',
+        name:'profile',
+        component: () => import ('@/components/Profile'),
+        children:[
+          {
+            path:'/profile/settings',
+            component: Settings
+          },
+          {
+            path:'/profile/courses',
+            component: UserCoures
+          }
+        ]
+      
       }
 
 

@@ -74,7 +74,7 @@
     </v-container>
     <v-container  class="mb-12">
 <v-row  class="courses " >
-  <v-col cols="4" v-for="x in 12" :key="x" class="mb-7">
+  <v-col cols="3" v-for="x in 12" :key="x" class="mb-7">
  <v-card class="card"  >
        <div >
           <svg xmlns="http://www.w3.org/2000/svg" width="65" height="85" viewBox="0 0 99 135">
@@ -88,8 +88,25 @@
       
       </v-card>   
        <div class="play-data">
-        <p>text</p>
+        <p class="urok">Назва уроку</p>
+
+        <div class="teacher">
+        <p>Викладач</p>
+        <v-spacer></v-spacer>
+        <v-icon>mdi-account</v-icon>
+        </div>
+        <div class="teacher">
+        <v-icon>mdi-star-outline</v-icon> 
+        <v-icon>mdi-star-outline</v-icon> 
+        <v-icon>mdi-star-outline</v-icon>
+        <v-icon>mdi-star-outline</v-icon>
+        <v-icon>mdi-star-outline</v-icon>
+        </div>
+        <div class="teacher">
+        <p class="ldate"> {{new Date().toLocaleString()}}</p>
+        </div>
       </div>
+      
      </v-col>
  
 </v-row>
@@ -98,22 +115,22 @@
    
   
 
-    <v-footer
-    absolute
-    dark      
-      class="font-weight-medium  white--text  "
-    >
-      <v-col
-        class="text-center"
-        cols="12"
-      >
-     <strong>Львів</strong>   {{ new Date().getFullYear() }} 
-      </v-col>
-    </v-footer>
+   
     
   </div>
 </template>
 <style  scoped>
+
+.teacher{
+  display: flex;
+  width: 275px;
+  height: 30px;
+  border: 1px solid black;
+}
+.urok{
+ margin-bottom: 3px;
+margin-top: 14px;
+}
 .sbtext{
   margin-top:40px;
   
@@ -148,6 +165,10 @@ width: 100%;
  
 
 
+}
+.ldate{
+
+  text-align: left;
 }
 .itext{
 

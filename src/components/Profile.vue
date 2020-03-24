@@ -1,61 +1,46 @@
 <template>
-    <div class="container-fluid cc">
-     <div class="wrapper">
-
+<div class="container-fluid cc">
+    <div class="wrapper">
         <v-row>
-
             <v-col cols="4" class="userImgContainer">
                 <p class="txtp">Профіль</p>
-       <v-icon  class="iblc" size="240px">mdi-account</v-icon>
-       <div class="btns">
-       <v-btn>Змінити фото</v-btn>
-       <v-btn to="courses">Мої курси</v-btn>
-       <v-btn to="settings" >Налаштування    </v-btn>
-       
-       </div>
-       
+                <v-icon class="iblc" size="240px">mdi-account</v-icon>
+                <div class="btns">
+                    <v-btn>Змінити фото</v-btn>
+                    <v-btn to="courses">Мої курси</v-btn>
+                    <v-btn to="settings">Налаштування </v-btn>
 
+                </div>
 
             </v-col>
             <router-view></router-view>
-            
+
         </v-row>
-     </div>
     </div>
+</div>
 </template>
-
-
-
-
 
 <script>
 export default {
-    data: ()=> ({
+    data: () => ({
 
-        confP:false
+        confP: false
 
     }),
 
-    methods:{
+    methods: {
 
-    configuratePassword(){
-    this.confP = !this.confP
+        configuratePassword() {
+            this.confP = !this.confP
 
-    }
+        }
 
     }
 }
 </script>
 
-
-
-
-
-
-
 <style scoped>
-
-.changepsw{
+.changepsw {
     display: flex;
     flex-direction: column;
     width: 400px;
@@ -66,28 +51,31 @@ export default {
     transition-duration: 5000ms;
 }
 
-.chP{
+.chP {
     width: 400px !important;
 
 }
-.changepsw>input{
+
+.changepsw>input {
     border-bottom: 1px solid white;
     padding: 10px;
     color: white;
     width: 70%;
     padding-bottom: 7px;
-    
+
 }
-.cc{
+
+.cc {
     display: flex;
     justify-content: flex-start;
     height: 100%;
 }
-.iblc{
+
+.iblc {
 
     width: 272px;
     height: 272px;
-    border:1px solid black;
+    border: 1px solid black;
     margin-top: 20px;
     border-radius: 50%;
     display: flex;
@@ -95,47 +83,56 @@ export default {
     align-items: center;
     margin-top: 5px;
 }
-.wrapper{
- width: 70%;
- height: 100%;
+
+.wrapper {
+    width: 70%;
+    height: 100%;
 }
-.inp{
-    border-bottom: 1px solid black ;
+
+.inp {
+    border-bottom: 1px solid black;
     margin-right: 5px;
 }
-.inpC{
+
+.inpC {
     padding: 10px;
 }
-.userData{
-    display:flex;
+
+.userData {
+    display: flex;
     flex-direction: column;
     align-items: center;
 }
-.btns{
-    
+
+.btns {
+
     display: flex;
     flex-direction: column;
     justify-content: center;
 
 }
-.btns>button{
+
+.btns>button {
     margin: 10px;
     width: 200px;
 }
-.userImgContainer{
-    display:flex;
+
+.userImgContainer {
+    display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     height: 100%;
     border-right: 2px solid black;
 }
-.txtp{
+
+.txtp {
     font-size: 50px;
-    padding:0px;
+    padding: 0px;
     margin: 1px;
 }
-.edit:hover{
+
+.edit:hover {
     color: black;
 }
 </style>

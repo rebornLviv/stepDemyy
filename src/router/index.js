@@ -8,18 +8,17 @@ import Settings from '@/components/Settings'
 import UserCoures from '@/components/UserCourses'
 Vue.use(VueRouter)
 
-const routes = [
-  {
+const routes = [{
     path: '/',
     name: 'home',
-    component:Home,
+    component: Home,
     beforeEnter: (to, from, next) => {
       // ...
-    // store.dispatch('setCat');
-     // this.$store.dispatch('setCat');
-     setTimeout(() => {
-      router.app.$store.dispatch('setCat');
-     }, 100);
+      // store.dispatch('setCat');
+      // this.$store.dispatch('setCat');
+      setTimeout(() => {
+        router.app.$store.dispatch('setCat');
+      }, 100);
       console.log('setCat')
       next()
     }
@@ -30,7 +29,7 @@ const routes = [
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-   component: () => import(/* webpackChunkName: "about" */ '@/components/Login')
+    component: () => import( /* webpackChunkName: "about" */ '@/components/Login')
   },
   {
     path: '/register',
@@ -38,66 +37,70 @@ const routes = [
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-   component: () => import(/* webpackChunkName: "about" */ '@/components/Register')
+    component: () => import( /* webpackChunkName: "about" */ '@/components/Register')
   },
   {
-    path:'/recover',
-    name:'recover',
-    component:()=> import ('@/components/Recover')
-    
-    
-      },
-      {
-        path:'/courses/:id',
-    name:'course',
+    path: '/recover',
+    name: 'recover',
+    component: () => import('@/components/Recover')
+
+
+  },
+  {
+    path: '/courses/:id',
+    name: 'course',
     beforeEnter: (to, from, next) => {
       // ...
       setTimeout(() => {
-        router.app.$store.dispatch('setCourse',router.app.$route.path.replace('/courses/',''))
+        router.app.$store.dispatch('setCourse', router.app.$route.path.replace('/courses/', ''))
       }, 20);
-      
+
       next()
 
     },
-    component:()=> import ('@/components/Course')
-      },
-      {
-        meta: { requiresAuth: true },
-        path:'/courses/:id/:id',
-      name:'lesson',
-      beforeEnter (to, from, next) {
+    component: () => import('@/components/Course')
+  },
+  {
+    meta: {
+      requiresAuth: true
+    },
+    path: '/courses/:id/:id',
+    name: 'lesson',
+    beforeEnter(to, from, next) {
       // ...
-      let course=router.app.$route.path.split('/')[2];
-      console.log("Course Name",course)
-      let lesson =router.app.$route.path.split('/')[3]
-      console.log('Lesson Name',lesson)
+      let course = router.app.$route.path.split('/')[2];
+      console.log("Course Name", course)
+      let lesson = router.app.$route.path.split('/')[3]
+      console.log('Lesson Name', lesson)
       setTimeout(() => {
-        router.app.$store.dispatch('setLessons',{course,lesson})
-      router.app.$store.dispatch('getCurrentLesson',course) 
+        router.app.$store.dispatch('setLessons', {
+          course,
+          lesson
+        })
+        router.app.$store.dispatch('getCurrentLesson', course)
       }, 5000);
-     
+
       next()
 
     },
-    component:()=> import ('@/components/Lesson')
+    component: () => import('@/components/Lesson')
 
+  },
+  {
+    path: '/profile',
+    name: 'profile',
+    component: () => import('@/components/Profile'),
+    children: [{
+        path: '/profile/settings',
+        component: Settings
       },
       {
-        path:'/profile',
-        name:'profile',
-        component: () => import ('@/components/Profile'),
-        children:[
-          {
-            path:'/profile/settings',
-            component: Settings
-          },
-          {
-            path:'/profile/courses',
-            component: UserCoures
-          }
-        ]
-      
+        path: '/profile/courses',
+        component: UserCoures
       }
+    ]
+
+  }
 
 
 ]
@@ -109,17 +112,19 @@ const router = new VueRouter({
   routes
 })
 
-router.beforeEach((to, from, next,store) => {
+router.beforeEach((to, from, next, store) => {
   if (to.matched.some(rec => rec.meta.requiresAuth)) {
     fb.auth().onAuthStateChanged(user => {
       console.log(user);
       if (user) {
         next();
       } else {
-        next({ name: "home" });
-        router.app.$store.dispatch('setError','You must be loged in to attend a course');
+        next({
+          name: "home"
+        });
+        router.app.$store.dispatch('setError', 'You must be loged in to attend a course');
       }
-      
+
     });
   } else next();
 });

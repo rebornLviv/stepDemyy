@@ -100,10 +100,6 @@ export default {
         saveProgress() {
 
         },
-
-
-
-
     },
     getters: {
         user(state) {

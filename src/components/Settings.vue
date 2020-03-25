@@ -62,11 +62,9 @@
             </v-col>
 </template>
 
-
-
 <script>
 export default {
-    data: ()=> ({
+    data: () => ({
 
         confP:false,
         password:'',
@@ -78,8 +76,7 @@ export default {
         menu:false
 
     }),
-
-    methods:{
+    methods: {
   onLogout() {
       console.log(this.isUserLoggedIn);
       this.$store.dispatch("logoutUser").catch(error => {
@@ -149,28 +146,31 @@ this.password = ''
     transition-duration: 5000ms;
 }
 
-.chP{
+.chP {
     width: 400px !important;
 
 }
-.changepsw>input{
+
+.changepsw>input {
     border-bottom: 1px solid white;
     padding: 10px;
     color: white;
     width: 70%;
     padding-bottom: 7px;
-    
+
 }
-.cc{
+
+.cc {
     display: flex;
     justify-content: flex-start;
     height: 100%;
 }
-.iblc{
+
+.iblc {
 
     width: 272px;
     height: 272px;
-    border:1px solid black;
+    border: 1px solid black;
     margin-top: 20px;
     border-radius: 50%;
     display: flex;
@@ -178,12 +178,14 @@ this.password = ''
     align-items: center;
     margin-top: 5px;
 }
-.wrapper{
- width: 70%;
- height: 100%;
+
+.wrapper {
+    width: 70%;
+    height: 100%;
 }
-.inp{
-    border-bottom: 1px solid black ;
+
+.inp {
+    border-bottom: 1px solid black;
     margin-right: 5px;
 }
 .inpC{
@@ -191,36 +193,42 @@ this.password = ''
     padding: 15px;
     width: 300px;
 }
-.userData{
-    display:flex;
+
+.userData {
+    display: flex;
     flex-direction: column;
     align-items: center;
 }
-.btns{
-    
+
+.btns {
+
     display: flex;
     flex-direction: column;
     justify-content: center;
 
 }
-.btns>button{
+
+.btns>button {
     margin: 10px;
     width: 200px;
 }
-.userImgContainer{
-    display:flex;
+
+.userImgContainer {
+    display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     height: 100%;
     border-right: 2px solid black;
 }
-.txtp{
+
+.txtp {
     font-size: 50px;
-    padding:0px;
+    padding: 0px;
     margin: 1px;
 }
-.edit:hover{
+
+.edit:hover {
     color: black;
 }
 </style>

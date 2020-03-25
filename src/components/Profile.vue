@@ -2,13 +2,16 @@
     <div class="container-fluid cc">
      <div class="wrapper">
 
-        <v-row>
+        <v-row class="miniCont">
 
             <v-col cols="4" class="userImgContainer">
                 <p class="txtp">Профіль</p>
-       <v-icon  class="iblc" size="240px">mdi-account</v-icon>
+       <v-icon v-if="!this.$store.getters.getUserPhoto"  class="iblc" size="240px">mdi-account</v-icon>
+       <img  v-if="this.$store.getters.getUserPhoto" class="iblc" :src="this.$store.getters.getUserPhoto" alt="">
+     
+  
        <div class="btns">
-       <v-btn>Змінити фото</v-btn>
+       <input type="file" ref="file" @change="selectFile" placeholder="">
        <v-btn to="courses">Мої курси</v-btn>
        <v-btn to="settings" >Налаштування    </v-btn>
        
@@ -32,15 +35,27 @@
 export default {
     data: ()=> ({
 
-        confP:false
+        confP:false,
+        file:null,
+        userImage:''
 
     }),
 
     methods:{
-
+    selectFile(){
+        this.file = this.$refs.file.files[0]
+        this.$store.dispatch('setUserPhoto',this.file)
+        console.log(this.file)
+    },
     configuratePassword(){
     this.confP = !this.confP
 
+    },
+    computed:{
+
+        userPhoto(){
+            return this.$store.getters.getUserPhoto
+        }
     }
 
     }
@@ -55,6 +70,14 @@ export default {
 
 <style scoped>
 
+
+
+.miniCont{
+height: 92%;
+margin-top: 0px;
+
+
+}
 .changepsw{
     display: flex;
     flex-direction: column;
@@ -96,7 +119,7 @@ export default {
     margin-top: 5px;
 }
 .wrapper{
- width: 70%;
+ width: 80%;
  height: 100%;
 }
 .inp{
@@ -127,7 +150,8 @@ export default {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 100%;
+    margin-top: 0px;
+    padding-top: 0px;
     border-right: 2px solid black;
 }
 .txtp{

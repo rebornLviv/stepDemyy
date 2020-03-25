@@ -3,12 +3,14 @@
                 <p class="txtp">Мої курси</p>
  
                 <div class="courseCont">
-                    <v-card class="course">
-                        <p>Назва</p>
+                    <v-card    class="course" v-for="x in userCourses " :key="x.title"   >
+                        <p>{{x.title}}</p>
+                        <p>Поточний урок : {{x.clesson+1}}</p>
+                        <p></p>
                         <v-progress-linear
       color="light-green"
       height="10"
-      value="20%"
+      :value="x.progress"
       striped
     ></v-progress-linear>
                         <v-btn>Продовжити</v-btn>
@@ -34,6 +36,11 @@ export default {
 
     }
 
+    },
+    computed:{
+        userCourses(){
+            return  this.$store.getters.getMyCourses
+        }
     }
 }
 </script>

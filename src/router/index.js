@@ -89,11 +89,21 @@ const routes = [
         children:[
           {
             path:'/profile/settings',
-            component: Settings
+            component: Settings,
+            async beforeEnter(to, from, next){
+              await  router.app.$store.dispatch('getUserPhoto')  
+            await  router.app.$store.dispatch('getUserName')
+            await  router.app.$store.dispatch('getUserBirthDay')
+              next()
+            }
           },
           {
             path:'/profile/courses',
-            component: UserCoures
+            component: UserCoures,
+            async  beforeEnter(to, from, next){
+           await  router.app.$store.dispatch('getMyCourses')
+              next()
+            }
           }
         ]
       

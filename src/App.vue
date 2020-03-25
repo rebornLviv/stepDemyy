@@ -270,6 +270,7 @@
                   </v-card>
                 </v-dialog>
         <v-btn v-if="isUserLoggedIn" to="/" text @click="onLogout" class="black--text">Вийти</v-btn>
+        <v-btn v-if="isUserLoggedIn" to="/profile/settings">Профіль </v-btn>
                 
               </v-row>
             </v-list-item-title>
@@ -347,6 +348,7 @@ export default {
       this.$router.push("/");
     },
     OnLogin() {
+
       if (this.$refs.form.validate()) {
         const user = {
           email: this.email,

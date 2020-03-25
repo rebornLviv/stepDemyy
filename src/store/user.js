@@ -1,7 +1,4 @@
 import * as fb from 'firebase'
-import courses from './courses'
-
-
 class User {
     constructor(id) {
         this.id = id

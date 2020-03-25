@@ -87,14 +87,7 @@ const routes = [{
 
   },
   {
-    path: '/profile',
-    name: 'profile',
-    component: () => import('@/components/Profile'),
-    children: [{
-        path: '/profile/settings',
-        component: Settings
-      },
-      {
+
         path:'/profile',
         name:'profile',
         component: () => import ('@/components/Profile'),
@@ -120,9 +113,9 @@ const routes = [{
         ]
       
       }
-    ]
+    
 
-  }
+  
 
 
 ]

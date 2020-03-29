@@ -11,9 +11,12 @@
      
   
        <div class="btns">
-       <input type="file" ref="file" @change="selectFile" placeholder="">
-       <v-btn to="courses">Мої курси</v-btn>
-       <v-btn to="settings" >Налаштування    </v-btn>
+           <div class="upload-btn-wrapper">
+  <v-btn class="btn" >Upload a file</v-btn>
+  <input type="file" ref="file" @change="selectFile" class="innp" name="myfile" />
+</div>
+       <v-btn class="mb-3 mt-2" to="courses">Мої курси</v-btn>
+       <v-btn class="sett" to="settings" >Налаштування    </v-btn>
        
        </div>
        
@@ -60,8 +63,28 @@ export default {
 </script>
 
 <style scoped>
+.innp{
+    cursor: pointer;
+}
+.btn{
+    width: 200px;
+}
 
+.upload-btn-wrapper {
+  position: relative;
+ 
+  display: inline-block;
+  cursor: pointer;
+  
+}
 
+.upload-btn-wrapper input[type=file] {
+  font-size: 100px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+}
 
 .miniCont{
 height: 92%;
@@ -133,10 +156,12 @@ margin-top: 0px;
 }
 
 .btns {
-
+    width: 200px;
+    height: 200px;
     display: flex;
     flex-direction: column;
     justify-content: center;
+
 
 }
 
@@ -148,7 +173,6 @@ margin-top: 0px;
 .userImgContainer {
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
     margin-top: 0px;
     padding-top: 0px;

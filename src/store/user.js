@@ -37,7 +37,7 @@ export default {
             email,
             password
         }) {
-            commit('clearError')
+            
             commit('setLoading', true)
             try {
                 const user = await fb.auth().createUserWithEmailAndPassword(email, password)

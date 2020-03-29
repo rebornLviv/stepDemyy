@@ -66,8 +66,10 @@
 
     </v-container>
     <v-container class="mb-12">
-        <v-row class="courses ">
-            <v-col cols="3" v-for="x in 12" :key="x" class="mb-7">
+        <p v-if="isLoading"  >Loading......</p>
+        <v-row class="courses " v-if="!isLoading">
+            
+            <v-col cols="3" v-for="x in topLessons" :key="x.videoUrl" class="mb-7" >
                 <v-card class="card">
                     <div>
                         <svg xmlns="http://www.w3.org/2000/svg" width="65" height="85" viewBox="0 0 99 135">
@@ -81,19 +83,15 @@
 
                 </v-card>
                 <div class="play-data">
-                    <p class="urok">Назва уроку</p>
+                    <p class="urok">{{x.title}}</p>
 
                     <div class="teacher">
-                        <p>Викладач</p>
+                        <p>{{x.author}}</p>
                         <v-spacer></v-spacer>
                         <v-icon>mdi-account</v-icon>
                     </div>
                     <div class="teacher">
-                        <v-icon>mdi-star-outline</v-icon>
-                        <v-icon>mdi-star-outline</v-icon>
-                        <v-icon>mdi-star-outline</v-icon>
-                        <v-icon>mdi-star-outline</v-icon>
-                        <v-icon>mdi-star-outline</v-icon>
+                        <star :rating="x.rating"></star>
                     </div>
                     <div class="teacher">
                         <p class="ldate"> {{new Date().toLocaleString()}}</p>
@@ -109,6 +107,34 @@
 </div>
 </template>
 
+
+<script>
+import Star from './Stars'
+export default {
+    data() {
+        return {
+            
+        }
+    },
+    computed:{
+
+        topLessons(){
+           
+            return this.$store.getters.getTopLessons
+        },
+        isLoading(){
+            return this.$store.getters.loading
+        }
+
+    },
+  async  beforeCreate() {     
+    await    this.$store.dispatch('getAllLessons')
+    },
+    components:{
+        star:Star
+    }
+}
+</script>
 <style scoped>
 .teacher {
     display: flex;

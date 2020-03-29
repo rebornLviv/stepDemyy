@@ -2,7 +2,7 @@
     <v-col cols="8" class="userData">
                 <p class="txtp">Налаштування профілю</p>
                 <div class="inpC" >
-             <input type="text" v-model="name" v-if="editName" class="inp"><p v-if="!editName" class="uName">{{userName}}</p> <v-spacer></v-spacer>
+             <input type="text" v-model="name" v-if="editName" class="inp"><p v-if="!editName" class="uName">Ім'я :    {{userName}}</p> <v-spacer></v-spacer>
               <v-icon v-if="!editName" class="edit" @click="()=>{ editName = ! editName,name=userName}">mdi-lead-pencil</v-icon>
               <v-icon v-if="editName" class="edit" @click="changeName">mdi-check</v-icon>
               <v-icon v-if="editName" class="edit" @click="()=>{ editName = ! editName}">mdi-window-close</v-icon>
@@ -20,7 +20,7 @@
         <template v-slot:activator="{ on }">
           <v-text-field
             v-model="date"
-            label="Picker in menu"
+            label="Оберіть дату"
             prepend-icon="mdi-calendar"
             readonly
             v-on="on"
@@ -33,7 +33,7 @@
         </v-date-picker>
       </v-menu>
              
-             <p v-if="!editDate" class="uName">{{userBirthDay}}</p> <v-spacer></v-spacer>
+             <p v-if="!editDate" class="uName">Дата народження : {{userBirthDay}}</p> <v-spacer></v-spacer>
               <v-icon v-if="!editDate" class="edit" @click="()=>{ editDate= ! editDate}">mdi-lead-pencil</v-icon>
               <v-icon v-if="editDate" class="edit" @click="changeBday">mdi-check</v-icon>
               <v-icon v-if="editDate" class="edit" @click="()=>{ editDate = ! editDate}">mdi-window-close</v-icon>
@@ -79,6 +79,7 @@ export default {
     methods: {
   onLogout() {
       console.log(this.isUserLoggedIn);
+        this.$store.dispatch('setInitialState')
       this.$store.dispatch("logoutUser").catch(error => {
         console.log(error);
       });

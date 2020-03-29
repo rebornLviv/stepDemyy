@@ -14,7 +14,7 @@
                         </v-btn>
                     </template>
                     <v-list>
-                        <v-list-item v-for="cat in categories" :key="cat" :to="'/courses/' + cat">{{cat}}</v-list-item>
+                        <v-list-item v-for="cat in categories" :key="cat"  @click="setCourses(cat)">{{cat}}</v-list-item>
                     </v-list>
                 </v-menu>
             </div>
@@ -29,7 +29,7 @@
                         </v-btn>
                     </template>
                     <v-list>
-                        <v-list-item v-for="cat in categories" :key="cat" :to="'/courses/' + cat">{{cat}}</v-list-item>
+                        <v-list-item v-for="cat in categories" :key="cat" :to="'/courses/' + cat" >{{cat}}</v-list-item>
                     </v-list>
                 </v-menu>
             </div>
@@ -61,11 +61,11 @@
             </template>
 
             <v-list>
-                <v-list-item>
-                    <v-list-item-title>
+                <v-list-item >
+                    <v-list-item-title v-if="!isUserLoggedIn">
                         <v-row justify="center">
                             <v-dialog v-model="dialog" max-width="500px">
-                                <template v-if="!isUserLoggedIn" v-slot:activator="{ on }">
+                                <template  v-slot:activator="{ on }">
                                     <v-btn text class="black--text" color="primary" dark v-on="on" @click.stop="dialog = false">Увійти</v-btn>
                                 </template>
 
@@ -137,10 +137,10 @@
 
 
             <!-- Register -->
-            <v-list-item-title>
+            <v-list-item-title v-if="!isUserLoggedIn">
               <v-row>
                 <v-dialog v-model="dialog3" max-width="600px">
-                  <template v-if="!isUserLoggedIn" v-slot:activator="{ on }">
+                  <template  v-slot:activator="{ on }">
                     <v-btn
                       text
                       class="black--text"
@@ -207,12 +207,17 @@
                     </v-row>
                   </v-card>
                 </v-dialog>
-        <v-btn v-if="isUserLoggedIn" to="/" text @click="onLogout" class="black--text">Вийти</v-btn>
-        <v-btn v-if="isUserLoggedIn" to="/profile/settings">Профіль </v-btn>
+        
                 
               </v-row>
             </v-list-item-title>
+            
             <!-- Register -->
+            <v-list-item-title>
+
+                <v-btn v-if="isUserLoggedIn" to="/" text @click="onLogout" class="black--text">Вийти</v-btn>
+        <v-btn v-if="isUserLoggedIn" to="/profile/settings">Профіль </v-btn>
+            </v-list-item-title>
           </v-list-item>
         </v-list>
       </v-menu>
@@ -270,6 +275,7 @@ export default {
     },
     onLogout() {
       console.log(this.isUserLoggedIn);
+      this.$store.dispatch('setInitialState')
       this.$store.dispatch("logoutUser").catch(error => {
         console.log(error);
       });
@@ -282,11 +288,13 @@ export default {
           email: this.email,
           password: this.password
         };
+        this.$store.dispatch('setInitialState')
         this.$store
           .dispatch("loginUser", user)
           .then(() => {
             this.loader = "loading";
             this.dialog = !this.dialog;
+
             this.$router.push("/");
           })
           .catch(err => console.log(err));
@@ -299,11 +307,11 @@ export default {
           password: this.password
         };
         const user = {
-          email: this.email,
+          email: this.email.toLowerCase(),
           password: this.password,
           courses: {}
         };
-
+        this.$store.dispatch('setInitialState')
         this.$store
           .dispatch("registerUser", reguser)
           .then(() => {
@@ -326,6 +334,11 @@ export default {
                     .catch(
                         err => console.log('err', err))
             }
+        },
+      async  setCourses(cat){
+          console.log('asss',cat)
+         await   this.$store.dispatch("setCourse",cat)
+         this.$router.push({path:'/courses/' + cat})
         }
     },
     computed: {
@@ -373,6 +386,10 @@ export default {
     },
     updated() {
         console.log("Signed?", this.isUserLoggedIn)
+    },
+    beforeCreate(){
+        this.$store.dispatch('getAllLessons')
+        this.$store.dispatch('setCat');
     }
 };
 </script>

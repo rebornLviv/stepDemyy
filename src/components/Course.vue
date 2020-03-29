@@ -26,7 +26,7 @@ align="center"
 <img :src="course.imgSrc" width="200" alt="Course Image">
 
 <p>{{course.description}}</p>
-<v-btn dark color="green darken-1" :to="'/courses/'+this.$route.path.split('/')[2]+'/' + course.title.replace(' ','')" @click="manageCourse"> Get started</v-btn>
+<v-btn dark color="green darken-1"  @click="manageCourse"> Get started</v-btn>
 
           </v-col>
 
@@ -52,13 +52,21 @@ export default {
         }
     },
     methods: {
-      manageCourse(){
+    async  manageCourse(){
+      
       console.log('manage')
         //const email=fb.auth().currentUser.email;
        // console.log(type(id))
  let course=this.$route.path.replace('/courses/','')
-let title = this.course.title.replace(" ",'')
-        this.$store.dispatch('addCourse',{course,title})
+let title = this.course.title.split(' ').join('')
+   await     this.$store.dispatch('addCourse',{course,title}).then(
+
+     ()=>{
+      this.$router.push({path:'/courses/'+this.$route.path.split('/')[2]+'/' + title})
+     }
+   )
+   
+        // this.$store.dispatch('getCurrentLesson',)
       }
     },
     computed :{
@@ -69,16 +77,6 @@ course(){
 
   return  this.$store.getters.getCourse
 },
-
-
-    },
-    beforeCreate(){
-      
-
-
-    },
-    created(){
-
 
 
     },
@@ -101,6 +99,23 @@ this.id=to.params['id']
         }
         
     },
+   async beforeCreate(){
+console.log("Course",this.$store.getters.getCourse)
+
+
+    },
+  async  beforeRouteLeave (to, from, next) {
+      let course = this.$route.path.split('/')[2];
+      let lesson = this.course.title.replace(' ','')
+  await    this.$store.dispatch('setLessons',{course,lesson})
+// this.$store.dispatch()
+      
+      
+      
+  next()
+
+    }
+  
     
 
 }

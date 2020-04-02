@@ -263,7 +263,7 @@ this.rating = 0
        console.log('Lesson Name',lesson)
       
       
-      
+      this.$store.dispatch('setInitialState')
       next()
       // ...
     },

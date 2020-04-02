@@ -1,6 +1,6 @@
 <template>
 <v-app>
-    <v-app-bar app color="white" dark class="barrr">
+    <v-app-bar app color="white" dark class="barrr" >
         <div class="black--text font-italic mr-5">
             <router-link to="/" tag="h2" class="font-weight-regular logo">Stepdemy</router-link>
         </div>
@@ -88,7 +88,7 @@
 
                                                             <v-btn tag="a" outlined class="secondary--text sz ma-2" to="/" text @click="dialog3 = !dialog3, dialog = !dialog">Зареєструватися</v-btn>
 
-                                                            <v-btn class="ma-2 bg-black" :loading="loading" :disabled="loading" color="white-text" text @click="OnLogin" v-if="!isUserLoggedIn" depressed to="/">Вхід</v-btn>
+                                                            <v-btn class="ma-2 bg-black" :loading="isLoading" color="white-text" text @click="OnLogin" v-if="!isUserLoggedIn" depressed to="/">Вхід</v-btn>
 
                                                         </v-card-actions>
                                                         <div class="pr">
@@ -121,7 +121,7 @@
 
                                                     <v-card-actions class="mt-4 bts">
                                                         <v-btn class="nr ml-2" text to="/" color="secondary" @click="recoverDialog = false">Закрити</v-btn>
-                                                        <v-btn class="nr elevation-0 mr-2 disabled white--text" @click="recover" depressed color="rgb(20, 19, 19)" :disabled="valid===false">Продовжити</v-btn>
+                                                        <v-btn class="nr elevation-0 mr-2 disabled white--text" @click="recover" :loading="isLoading" depressed color="rgb(20, 19, 19)" :disabled="valid===false">Продовжити</v-btn>
                                                     </v-card-actions>
                                                 </v-col>
                                             </v-row>
@@ -200,7 +200,7 @@
                               color="secondary"
                               @click="dialog3 = false"
                             >Закрити</v-btn>
-                            <v-btn @click="OnRegister" class="nr elevation-0 mr-2" dark>Далі</v-btn>
+                            <v-btn @click="OnRegister" :loading="isLoading"  class="nr elevation-0 mr-2" dark>Далі</v-btn>
                           </v-card-actions>
                         </v-form>
                       </v-col>
@@ -221,8 +221,18 @@
           </v-list-item>
         </v-list>
       </v-menu>
+
+          
+     
+          
+      
     </v-app-bar>
+    <v-progress-linear v-if="isLoading" class="pb"
+      indeterminate
+      color="black"
+    ></v-progress-linear>
     <v-content>
+        
         <router-view></router-view>
     </v-content>
     <template v-if="error">
@@ -301,6 +311,7 @@ export default {
       }
     },
     OnRegister() {
+        console.log(this.isLoading)
       if (this.$refs.form.validate()) {
         const reguser = {
           email: this.email,
@@ -372,6 +383,9 @@ export default {
                 v => !!v || "Please repeat password",
                 v => v === this.password || "Passwords didn`t match"
             ];
+        },
+        isLoading(){
+            return this.$store.getters.loading
         }
     },
     watch: {
@@ -395,6 +409,12 @@ export default {
 </script>
 
 <style scoped>
+.pb{
+    height: 5px;
+position: fixed;
+bottom: 0px;
+top: 65px;
+}
 .navitems:nth-child(1) {
     background: red;
 }

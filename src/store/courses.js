@@ -33,6 +33,7 @@ fb.firestore().collection("User").where("email","==",email).get()
 .then(
 
      (user)=>{
+        commit('setLoading', true)
         console.log("User Data")
         user.forEach(
             u=>{
@@ -68,11 +69,13 @@ console.log('userId',uid)
         },{merge:true})
         .then(
             ()=>{
+                commit('setLoading', false)
                 console.log('success')
             }
         )
         .catch(
             err=>{
+                commit('setLoading', false)
                 console.log("err",err)
             }
         )
@@ -90,6 +93,7 @@ setCat({commit},payload){
 fb.firestore().collection('Courses').get()
 .then(
 courses=>{
+    commit('setLoading', true)
 
     courses.forEach(
         course=>{
@@ -105,6 +109,10 @@ courses=>{
     commit("setCat",tcourses)
 } 
 
+).then(
+    ()=>{
+        commit('setLoading', false)
+    }
 )
 
 
@@ -116,6 +124,7 @@ fb.firestore().collection("Courses").where("category","==",payload).get()
 .then(
 
     course=>{
+        commit('setLoading', true)
  course.forEach(
     data=>{
         console.log("Course data:",data.data())
@@ -127,6 +136,7 @@ fb.firestore().collection("Courses").where("category","==",payload).get()
  
  console.log('Returned data',tcourse)
  commit("setCourse",tcourse)
+ commit('setLoading', false)
     }
 )
 

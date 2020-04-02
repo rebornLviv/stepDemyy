@@ -127,7 +127,8 @@ export default {
                           courses.push({
                               title:key,
                               progress:el.data().courses[key].cprogress,
-                              clesson:el.data().courses[key].currentlesson
+                              clesson:el.data().courses[key].currentlesson,
+                              ctitle:el.data().courses[key].ctitle
                           })
                         }
                             

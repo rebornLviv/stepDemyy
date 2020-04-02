@@ -43,7 +43,7 @@ export default{
                 fb.firestore().collection('Courses').where('category','==',payload.course).get()
                .then(
                   cdata=>{
-                
+                    commit('setLoading', true)
                       cdata.forEach(
                           el=>{
                               console.log("elid",el.id)
@@ -61,6 +61,7 @@ export default{
                             }
                         )
                         console.log("Course Lessons",lessons)
+                        commit('setLoading', false)
                         commit('setLessons',lessons)
                       })
                   }
@@ -342,6 +343,36 @@ export default{
 
 
 
+
+                        },
+                        setClesson({commit},payload){
+                            console.log('Settt',payload)
+                         let   email = fb.auth().currentUser.email;
+                         let id = ''
+                        fb.firestore().collection('User').where("email","==",email).get()
+                        .then(
+                            udata=>{
+                                udata.forEach(
+                                    u=>{
+                                        id = u.id
+                                    }
+                                )
+                                fb.firestore().collection('User').doc(id).set({
+
+                                    courses:{
+                                        [payload.course]:{
+                                            currentlesson: payload.lesson
+                                        }
+                                    }
+
+                                },{merge:true}).then(
+
+                                    ()=>{
+                                        commit('setCurrentLesson',payload.lesson)
+                                    }
+                                )
+                            }
+                        )
 
                         }
                 

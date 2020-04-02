@@ -6,14 +6,19 @@
                     <v-card    class="course" v-for="x in userCourses " :key="x.title"   >
                         <p>{{x.title}}</p>
                         <p>Поточний урок : {{x.clesson+1}}</p>
-                        <p></p>
-                        <v-progress-linear
-      color="light-green"
-      height="10"
+
+                        <v-progress-circular
+      :rotate="360"
+      :size="100"
+      :width="15"
       :value="x.progress"
-      striped
-    ></v-progress-linear>
-                        <v-btn>Продовжити</v-btn>
+      :color="parseInt(x.progress) >= 0 && parseInt(x.progress) < 25 ? 'red' : parseInt(x.progress) >= 25 && parseInt(x.progress) < 50 ? 'yellow' : parseInt(x.progress) >= 50 && parseInt(x.progress) < 75 ? 'orange': parseInt(x.progress) >= 75 ? 'green' : ''   "
+      
+    >
+      {{ parseInt(x.progress) + '%' }}
+    </v-progress-circular>
+  
+                        <v-btn @click="goToCourse(x.title,x.ctitle)">Продовжити</v-btn>
                     </v-card>
                 </div>
             </v-col>
@@ -31,10 +36,11 @@ export default {
 
     methods:{
 
-    configuratePassword(){
-    this.confP = !this.confP
+   goToCourse(course,lesson){
 
-    }
+       this.$router.push({path:`/courses/${course}/${lesson}`})
+
+   }
 
     },
     computed:{

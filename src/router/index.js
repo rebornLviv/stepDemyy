@@ -77,7 +77,9 @@ const routes = [{
 
   },
   {
-
+    meta: {
+      requiresAuth: true
+    },
         path:'/profile',
         name:'profile',
         component: () => import ('@/components/Profile'),

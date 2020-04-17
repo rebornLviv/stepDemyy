@@ -1,62 +1,88 @@
 <template>
-    <v-content>
+
  <v-container
         class="fill-height"
         fluid
       >
-<v-row
-align="center"
-          justify="center"
->
+
+<v-row class="wrapper">
+<v-col class="cont">
+<div >
+
+<img class="photo"  :src="course.imageSrc"  alt="">
+</div >
+<div class="inform">
+  
+<p class="courseName">{{course.title}}</p>
+<div class="preinfo">
+
+  <star class="stars" :size="'45px'" :rating ="course.rating"></star>
+  <div class="authorD">
+    <p>{{new Date().toLocaleString().substring(1,10)}}</p>
+    <div class="author">
+      
+<p>{{course.author}}</p>  <v-icon size="35px" >mdi-account</v-icon>
+    </div>
+    
+  </div>
+</div>
+<p class="desc">{{course.description}}</p>
+
+<v-row>
+  <v-col>
+    <v-btn  dark class="mt-5 courseBtn"   @click="manageCourse">{{ joined ? 'Продовжити' : 'Приєднатися до курсу'}}</v-btn>
+  </v-col>
+
 
 </v-row>
-       
-        <v-row
-          align="center"
-          justify="center"
-        >
-    
-          <v-col
-            cols="12"
-            sm="8"
-            md="4"
-          >
- <h1 ref="titl">{{course.title}}</h1>
 
-<img :src="course.imgSrc" width="200" alt="Course Image">
+</div>
 
-<p>{{course.description}}</p>
-<v-btn dark color="green darken-1"  @click="manageCourse"> Get started</v-btn>
 
-          </v-col>
 
-        </v-row>
+</v-col>
+
+
+</v-row>
+
+
+
+
+
+
+
+
+
+
+
+
       </v-container>
 
 
 
-    </v-content>
 </template>
 
 
 
 <script>
-import * as fb from 'firebase'
-
+import Star from './Stars'
 export default {
+  
     data() {
         return {
             name: this.$route.path.replace('/courses/',''),
-            id:this.$route.params['id'] 
+            id:this.$route.params['id'], 
+            rating:0
             
         }
+    },
+    components:{
+      star:Star
     },
     methods: {
     async  manageCourse(){
       
       console.log('manage')
-        //const email=fb.auth().currentUser.email;
-       // console.log(type(id))
  let course=this.$route.path.replace('/courses/','')
 let title = this.course.title.split(' ').join('')
    await     this.$store.dispatch('addCourse',{course,title}).then(
@@ -66,7 +92,7 @@ let title = this.course.title.split(' ').join('')
      }
    )
    
-        // this.$store.dispatch('getCurrentLesson',)
+      
       }
     },
     computed :{
@@ -77,43 +103,45 @@ course(){
 
   return  this.$store.getters.getCourse
 },
+joined(){
+  return this.$store.getters.getJoined
+}
 
 
     },
-   /* updated(){
-        this.$store.dispatch('setTitle',this.$route.path.replace('/courses/',''))
-        this.$store.dispatch('setDesc',this.$route.path.replace('/courses/',''))
-this.$store.dispatch('setDesc',this.$route.path.replace('/courses/',''))
-    },*/
+ 
     watch:{
 
         $route(to){
             console.log('parid',to.params['id'])
   this.$store.dispatch('setCourse',this.$route.path.replace('/courses/',''))
-  //          this.$store.dispatch('setTitle',this.$route.path.replace('/courses/',''))
-//this.$store.dispatch('setDesc',this.$route.path.replace('/courses/',''))
-//this.$store.dispatch('setSrc',this.$route.path.replace('/courses/',''))
 this.id=to.params['id']
-
-
         }
         
     },
    async beforeCreate(){
+     let course = this.$route.path.split('/')[2];
 console.log("Course",this.$store.getters.getCourse)
-
-
+this.$store.dispatch('getJoined',course)
     },
   async  beforeRouteLeave (to, from, next) {
       let course = this.$route.path.split('/')[2];
-      let lesson = this.course.title.replace(' ','')
-  await    this.$store.dispatch('setLessons',{course,lesson})
-// this.$store.dispatch()
-      
-      
-      
-  next()
+      let lesson = this.course.title.split(' ').join('');
+  await    this.$store.dispatch('setLessons',{course,lesson}).then(
+    
 
+    async () => {
+      console.log(this.$store.getters.getLessons)
+      console.log('Sussssssssssssssss')
+   await  this.$store.dispatch('getCurrentLesson',course).then(
+     () => {
+       console.log(this.$store.getters.getCurrentLesson)
+ next()
+     }
+   )
+
+    }
+  )
     }
   
     
@@ -122,6 +150,64 @@ console.log("Course",this.$store.getters.getCourse)
 </script>
 
 
-<style>
-    
+<style scoped>
+.courseBtn{
+  width: 100%;
+}
+.authorD{
+  height: 90px;
+  display:flex;
+  flex-direction: column;
+}
+.authorD > p{
+  margin-bottom: 0px !important;
+  text-align: right;
+}
+.author{
+  width: 200px;
+  height: 70px;
+  border: 1px solid  #4E5256;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+ 
+}
+.author > p {
+margin-bottom: 0px !important;
+margin-right: 8px;
+}
+.author > i {
+  width: 42px;
+  height: 42px;
+border: 1px solid #4E5256;
+border-radius: 100%;
+}
+.stars{
+}
+.cont{
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+    .photo{
+
+      width: 800px;
+      height: 500px;
+      border:1px solid  #4E5256;
+    }
+    .preinfo{
+      height: 90px;
+      display: flex;
+      justify-content: space-between;
+    }
+    .inform{
+ width: 800px;
+  height: 639px;
+    }
+    .courseName{
+      font-size: 70px;
+      color:#4E5256 ;
+    }
 </style>

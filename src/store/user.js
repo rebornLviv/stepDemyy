@@ -1,4 +1,27 @@
-import * as fb from 'firebase'
+import * as fb  from 'firebase'
+const  getUserEmail =  async () =>{
+  await fb.apps;  
+  let email = await fb.auth().currentUser.email;
+return email
+
+}
+
+const getUserId = async () =>{
+    let email = await getUserEmail();
+    let id = "";
+ await   fb.firestore().collection('User').where('email','==',email).get()
+    .then(
+        userData=> {
+            userData.forEach(
+                el => {
+                 id = el.id;
+                }
+            )
+        }
+    )
+    return id;
+
+}
 class User {
     constructor(id) {
         this.id = id
@@ -112,9 +135,9 @@ export default {
 
         },
     
-        getMyCourses({commit}) {
+     async   getMyCourses({commit}) {
 
-            let email = fb.auth().currentUser.email;
+            let email = await getUserEmail();
             console.log('email',email)
             let courses =[]
           fb.firestore().collection('User').where('email','==',email).get()
@@ -160,8 +183,8 @@ export default {
         )
             
         },
-        getUserName({commit}){
-            let email = fb.auth().currentUser.email;
+       async  getUserName({commit}){
+            let email = await  getUserEmail();
             let name = '';
             fb.firestore().collection('User').where('email','==',email).get()
             .then(
@@ -179,8 +202,8 @@ export default {
             
 
         },
-        getUserBirthDay({commit}){
-            let email = fb.auth().currentUser.email;
+    async    getUserBirthDay({commit}){
+            let email =  await getUserEmail();
             let bd = '';
             fb.firestore().collection('User').where('email','==',email).get()
             .then(
@@ -198,17 +221,9 @@ export default {
             
 
         },
-        setUserBirthDay({commit},payload){
-            let user = fb.auth().currentUser.email;
-            let id =''
-            fb.firestore().collection('User').where('email','==',user).get()
-            .then(
-                userData=> {
-                    userData.forEach(
-                        el => {
-                         id = el.id;
-                        }
-                    )
+      async  setUserBirthDay({commit},payload){
+            
+            let id =  await  getUserId()
             fb.firestore().collection('User').doc(id).set(
                 {
                     birthday:payload
@@ -216,26 +231,13 @@ export default {
             )
             .then(
                 ()=>{
-
                     commit('setUserBirthDay',payload)
                 }
             )
-                }
-            )
-        },
-        setUserName({commit},payload){
-            let user = fb.auth().currentUser.email;
-            let id =''
+                },
+     async    setUserName({commit},payload){
+        let id =  await  getUserId()
             console.log(payload)
-
-            fb.firestore().collection('User').where('email','==',user).get()
-            .then(
-                userData=> {
-                    userData.forEach(
-                        el => {
-                         id = el.id;
-                        }
-                    )
                     fb.firestore().collection('User').doc(id).set(
                         {
                          userName: payload   
@@ -246,49 +248,38 @@ export default {
                             commit('setUserName',payload)
                         }
                     )
-                }
-            )
+                
+            
             
         },
-         setUserPhoto({commit},payload){
-            console.log('Pload',payload)
-        let user = fb.auth().currentUser.email;
+    async  setUserPhoto({commit},payload){
+         console.log('Pload',payload)
          let newPhoto = ''   
-         let id =''
+         let id =  await  getUserId()
          let userPhotos  =  fb.storage().ref('userPhotos/' + payload.name)
-         userPhotos.put(payload)
+      let photo =  await  userPhotos.put(payload)
          .then(
            async ( )=> {
                 
                 newPhoto =   await  userPhotos.getDownloadURL();
-                console.log(newPhoto)
-                
-                    
-                fb.firestore().collection('User').where('email','==',user).get()
-            .then(
-                userData=> {
-                    userData.forEach(
-                        el => {
-                         id = el.id;
-                        }
-                    )
-                    fb.firestore().collection('User').doc(id).set(
-                        {
-                         userPhoto: newPhoto   
-                        },{merge:true}
-                    )
-                    .then(
-                        () =>{
-                            commit('setUserPhoto',newPhoto)
-                        }
-                    )
-                }
-            )
+                return newPhoto;
+                   
+            
              }
-         ) 
+         )
+         fb.firestore().collection('User').doc(id).set(
+            {
+             userPhoto:  photo   
+            },{merge:true}
+        )
+        .then(
+            () =>{
+                commit('setUserPhoto',photo)
+            }
+        )
         },
-        getUserPhoto({commit}){
-            let user = fb.auth().currentUser.email;
+      async   getUserPhoto({commit}){
+            let user = await getUserEmail();
             let photo = ''
             fb.firestore().collection('User').where('email','==',user).get()
             .then(

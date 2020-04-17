@@ -1,4 +1,118 @@
-import  * as fb from 'firebase'
+import firebase from 'firebase/app';
+
+const  getUserEmail =  async () =>{
+
+return await firebase.auth().currentUser.email;
+
+}
+const calculateOveralRating = async(cid,videoUrl) => {
+    let overalRating = null;
+    let ratings = null;
+    let allRates = [];
+  await  firebase.firestore().collection('Courses').doc(cid).collection('Lessons').where("videoUrl","==",videoUrl).get()
+    .then(
+            lData=>{
+                    lData.forEach(
+                        l=>{
+                            ratings = l.data().ratings
+                        }
+                    )
+                    console.log('ratings',ratings)    
+                    for(let key in ratings ){
+                      allRates.push(ratings[key]) 
+                      console.log('key',key) 
+                    }
+                    var sum = 0;
+                    for (let x of allRates){
+                        sum+=x;
+
+                    }
+                    console.log('sum',sum)
+                    console.log('allRates',allRates)
+                    overalRating = sum/allRates.length
+                    
+                }
+            )
+
+            return overalRating;
+
+
+
+
+
+}
+const calculateCourseRating = async (category) => {
+    let all = [] 
+let rating = 0;
+await  firebase.firestore().collectionGroup('Lessons').where("course","==",category).get()
+.then(
+
+    lessons => {
+        lessons.forEach(
+            l =>{
+                if(l.data().rating !== 0){
+                all.push(l.data().rating)
+                }
+            }
+        )
+        rating =   all.reduce((a ,b)  =>  a+b,0) / all.length
+    }
+)
+
+return rating;
+
+
+
+}
+const getCourseId = async (category) => {
+    let cid ='';
+  await  firebase.firestore().collection('Courses').where("category","==",category).get()
+    .then(
+        courseData=>{
+            courseData.forEach(
+                c=>{
+                    cid = c.id
+                }
+            )
+            }
+    )
+    return cid;
+                
+
+}
+
+const getLessonId = async (cid,videoUrl) => {
+    let lid ='';
+   await  firebase.firestore().collection('Courses').doc(cid).collection('Lessons').where("videoUrl","==",videoUrl).get()
+    .then(
+        lessonData=>{
+
+           lessonData.forEach(
+               l=>{
+                   lid = l.id
+               }
+           )
+          
+}
+    )
+    return lid;
+}
+const getUserId = async () =>{
+    let email = await getUserEmail();
+    let id = "";
+ await   firebase.firestore().collection('User').where('email','==',email).get()
+    .then(
+        userData=> {
+            userData.forEach(
+                el => {
+                 id = el.id;
+                }
+            )
+        }
+    )
+    return id;
+
+}
 export default{
    state:{
         lessons:[],
@@ -36,21 +150,13 @@ export default{
                 commit('setCurrentTime',0)
 
             },
-            setLessons({commit},payload){
+           async setLessons({commit},payload){
                 console.log('c-l',payload)
                 let lessons=[]
-                let id=''
-                fb.firestore().collection('Courses').where('category','==',payload.course).get()
-               .then(
-                  cdata=>{
-                    commit('setLoading', true)
-                      cdata.forEach(
-                          el=>{
-                              console.log("elid",el.id)
-                              id=el.id
-                          }
-                      )
-                      fb.firestore().collection('Courses').doc(id).collection('Lessons').where('cat','==',payload.lesson).get()
+                commit('setLoading', true)
+                let id= await getCourseId(payload.course)
+
+                await      firebase.firestore().collection('Courses').doc(id).collection('Lessons').where('cat','==',payload.lesson).get()
                       .then( dat =>{
                         console.log('lesson data :')
                         dat.forEach(
@@ -61,24 +167,19 @@ export default{
                             }
                         )
                         console.log("Course Lessons",lessons)
-                        commit('setLoading', false)
                         commit('setLessons',lessons)
-                      })
-                  }
-            
-                   
-               )
-                
+                        commit('setLoading', false)
+                        
+                      })            
                 
                
             },
-            getCurrentLesson({commit},payload){
+           async  getCurrentLesson({commit},payload){
                 let current;
                 console.log('CurrentLessonPayload',payload)
-                let email  = fb.auth().currentUser.email;
-                fb.firestore().collection("User").where("email","==",email).get()
+                let email  = await getUserEmail();
+            await    firebase.firestore().collection("User").where("email","==",email).get()
                 .then(
-        
                     user=>{
                         user.forEach(
                             data=>{
@@ -94,15 +195,15 @@ export default{
                 )
                 
                 },
-                updateLesson({commit},payload){
+             async   updateLesson({commit},payload){
                    let  uid=""
                    let finished=[]
                    let flessons=[]
                    console.log("payload finished",payload.flessons.length);
                    console.log("payload Currles",payload.currentLesson);
-                   
+                   let email = await getUserEmail()
                  //  let cprogr=(payload.flessons.size * (100/payload.amount)) +'%'
-                    fb.firestore().collection("User").where("email","==",fb.auth().currentUser.email).get()
+              await      firebase.firestore().collection("User").where("email","==",email).get()
                     .then(
                         user=>{
                             user.forEach(
@@ -110,67 +211,51 @@ export default{
 
                                   uid = el.id
                                   flessons= el.data().courses[payload.course].flessons
+                                  console.log("db flessons",flessons)
+            console.log('payload.fless', payload.flessons)
                                 }
-                            )
-                            console.log("db flessons",flessons)
-                            console.log('payload.fless', payload.flessons)
-                            for (let x of payload.flessons){
-                                if(!flessons.includes(x)){
-                                 flessons.push(x) 
-                                 console.log('beforeInserted',flessons)  
-                            fb.firestore().collection("User").doc(uid).set({
-                                courses:{
-                                [payload.course]:{
-                                    flessons: flessons
-                                }
-
-                            }
-                        },{merge:true})
-                    }
-                    }
-                            fb.firestore().collection("User").doc(uid).get()
-                            .then(
-                                data=>{
-
-                                  finished=data.data().courses[payload.course].flessons
-
-                                  fb.firestore().collection("User").doc(uid).set({
-                                    courses:{
-        
-                                        [payload.course]:{
-                                    currentlesson:payload.currentLesson,
-                                    lprogress:payload.currentTime,
-                                    cprogress:(finished.length * (100/payload.amount)) +"%" ,
-                                       
-        
-                                        }
-                                    }
-        
-        
-        
-        
-        
-                                    },{merge:true})  
-                                }
-
-
-
-                            )
-                            console.log(finished)
-                            console.log("finished.length",finished.length)
-                            console.log("progress",(finished.length * (100/payload.amount)) +"%");
-                            
+                            )      
                              
                         }
 
                     )
+                    for (let x of payload.flessons){
+                        if(!flessons.includes(x)){
+                                flessons.push(x) 
+                                 console.log('beforeInserted',flessons)  
+                                firebase.firestore().collection("User").doc(uid).set({
+                                    courses:{
+                                    [payload.course]:{
+                                        flessons: flessons
+                                    }
+                                }
+                            },{merge:true})
+                        }
+                        }
+            await  firebase.firestore().collection("User").doc(uid).get().then( data=>{ finished=data.data().courses[payload.course].flessons})  
+                
+             await    firebase.firestore().collection("User").doc(uid).set({
+                    courses:{
+                            [payload.course]:
+                                        {
+                                            currentlesson:payload.currentLesson,
+                                            lprogress:payload.currentTime,
+                                            cprogress:(finished.length * (100/payload.amount)) +"%" ,
+                                }
+                            }
+                            },{merge:true}).then(()=>{
+
+                                console.log(finished)
+                                console.log("finished.length",finished.length)
+                                console.log("progress",(finished.length * (100/payload.amount)) +"%");
+                                })        
 
                 },
                 async finishedLessons({commit},payload){
-                    let email = fb.auth().currentUser.email;
+                    let email = firebase.auth().currentUser.email;
                     let id  = '' ;
                     let flessons = [];
-                  await   fb.firestore().collection('User').where("email","==",email).get()
+                  await   firebase.firestore().collection('User').where("email","==",email).get()
                     .then(
                         udata=>{
                             udata.forEach(
@@ -183,7 +268,7 @@ export default{
                                 if(!flessons.includes(x)){
                                  flessons.push(x) 
                                  console.log('beforeInserted',flessons)  
-                            fb.firestore().collection("User").doc(id).set({
+                            firebase.firestore().collection("User").doc(id).set({
                                 courses:{
                                 [payload.course]:{
                                     flessons: flessons,
@@ -199,11 +284,11 @@ export default{
 
                  
                 },
-                setProgress({commit},payload){
-                    let email = fb.auth().currentUser.email
+            async   setProgress({commit},payload){
+                    let email = await getUserEmail()
                     let id = ''
                   let  finished = []
-                    fb.firestore().collection('User').where("email","==",email).get()
+                await    firebase.firestore().collection('User').where("email","==",email).get()
                     .then(
                         udata=>{
                             udata.forEach(
@@ -213,97 +298,53 @@ export default{
                                 }
                             )
                             console.log('LenOfArray',finished.length)
-                            console.log('totalVids',payload.amount)
-                            fb.firestore().collection('User').doc(id).set({
-
-                                courses:{
-                                    [payload.course]:{
-                                        cprogress:(finished.length * (100/payload.amount)) +"%",
-                                        
-                                    }
-                                }
-
-                            },{merge:true})
+                            console.log('totalVids',payload.amount) 
                         }
                     )
+                await   firebase.firestore().collection('User').doc(id).set({
+
+                        courses:{
+                            [payload.course]:{
+                                cprogress:(finished.length * (100/payload.amount)) +"%",
+                                
+                            }
+                        }
+
+                    },{merge:true})       
+
                 },
-                rateLesson({commit},payload){
-                    let email = fb.auth().currentUser.email
-                    let cid = ''
-                    let lid = ''
-                    let allRates = []
-                    let ratings = {}
+              async   rateLesson({commit},payload){
+                    console.log('payload',payload)
+                    let email = firebase.auth().currentUser.email
+                    let cid = await getCourseId(payload.category)
+                    let lid = await getLessonId(cid,payload.videoUrl)
+                    console.log("cid",cid)
+                    console.log("lid",cid)
                     let overalRating = null;
-                    fb.firestore().collection('Courses').where("category","==",payload.category).get()
-                    .then(
-                        courseData=>{
-                            courseData.forEach(
-                                c=>{
-                                    cid = c.id
-
-                                    
-                                 fb.firestore().collection('Courses').doc(cid).collection('Lessons').where("videoUrl","==",payload.videoUrl).get()
-                                 .then(
-                                     lessonData=>{
-
-                                        lessonData.forEach(
-                                            l=>{
-                                                lid = l.id
-                                            }
-                                        )
-                                    fb.firestore().collection('Courses').doc(cid).collection('Lessons').doc(lid).set(
-                                            {
-                                                ratings:{
-                                                    [email]:payload.rating
-                                                }
-                                            },{merge:true}
-                                            ).then(
-                                                ()=>{
-                                                    fb.firestore().collection('Courses').doc(cid).collection('Lessons').where("videoUrl","==",payload.videoUrl).get()
-                                                    .then(
-                                                        lData=>{
-                                                            lData.forEach(
-                                                                l=>{
-                                                                    ratings = l.data().ratings
-                                                                }
-                                                            )
-                                                            console.log('ratings',ratings)    
-                                                            for(let key in ratings ){
-                                                              allRates.push(ratings[key]) 
-                                                              console.log('key',key) 
-                                                            }
-                                                            var sum = 0;
-                                                            for (let x of allRates){
-                                                                sum+=x;
-
-                                                            }
-                                                            console.log('sum',sum)
-                                                            console.log('allRates',allRates)
-                                                            overalRating = sum/allRates.length
-                                                            fb.firestore().collection('Courses').doc(cid).collection('Lessons').doc(lid).set({
-
-                                                            rating:overalRating
-                                                            },{merge:true})
-                                                        }
-                                                    )
-
-                                                }
-                                            )
-                                     }
-                                 )   
-                                }
-                            )
-                        }
-                    )
+                    try{
+                await    firebase.firestore().collection('Courses').doc(cid).collection('Lessons').doc(lid)
+                    .set({
+                        ratings:{  [email]:payload.rating } },{merge:true})
+                    }
+                    catch(e){
+                        console.log("error",e)
+                    }
+                      
+                 overalRating = await calculateOveralRating(cid,payload.videoUrl);                            
+              await   firebase.firestore().collection('Courses').doc(cid).collection('Lessons').doc(lid).set({
+                                    rating:overalRating
+                                    },{merge:true})                    
+            let rating = await calculateCourseRating(payload.category)     
+             firebase.firestore().collection('Courses').doc(cid).set({
+                                     rating : rating },
+                                         {merge:true})     
                     
 
                 },
-
-
-                getAllLessons({commit},payload){
+                async getAllLessons({commit},payload){
                     let all = [] 
                     commit('setLoading',true)
-                    fb.firestore().collectionGroup('Lessons').get().then(
+                await    firebase.firestore().collectionGroup('Lessons').get().then(
 
                         lessons=>{
                             lessons.docs.forEach(
@@ -321,10 +362,9 @@ export default{
                             )
                         },
                         getTopLessons({commit},payload){
-
                             let top = [] 
                             commit('setLoading',true)
-                            fb.firestore().collectionGroup('Lessons').orderBy('rating','desc').limit(12).get().then(
+                            firebase.firestore().collectionGroup('Lessons').orderBy('rating','desc').limit(12).get().then(
         
                                 lessons=>{
                                     lessons.docs.forEach(
@@ -345,19 +385,10 @@ export default{
 
 
                         },
-                        setClesson({commit},payload){
+                      async  setClesson({commit},payload){
                             console.log('Settt',payload)
-                         let   email = fb.auth().currentUser.email;
-                         let id = ''
-                        fb.firestore().collection('User').where("email","==",email).get()
-                        .then(
-                            udata=>{
-                                udata.forEach(
-                                    u=>{
-                                        id = u.id
-                                    }
-                                )
-                                fb.firestore().collection('User').doc(id).set({
+                         let id = await getUserId();
+                           await     firebase.firestore().collection('User').doc(id).set({
 
                                     courses:{
                                         [payload.course]:{
@@ -371,14 +402,9 @@ export default{
                                         commit('setCurrentLesson',payload.lesson)
                                     }
                                 )
-                            }
-                        )
-
-                        }
+                            
+                        },
                 
-                
-
-
         },
        
         getters:{
@@ -401,108 +427,6 @@ export default{
                
    }
 
-       /*  actions:{
-           ,
-            getUserLesson({commit},{less,cs}){
-                let cid=''
-                console.log("------------------------------------------------")
-                var les=[]
-                var tryit={};
-                let dd=[]
-                var cnt=0
-                console.log("less",less,"cs",cs)
-                fb.firestore().collection('Courses').where('category','==',cs).get()
-                .then(
-                    
-                   data=>{
-                       console.log('element id 2')
-                       data.forEach(
-                           el=>{
-                               console.log(el.id)
-                               cid=el.id
-                           }
-                       )
-                       
-                       fb.firestore().collection('Courses').doc(cid).collection('Lessons').where('cat','==',less).get()
-                       .then( dat =>{
- console.log(" el data 2222")
-                         dat.forEach(
-                             el=>{
-                                 dd.push(cnt)
-                                 tryit['les'+cnt]=el.data()
-                                 cnt++;
-                    les.push(el.data())             
-                                 console.log(el.data())
- 
-                             }
-                         )
-                        console.log(les)
-                       })
-                   }
-             
-                    
-                )
-            
-                let id = null;
-                let lesson=0;
-                console.log("qPauLoad",less)
-                if(less){
-                fb.firestore().collection('User').where('email','==',fb.auth().currentUser.email).get()
-                .then(
-                   doc=>{
-                    
-                       doc.forEach(
-                           el=>{
-            
-                             id=el.id
-                               console.log(el.data())
-                               console.log(id)
-                               el.data().courses.forEach(
-                                   e=>{
-                                      //  console.log(e)
-                                   }
-                               )
-                           }
-                       )
-                       fb.firestore().collection('User').doc(id).get()
-                       .then(
-                           doc=>{
-                            dd.forEach(
-                                el=>{
-                                    console.log(el)
-                                }
-                            )
-                               console.log(doc.data())
-                               doc.data().courses.forEach(
-                                   el=>{
-                                       console.log('trimmed',el.cname.replace(" ",''),"less",less)
-                                    console.log(el)
-                                    if(el.cname.replace(" ",'')==less){
-                                        console.log('tut')
-                                        lesson= el.currentlesson
-                                         commit('setCurrentLesson',{les,lesson})
-                                        commit('setCurrentTime',el.lprogress)
-                                    }
-                         
-                                   }
-                                   
-                               )
-
-                           }
-                       )
-                        }
-                )
-                    }
-                    else {
-                        console.log('No lessons')
-                    }
-                console.log("------------------------------------------------")
-            }
-        
-        },
-       
-   
-        */
         }
 
 

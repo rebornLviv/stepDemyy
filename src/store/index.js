@@ -5,6 +5,7 @@ import shared from './shared'
 import courses from './courses'
 import lessons from './lessons'
 
+
 Vue.use(Vuex)
 
 export default new Vuex.Store({

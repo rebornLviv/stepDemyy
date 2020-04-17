@@ -1,38 +1,20 @@
 import Vue from 'vue'
-import App from '../App.vue'
 import VueRouter from 'vue-router'
 import Home from '@/components/Home'
-import store from '../store/index'
-import * as fb from 'firebase'
 import Settings from '@/components/Settings'
 import UserCoures from '@/components/UserCourses'
-import Course from '@/components/Courses'
+import firebase from 'firebase'
+import { homeResolver } from '../../resolvers/homeResolver'
+import profileResolver from '../../resolvers/profileResolver'
+import { courseResolver} from '../../resolvers/courseResolver'
+import { lessonResolver} from '../../resolvers/lessonResolver'
 Vue.use(VueRouter)
 
 const routes = [{
     path: '/',
     name: 'home',
     component: Home,
-    beforeEnter: async (to, from, next) => {
-      // ...
-      setTimeout(()=>{
-        router.app.$store.dispatch('getAllLessons').then(
-
-          ()=>{
-            router.app.$store.dispatch('getTopLessons').then(
-              ()=>{
-                next()
-              }
-
-            )
-            
-          }
-        )
-
-
-      },1000)
-      
-    }
+    beforeEnter: homeResolver
   },
   {
     path: '/login',
@@ -54,13 +36,11 @@ const routes = [{
     path: '/recover',
     name: 'recover',
     component: () => import('@/components/Recover')
-
-
   },
   {
     path: '/courses/:id',
     name: 'course',
-   
+    beforeEnter:courseResolver,
     component: () => import('@/components/Course'),
   },
   {
@@ -69,47 +49,36 @@ const routes = [{
     },
     path: '/courses/:id/:id',
     name: 'lesson',
+    beforeEnter:lessonResolver,
     component: () => import('@/components/Lesson'),
-    beforeRouteEnter (to, from, next) {
-    
-      router.app.$store.dispatch()
-    }
-
+   
   },
   {
-    meta: {
-      requiresAuth: true
-    },
-        path:'/profile',
-        name:'profile',
-        component: () => import ('@/components/Profile'),
-        children:[
-          {
-            path:'/profile/settings',
-            component: Settings,
-            async beforeEnter(to, from, next){
-              await  router.app.$store.dispatch('getUserPhoto')  
-            await  router.app.$store.dispatch('getUserName')
-            await  router.app.$store.dispatch('getUserBirthDay')
-              next()
-            }
-          },
-          {
-            path:'/profile/courses',
-            component: UserCoures,
-            async  beforeEnter(to, from, next){
-           await  router.app.$store.dispatch('getMyCourses')
-              next()
-            }
-          }
-        ]
-      
+    path: '/profile',
+    name: 'profile',
+    component: () => import('@/components/Profile'),
+    children: [{
+        path: '/profile/settings',
+        component: Settings,
+        beforeEnter:profileResolver
+      },
+      {
+        path: '/profile/courses',
+        component: UserCoures,
+        beforeEnter: profileResolver
       }
-    
-
-  
-
-
+    ]
+  },
+  {
+    path: '/teachers',
+    name: 'teachers',
+    component: () => import('@/components/Teachers')
+  },
+  {
+    path: '/lessons',
+    name: 'lessons',
+    component: () => import('@/components/Lessons')
+  }
 ]
 
 
@@ -121,7 +90,7 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next, store) => {
   if (to.matched.some(rec => rec.meta.requiresAuth)) {
-    fb.auth().onAuthStateChanged(user => {
+   firebase.auth().onAuthStateChanged(user => {
       console.log(user);
       if (user) {
         next();

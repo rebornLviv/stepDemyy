@@ -1,165 +1,179 @@
 <template>
-    <v-col cols="8" class="userData">
-                <p class="txtp">Налаштування профілю</p>
-                <div class="inpC" >
-             <input type="text" v-model="name" v-if="editName" class="inp"><p v-if="!editName" class="uName">Ім'я :    {{userName}}</p> <v-spacer></v-spacer>
-              <v-icon v-if="!editName" class="edit" @click="()=>{ editName = ! editName,name=userName}">mdi-lead-pencil</v-icon>
-              <v-icon v-if="editName" class="edit" @click="changeName">mdi-check</v-icon>
-              <v-icon v-if="editName" class="edit" @click="()=>{ editName = ! editName}">mdi-window-close</v-icon>
-                </div>
-                <div class="inpC" >
-             <v-menu v-if="editDate"
-        ref="menu"
-        v-model="menu"
-        :close-on-content-click="false"
-        :return-value.sync="date"
-        transition="scale-transition"
-        offset-y
-        min-width="290px"
-      >
-        <template v-slot:activator="{ on }">
-          <v-text-field
-            v-model="date"
-            label="Оберіть дату"
-            prepend-icon="mdi-calendar"
-            readonly
-            v-on="on"
-          ></v-text-field>
-        </template>
-        <v-date-picker v-model="date" no-title scrollable>
-          <v-spacer></v-spacer>
-          <v-btn text color="primary" @click="menu = false">Cancel</v-btn>
-          <v-btn text color="primary" @click="$refs.menu.save(date)">OK</v-btn>
-        </v-date-picker>
-      </v-menu>
-             
-             <p v-if="!editDate" class="uName">Дата народження : {{userBirthDay}}</p> <v-spacer></v-spacer>
-              <v-icon v-if="!editDate" class="edit" @click="()=>{ editDate= ! editDate}">mdi-lead-pencil</v-icon>
-              <v-icon v-if="editDate" class="edit" @click="changeBday">mdi-check</v-icon>
-              <v-icon v-if="editDate" class="edit" @click="()=>{ editDate = ! editDate}">mdi-window-close</v-icon>
-                </div>
-                <div class="btns">
-       <v-btn v-if="!confP" dark @click="configuratePassword" class="chP" > <span>Налаштування паролю</span>
-       <v-spacer></v-spacer> 
-        <v-icon color="white" >mdi-chevron-down</v-icon>
+<v-col cols="8" class="userData">
+    <p class="txtp">Налаштування профілю</p>
+    <div class="inpC">
+        <v-text-field
+            v-model="name"
+            label="Ім'я"
+            outlined
+            single-line
+            class="inpt"
+            v-if="editName"
+        >
+        </v-text-field>
+        <p v-if="!editName" class="uName">Ім'я : {{userName}}</p>
+        <v-spacer></v-spacer>
+        <v-icon v-if="!editName" class="edit" @click="()=>{ editName = ! editName,name=userName}">mdi-lead-pencil</v-icon>
+        <v-icon v-if="editName" class="edit" @click="changeName">mdi-check</v-icon>
+        <v-icon v-if="editName" class="edit" @click="()=>{ editName = ! editName}">mdi-window-close</v-icon>
+    </div>
+    <div class="inpC">
+        <v-menu v-if="editDate" ref="menu" v-model="menu" :close-on-content-click="false" :return-value.sync="date" transition="scale-transition" offset-y min-width="290px">
+            <template v-slot:activator="{ on }">
+                <v-text-field v-model="date" label="Оберіть дату" prepend-icon="mdi-calendar" readonly v-on="on"></v-text-field>
+            </template>
+            <v-date-picker v-model="date" no-title scrollable>
+                <v-spacer></v-spacer>
+                <v-btn text color="primary" @click="menu = false">Cancel</v-btn>
+                <v-btn text color="primary" @click="$refs.menu.save(date)">OK</v-btn>
+            </v-date-picker>
+        </v-menu>
+
+        <p v-if="!editDate" class="uName">Дата народження : {{userBirthDay}}</p>
+        <v-spacer></v-spacer>
+        <v-icon v-if="!editDate" class="edit" @click="()=>{ editDate= ! editDate}">mdi-lead-pencil</v-icon>
+        <v-icon v-if="editDate" class="edit" @click="changeBday">mdi-check</v-icon>
+        <v-icon v-if="editDate" class="edit" @click="()=>{ editDate = ! editDate}">mdi-window-close</v-icon>
+    </div>
+    <!-- <div class="btns">
+        <v-btn v-if="!confP" dark @click="configuratePassword, expand = !expand" class="chP"> <span>Налаштування паролю</span>
+            <v-spacer></v-spacer>
+            <v-icon color="white">mdi-chevron-down</v-icon>
         </v-btn>
-       <div v-if="confP" class="changepsw">
-        <input type="password" v-model="password" name="" id="" placeholder="Введіть новий пароль">
-        <input type="password"  v-model="repassword" name="" id="" placeholder="Підтвердіть новий пароль">
-        <v-btn class="changeP" :disabled="(!password && !repassword ) || password !== repassword"
-        :loading="isLoading"
-        @click="changePassword"
-        >Зберегти</v-btn>
-<v-icon color="white" size="40px" @click="configuratePassword"  >mdi-chevron-up</v-icon>
+        <v-expand-panels  v-if="confP" class="changepsw">
+            <v-card
+                v-show="expand"
+                height="500"
+                width="00"
+                class="mx-auto"
+            >
+                <input type="password" v-model="password" name="" id="" placeholder="Введіть новий пароль">
+                <input type="password" v-model="repassword" name="" id="" placeholder="Підтвердіть новий пароль">
+                <v-btn class="changeP" :disabled="(!password && !repassword ) || password !== repassword" :loading="isLoading" @click="changePassword">Зберегти</v-btn>
+                <v-icon color="white" size="40px" @click="configuratePassword">mdi-chevron-up</v-icon>
+            </v-card>   
+        </v-expand-panels>
+    </div> -->
 
+    <template>
+        <v-expansion-panels width="400" dark>
+            <v-expansion-panel 
+            v-for="(item,i) in 1"
+            :key="i"
+            >
+                <v-expansion-panel-header v-if="!confP" @click="configuratePassword, expand = !expand">
+                    <span justify="center" align="center" class="title-pass">Налаштування паролю</span>
+                </v-expansion-panel-header>
+                <v-expansion-panel-content class="content-password changepsw">
+                    <input type="password" v-model="password" name="" id="" placeholder="Введіть новий пароль">
+                    <input type="password" v-model="repassword" name="" id="" placeholder="Підтвердіть новий пароль">
+                    <v-btn class="changeP" :disabled="(!password && !repassword ) || password !== repassword" :loading="isLoading" @click="changePassword">Зберегти</v-btn>
+                </v-expansion-panel-content>
+            </v-expansion-panel>
+        </v-expansion-panels>
+    </template>
+    <v-btn @click="onLogout()" class="chP">
+        <span>Вийти з аккаунту</span>
+    </v-btn>
 
-       </div>
-        <v-btn  @click="onLogout()" class="chP" > <span>Вийти з  аккаунту</span>
-        </v-btn>
-      
-       </div>
-
-            </v-col>
+</v-col>
 </template>
 
 <script>
 export default {
     data: () => ({
-
-        confP:false,
-        password:'',
-        repassword:'',
-        name:'',
-        editName:false,
-        editDate:false,
-        date:null,
-        menu:false
-
+        confP: false,
+        password: '',
+        repassword: '',
+        name: '',
+        editName: false,
+        editDate: false,
+        date: null,
+        menu: false,
+        expand: false
     }),
     methods: {
-  onLogout() {
-      console.log(this.isUserLoggedIn);
-        this.$store.dispatch('setInitialState')
-      this.$store.dispatch("logoutUser").catch(error => {
-        console.log(error);
-      });
-      this.$router.push("/");
-    },
-    configuratePassword(){
-    this.confP = !this.confP
+        onLogout() {
+            console.log(this.isUserLoggedIn);
+            this.$store.dispatch('setInitialState')
+            this.$store.dispatch("logoutUser").catch(error => {
+                console.log(error);
+            });
+            this.$router.push("/");
+        },
+        configuratePassword() {
+            this.confP = !this.confP
 
-    },
-    changeName(){
-    this.$store.dispatch('setUserName',this.name)
-    this.editName = false;
+            
 
-    },
-     changeBday(){
-    this.$store.dispatch('setUserBirthDay',this.date)
-this.editDate = false;
-    },
-    changePassword(){
-    this.$store.dispatch('changePassword',this.password)
-    
-    setTimeout(()=>{
-this.confP = false;
-this.password = ''
-    this.repassword = ''
-    },1000)
-    
-    
+        },
+        changeName() {
+            this.$store.dispatch('setUserName', this.name)
+            this.editName = false;
+
+        },
+        changeBday() {
+            this.$store.dispatch('setUserBirthDay', this.date)
+            this.editDate = false;
+        },
+        changePassword() {
+            this.$store.dispatch('changePassword', this.password)
+
+            setTimeout(() => {
+                this.confP = false;
+                this.password = ''
+                this.repassword = ''
+            }, 5000)
+
         }
-    
 
     },
-    computed:{
-        isLoading(){
+    computed: {
+        isLoading() {
             return this.$store.getters.loading
         },
-        userName(){
+        userName() {
             return this.$store.getters.getUserName
         },
-        userBirthDay(){
+        userBirthDay() {
             return this.$store.getters.getUserBirthDay
         }
-        
-    
+
     },
 
 }
 </script>
 
 <style scoped>
-.uName{
+.uName {
     margin-bottom: 0;
+    font-size: 22px;
 }
-.changeP{
-    margin-top: 10px;
-}
-.changepsw{
+
+.content-password {
     display: flex;
     flex-direction: column;
-    width: 400px;
-    height: 165px;
-    background: #323232;
-    border-radius: 10px;
     align-items: center;
-    transition-duration: 5000ms;
 }
 
-.chP {
-    width: 400px !important;
-
-}
-
-.changepsw>input {
-    border-bottom: 1px solid white;
+.content-password input {
+    background-color: white;
+    margin-right: 20px;
     padding: 10px;
-    color: white;
-    width: 70%;
-    padding-bottom: 7px;
-
+    padding-right: 40px;
+    color: black;
+    border-radius: 5px;
 }
+
+.title-pass {
+    font-size: 22px;
+}
+
+ .chP {
+    width: 400px !important;
+    margin-top: 20px;
+}
+
 
 .cc {
     display: flex;
@@ -189,7 +203,8 @@ this.password = ''
     border-bottom: 1px solid black;
     margin-right: 5px;
 }
-.inpC{
+
+.inpC {
     display: flex;
     padding: 15px;
     width: 300px;

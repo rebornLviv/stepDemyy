@@ -1,98 +1,133 @@
 <template>
-    <div class="container-fluid cc">
-     <div class="wrapper">
-
+<div class="container-fluid cc">
+    <div class="wrapper">
         <v-row class="miniCont">
-
             <v-col cols="4" class="userImgContainer">
                 <p class="txtp">Профіль</p>
-       <v-icon v-if="!this.$store.getters.getUserPhoto"  class="iblc" size="240px">mdi-account</v-icon>
-       <img  v-if="this.$store.getters.getUserPhoto" class="iblc" :src="this.$store.getters.getUserPhoto" alt="">
-     
-  
-       <div class="btns">
-           <div class="upload-btn-wrapper">
-  <v-btn class="btn" >Upload a file</v-btn>
-  <input type="file" ref="file" @change="selectFile" class="innp" name="myfile" />
-</div>
-       <v-btn class="mb-3 mt-2" to="courses">Мої курси</v-btn>
-       <v-btn class="sett" to="settings" >Налаштування    </v-btn>
-       
-       </div>
-       
- </v-col>
-                
+                <v-icon v-if="!this.$store.getters.getUserPhoto" class="iblc" size="240px">mdi-account</v-icon>
+                <img v-if="this.$store.getters.getUserPhoto" class="iblc" :src="this.$store.getters.getUserPhoto" alt="">
+                <div class="btns">
+                    <div class="upload-btn-wrapper">
+                        <!-- <v-btn class="btn">Upload a file</v-btn> -->
+                        <v-btn color="primary btn" dark @click.stop="dialog = true">
+                            Upload a File
+                        </v-btn>
 
-           
+                        <v-dialog v-model="dialog" max-width="590">
+                            <v-card>
+                                <v-card-title class="headline" justify="center">Змінити фото</v-card-title>
+
+                                <v-card-text>
+                                    <v-file-input
+                                        label="File input"
+                                        filled
+                                        ref="file"
+                                        @change="selectFile"
+                                        prepend-icon="mdi-camera"
+                                        class="innp"
+                                        show-size counter multiple
+                                        name="myfile"
+                                    ></v-file-input>
+                                </v-card-text>
+
+                                <v-card-actions>
+                                    <v-btn class="btn-photo" color="green darken-1" text @click="dialog = false">
+                                        Відміна
+                                    </v-btn>
+
+                                    <v-btn class="btn-photo" color="green darken-1" text @click="updatePhoto" name="myfile" ref="file">
+                                        Зберегти
+                                    </v-btn>
+                                </v-card-actions>
+                            </v-card>
+                        </v-dialog>
+                    </div>
+                    <v-btn class="mb-3 mt-2" to="courses">Мої курси</v-btn>
+                    <v-btn class="sett" to="settings">Налаштування </v-btn>
+                </div>
+            </v-col>
             <router-view></router-view>
-
         </v-row>
-</div>
     </div>
+</div>
 </template>
 
 <script>
 export default {
     data: () => ({
-
-        confP:false,
-        file:null,
-        userImage:''
-
+        confP: false,
+        file: null,
+        userImage: '',
+        dialog: false
     }),
 
-    methods:{
-    selectFile(){
-        this.file = this.$refs.file.files[0]
-        this.$store.dispatch('setUserPhoto',this.file)
-        console.log(this.file)
-    },
-    configuratePassword(){
-    this.confP = !this.confP
+    methods: {
+        selectFile(file) {
+            this.file = file[0]
+           
+            console.log(this.file)
+        },
+        updatePhoto(){
+            console.log('updatePhoto')
+ this.$store.dispatch('setUserPhoto', this.file).then(
+     ()=>{
+ this.file = null;
+ this.dialog = false;
+     }
+ )
 
-    },
-    computed:{
+        },
+        configuratePassword() {
+            this.confP = !this.confP
 
-        userPhoto(){
-            return this.$store.getters.getUserPhoto
+        },
+        computed: {
+
+            userPhoto() {
+                return this.$store.getters.getUserPhoto
+            }
         }
-    }
 
     }
 }
 </script>
 
 <style scoped>
-.innp{
+.innp {
     cursor: pointer;
 }
-.btn{
+
+.btn {
     width: 200px;
 }
 
+.btn-photo {
+    font-size: 18px;
+}
+
 .upload-btn-wrapper {
-  position: relative;
- 
-  display: inline-block;
-  cursor: pointer;
-  
+    position: relative;
+
+    display: inline-block;
+    cursor: pointer;
+
 }
 
 .upload-btn-wrapper input[type=file] {
-  font-size: 100px;
-  position: absolute;
-  left: 0;
-  top: 0;
-  opacity: 0;
+    font-size: 100px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0;
 }
 
-.miniCont{
-height: 92%;
-margin-top: 0px;
-
+.miniCont {
+    height: 92%;
+    margin-top: 0px;
 
 }
-.changepsw{
+
+.changepsw {
     display: flex;
     flex-direction: column;
     width: 400px;
@@ -135,9 +170,10 @@ margin-top: 0px;
     align-items: center;
     margin-top: 5px;
 }
-.wrapper{
- width: 80%;
- height: 100%;
+
+.wrapper {
+    width: 80%;
+    height: 100%;
 }
 
 .inp {
@@ -161,7 +197,6 @@ margin-top: 0px;
     display: flex;
     flex-direction: column;
     justify-content: center;
-
 
 }
 

@@ -1,6 +1,4 @@
-import * as firebase from 'firebase';
-
-
+import { auth ,currentUser,coursesCollection,usersCollection} from "../firebase/firebaseConfig";
 export default{
     state:{
         course:{title:'',description:'',imgSrc:''},
@@ -31,149 +29,65 @@ state.joined = payload;
 
     actions:{
 async  addCourse({commit},payload){
-console.log('Maaaaaaaaaaaaaaaaaaaaanaging')
-var uid= '';
-var udata = null;    
-let email = firebase.auth().currentUser.email;
-console.log(email)
-await firebase.firestore().collection("User").where("email","==",email).get()
-.then(
-
-     (user)=>{
-        commit('setLoading', true)
-        console.log("User Data")
-        user.forEach(
-            u=>{
-            uid= u.id
-            udata=u.data()
-            console.log(u.data())
-            }
-        )
-        console.log(udata)
-        
-    }
-)
-if(udata.courses[payload.course]){
-    console.log("Already in")
+ console.log('Adding a course')
+ const userData = await usersCollection.doc(auth.currentUser.uid).get()
+if(userData.data().courses[payload.course]){
+    console.log("You have already joined that course!")
+    return;
      }
      else{
- console.log("in else");
+ console.log("Adding course");
  console.log('AddCoursePayload',payload)
- console.log("udata.courses",udata.courses[payload.course])
- console.log('userId',uid)
  
-    await     firebase.firestore().collection("User").doc(uid).set({
+    await     usersCollection.doc(auth.currentUser.uid).set({
              courses:{
- 
                  [payload.course]:{  
-                 ctitle:payload.title,
-                 cprogress:0,
-                 currentlesson:0,
-                 lprogress:0 ,
-                 flessons: []
+                    ctitle:payload.title,
+                    cprogress:0,
+                    currentlesson:0,
+                    lprogress:0 ,
+                    flessons: []
              }
  
              }
- 
- 
          },{merge:true})
-         .then(
-             ()=>{
-                 commit('setLoading', false)
-                 console.log('success')
-             }
-         )
-         .catch(
-             err=>{
-                 commit('setLoading', false)
-                 console.log("err",err)
-             }
-         )
- 
- 
      }
 
 
 
 },
-setCat({commit},payload){
- var tcourses=[]
-firebase.firestore().collection('Courses').get()
-.then(
-courses=>{
-    commit('setLoading', true)
-
-    courses.forEach(
-        course=>{
-
-  tcourses.push(course.data().category) 
-            
-        }
-    )
-    console.log("All courses",tcourses)
-    
-} 
-
-).then(
-    ()=>{
-        commit("setCat",tcourses)
-        commit('setLoading', false)
-    }
-)
-
+async setCat({commit},payload){
+let cats = []
+let courses =   await  coursesCollection.get()
+courses.forEach( course => cats.push(course.data().category) )
+commit("setCat",cats)
 
 },
 
 
 async setCourse({commit},payload){
     console.log('settingCourses',payload)
-var tcourse = null;   
-await  firebase.firestore().collection("Courses").where("category","==",payload).get()
-.then(
-
-    course=>{
-        commit('setLoading', true)
- course.forEach(
-    data=>{
-        console.log("Course data:",data.data())
-        tcourse=data.data();
-        
-    }
- )
-
- 
- console.log('Returned data',tcourse)
+var tcourse = null;
+commit('setLoading', true)
+let course = await  coursesCollection.where("category","==",payload).get()
+course.forEach( c => tcourse = c.data() )
+console.log('Returned data',tcourse)
  commit("setCourse",tcourse)
  commit('setLoading', false)
-    }
-)
-
-
 
 },
 
  async getJoined({commit},payload){
-    let crs = null;    
-    let email = firebase.auth().currentUser.email;
-    console.log(email)
-  await  firebase.firestore().collection("User").where("email","==",email).get().then(
-        user => {
-            user.forEach(
-                u=>{
-                 crs = u.data().courses
-                 console.log(crs)
-                }
-            )
-            if(crs.hasOwnProperty(payload)){
-                commit('setJoined',true)
-                console.log("joined",crs)
-            }
-            else{
-                commit('setJoined',false)  
-                console.log("not joined",crs)
-            }
-        }
-    )
+    const userData = await usersCollection.doc(auth.currentUser.uid).get()
+    if(userData.data().courses.hasOwnProperty(payload)){
+        commit('setJoined',true)
+        console.log("joined",userData.data().courses)
+    }
+    else{
+        commit('setJoined',false)  
+        console.log("not joined",userData.data().courses)
+    }
+   
 
 
 

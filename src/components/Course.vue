@@ -183,8 +183,6 @@ margin-right: 8px;
 border: 1px solid #4E5256;
 border-radius: 100%;
 }
-.stars{
-}
 .cont{
 
   display: flex;

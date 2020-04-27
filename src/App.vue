@@ -196,11 +196,35 @@
 </template>
 
 <script>
-import * as fb from "firebase";
+ import {auth ,fb} from './main'
+ const  createUserProfileDocument = async (userAuth,additionalDATA) => {
+    if(!userAuth) return;
+    const userRef =fb.doc(`Users/${userAuth.uid}`);
+    const snapShot = await userRef.get();
+    if(!snapShot.exists){
+        const {displayName,email} = userAuth;
+        const createdAt = new Date();
+    
+    try{
+        await userRef.set({
+            email,
+            createdAt,
+            courses:{},
+            ...additionalDATA
+
+        })
+    }
+    catch(error){
+        console.log('error creating user',error.message);
+    }
+}
+return userRef;
+  }
 
 import {
     mdiAccount
 } from "@mdi/js";
+import user from './store/user';
 
 export default {
     name: "App",
@@ -235,7 +259,11 @@ export default {
         onLogout() {
             console.log(this.isUserLoggedIn);
             this.$store.dispatch('setInitialState')
-            this.$store.dispatch("logoutUser").catch(error => {
+            this.$store.dispatch("logoutUser")
+            .then(()=>{
+                console.log('successfuly loged out')
+            })
+            .catch(error => {
                 console.log(error);
             });
             this.$router.push("/");
@@ -274,13 +302,11 @@ export default {
                 this.$store.dispatch('setInitialState')
                 this.$store
                     .dispatch("registerUser", reguser)
-                    .then(() => {
-                        fb.firestore()
-                            .collection("User")
-                            .add(user);
-                        this.dialog3 = !this.dialog3;
-                        this.$router.push("/");
-                    })
+                    .catch(
+                        (err)=>{
+                            console.log('err reg',err)
+                        }
+                    )
             }
         },
         recover() {

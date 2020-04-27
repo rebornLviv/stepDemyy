@@ -60,6 +60,10 @@ export default {
         userImage: '',
         dialog: false
     }),
+    created(){
+console.log(this.$store.getters.getUserPhoto) 
+
+    },
 
     methods: {
         selectFile(file) {

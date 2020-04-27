@@ -6,8 +6,11 @@ import UserCoures from '@/components/UserCourses'
 import firebase from 'firebase'
 import { homeResolver } from '../../resolvers/homeResolver'
 import profileResolver from '../../resolvers/profileResolver'
-import { courseResolver} from '../../resolvers/courseResolver'
 import { lessonResolver} from '../../resolvers/lessonResolver'
+import teacherResolver from '../../resolvers/teacherResolver'
+import topLessonsResolver from '../../resolvers/topLessonsResolver'
+import { courseResolver } from '../../resolvers/courseResolver'
+
 Vue.use(VueRouter)
 
 const routes = [{
@@ -40,20 +43,23 @@ const routes = [{
   {
     path: '/courses/:id',
     name: 'course',
-    beforeEnter:courseResolver,
+     beforeEnter:courseResolver,
     component: () => import('@/components/Course'),
   },
   {
     meta: {
       requiresAuth: true
     },
-    path: '/courses/:id/:id',
+    path: '/courses/:cid/:lid',
     name: 'lesson',
     beforeEnter:lessonResolver,
     component: () => import('@/components/Lesson'),
    
   },
   {
+    meta: {
+      requiresAuth: true
+    },
     path: '/profile',
     name: 'profile',
     component: () => import('@/components/Profile'),
@@ -72,11 +78,13 @@ const routes = [{
   {
     path: '/teachers',
     name: 'teachers',
+    beforeEnter:teacherResolver,
     component: () => import('@/components/Teachers')
   },
   {
     path: '/lessons',
     name: 'lessons',
+    beforeEnter:topLessonsResolver,
     component: () => import('@/components/Lessons')
   }
 ]

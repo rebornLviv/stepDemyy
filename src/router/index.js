@@ -74,22 +74,18 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes
 })
+router.beforeEach((to, from, next) => {
+  const requiresAuth = to.matched.some(x => x.meta.requiresAuth)
+  const currentUser = firebase.auth().currentUser
 
-router.beforeEach((to, from, next, store) => {
-  if (to.matched.some(rec => rec.meta.requiresAuth)) {
-   firebase.auth().onAuthStateChanged(user => {
-      console.log(user);
-      if (user) {
-        next();
-      } else {
-        next({
-          name: "home"
-        });
-        router.app.$store.dispatch('setError', 'You must be loged in to attend a course');
-      }
-
-    });
-  } else next();
-});
+  if (requiresAuth && !currentUser) {
+      next('/')
+      router.app.$store.dispatch('setError', 'You must be loged in to attend a course');
+  } else if (requiresAuth && currentUser) {
+      next()
+  } else {
+      next()
+  }
+})
 
 export default router

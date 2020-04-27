@@ -30,6 +30,10 @@ state.joined = payload;
     actions:{
 async  addCourse({commit},payload){
  console.log('Adding a course')
+ if(!auth.currentUser){
+return;
+
+ }
  const userData = await usersCollection.doc(auth.currentUser.uid).get()
 if(userData.data().courses[payload.course]){
     console.log("You have already joined that course!")

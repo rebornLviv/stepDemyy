@@ -85,6 +85,7 @@ export default {
       console.log('manage')
  let course=this.$route.path.replace('/courses/','')
 let title = this.course.title.split(' ').join('')
+
 await     this.$store.dispatch('addCourse',{course,title})
 this.$router.push({path:'/courses/'+this.$route.path.split('/')[2]+'/' + title})
    

@@ -1,61 +1,134 @@
 <template>
-<v-app>
-   <Header />
-    <v-progress-linear v-if="isLoading" class="pb" indeterminate color="black"></v-progress-linear>
-    <v-content>
+<v-app-bar app color="white" dark class="barrr">
+        <div class="black--text font-italic mr-5 logo">
+            <router-link to="/" tag="h2" class="font-weight-regular logo">Stepdemy</router-link>
+        </div>
+        <div class="navitems">
+            <div>
+                <v-menu offset-y>
+                    <template v-slot:activator="{on}">
+                        <v-btn text v-on="on">
+                            <span class="black--text  navText">Предмети
+                                <i aria-hidden="true" class="v-icon notranslate hidden-md-and-down v-icon--right mdi mdi-menu-down theme--light"></i>
+                            </span>
+                        </v-btn>
+                    </template>
+                    <v-list>
+                        <v-list-item v-for="cat in categories" :key="cat" @click="setCourses(cat)">{{cat}}</v-list-item>
+                    </v-list>
+                </v-menu>
+            </div>
 
-        <router-view></router-view>
-    </v-content>
-    <template v-if="error">
-        <v-snackbar color="dark" :timeout="30000" :multi-line="true" @input="closeError" :value="true">
-            {{ error}}
-            <v-btn text dark @click.native="closeError">Close</v-btn>
-        </v-snackbar>
+            <div>
+                <v-btn text to="/lessons" >
+                    <span class="black--text navText">
+                        Уроки
+                    </span>
+                </v-btn>
+            </div>
+
+            <div>
+                <v-btn text to="/teachers">
+                    <span class="black--text navText">Викладачі</span>
+                </v-btn>
+            </div>
+        </div>
+
+        <div class="userSearch">
+            <v-spacer></v-spacer>
+            <v-btn text class="grey--text srch">
+                <v-icon>mdi-magnify</v-icon>
+            </v-btn>
+            <v-menu bottom origin="center center" transition="scale-transition" :absolute="absolute">
+
+                <template v-slot:activator="{ on }">
+                    <v-btn fab dark icon v-on="on">
+                        <v-icon>mdi-account</v-icon>
+                    </v-btn>
+                </template>
+
+                <v-list>
+                    <v-list-item>
+                            <auth-modal v-if="!isUserLoggedIn" />
+                            
+                        <!-- Register -->
+                        <v-list-item-title>
+
+                            <v-btn v-if="isUserLoggedIn" to="/" text @click="onLogout" class="black--text">Вийти</v-btn>
+                            <v-btn v-if="isUserLoggedIn" to="/profile/settings">Профіль </v-btn>
+                        </v-list-item-title>
+                    </v-list-item>
+                </v-list>
+            </v-menu>
+        </div>
+
+    </v-app-bar>
     </template>
-    <Footer />
-</v-app>
-</template>
-
 <script>
-
-
-import {
-    mdiAccount
-} from "@mdi/js";
-import user from './store/user';
-import AuthModals from './components/subComponents/AuthModals.vue';
-import Footer from './components/subComponents/Footer';
-import Header from './components/subComponents/Header.vue';
-
+import AuthModals from './AuthModals'
 export default {
-    name: "App",
     data: () => ({
+        loader: null,
+        loading: false,
+        idef: "mdi-menu-down",
+        idw: "mdi-menu-down",
+        iup: "mdi-menu-up",
+        absolute: false
     }),
     components:{
-        Footer,
-        Header
+        authModal: AuthModals,
+        
     },
 
     methods: {
         closeError() {
             this.$store.dispatch("clearError");
         },
+        onLogout() {
+            console.log(this.isUserLoggedIn);
+            this.$store.dispatch('setInitialState')
+            this.$store.dispatch("logoutUser")
+            .then(()=>{
+                console.log('successfuly loged out')
+            })
+            .catch(error => {
+                console.log(error);
+            });
+            this.$router.push("/");
+        },
+        async setCourses(cat) {
+            console.log('asss', cat)
+            await this.$store.dispatch("setCourse", cat)
+            this.$router.push({
+                path: '/courses/' + cat
+            })
+        }
     },
     computed: {
+        categories() {
+            return this.$store.getters.getCat;
+        },
         error() {
             return this.$store.getters.error;
+        },
+        isUserLoggedIn() {
+            return this.$store.getters.isUserLoggedIn;
         },
         isLoading() {
             return this.$store.getters.loading
         }
     },
-  async  created(){
- await this.$store.dispatch('setCat');
+    watch: {
+        loader() {
+            const l = this.loader;
+            this[l] = !this[l];
 
+            setTimeout(() => (this[l] = false), 3000);
+
+            this.loader = null;
+        }
     },
-    updated() {
-        console.log("Signed?", this.isUserLoggedIn)
-    }
+ 
 };
 </script>
 
@@ -109,7 +182,7 @@ export default {
 .c1 {
     height: 550px;
     width: 100%;
-    background-image: url("./img/laptop.jpg");
+
     background-position: center center;
     background-repeat: no-repeat;
     padding: 0;

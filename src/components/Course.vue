@@ -65,7 +65,7 @@
 
 
 <script>
-import Star from './Stars'
+import Star from './subComponents/Stars'
 export default {
   
     data() {
@@ -85,14 +85,10 @@ export default {
       console.log('manage')
  let course=this.$route.path.replace('/courses/','')
 let title = this.course.title.split(' ').join('')
-   await     this.$store.dispatch('addCourse',{course,title}).then(
-
-     ()=>{
-      this.$router.push({path:'/courses/'+this.$route.path.split('/')[2]+'/' + title})
-     }
-   )
+await     this.$store.dispatch('addCourse',{course,title})
+this.$router.push({path:'/courses/'+this.$route.path.split('/')[2]+'/' + title})
    
-      
+     
       }
     },
     computed :{
@@ -119,32 +115,6 @@ this.id=to.params['id']
         }
         
     },
-   async beforeCreate(){
-     let course = this.$route.path.split('/')[2];
-console.log("Course",this.$store.getters.getCourse)
-this.$store.dispatch('getJoined',course)
-    },
-  async  beforeRouteLeave (to, from, next) {
-      let course = this.$route.path.split('/')[2];
-      let lesson = this.course.title.split(' ').join('');
-  await    this.$store.dispatch('setLessons',{course,lesson}).then(
-    
-
-    async () => {
-      console.log(this.$store.getters.getLessons)
-      console.log('Sussssssssssssssss')
-   await  this.$store.dispatch('getCurrentLesson',course).then(
-     () => {
-       console.log(this.$store.getters.getCurrentLesson)
- next()
-     }
-   )
-
-    }
-  )
-    }
-  
-    
 
 }
 </script>

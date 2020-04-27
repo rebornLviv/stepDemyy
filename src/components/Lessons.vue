@@ -49,7 +49,7 @@
 </template>
 
 <script>
-import Star from './Stars'
+import Star from './subComponents/Stars'
 
 export default {
     data() {
@@ -62,9 +62,6 @@ export default {
         isLoading() {
             return this.$store.getters.loading
         }
-    },
-    async beforeCreate() {
-        await this.$store.dispatch('getAllLessons')
     },
     components: {
         star: Star

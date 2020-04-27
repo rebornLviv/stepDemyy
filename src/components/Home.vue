@@ -114,7 +114,7 @@
 
 
 <script>
-import Star from './Stars'
+import Star from './subComponents/Stars'
 export default {
     data() {
         return {
@@ -420,8 +420,5 @@ align-items: center;
     align-items: center;
     
     
-}
-.col-3{
-
 }
 </style>

@@ -78,6 +78,11 @@ console.log('Returned data',tcourse)
 },
 
  async getJoined({commit},payload){
+     if(!auth.currentUser){
+        commit('setJoined',false)  
+        console.log("no user")
+        return;
+     }
     const userData = await usersCollection.doc(auth.currentUser.uid).get()
     if(userData.data().courses.hasOwnProperty(payload)){
         commit('setJoined',true)

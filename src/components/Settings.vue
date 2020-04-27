@@ -35,25 +35,6 @@
         <v-icon v-if="editDate" class="edit" @click="changeBday">mdi-check</v-icon>
         <v-icon v-if="editDate" class="edit" @click="()=>{ editDate = ! editDate}">mdi-window-close</v-icon>
     </div>
-    <!-- <div class="btns">
-        <v-btn v-if="!confP" dark @click="configuratePassword, expand = !expand" class="chP"> <span>Налаштування паролю</span>
-            <v-spacer></v-spacer>
-            <v-icon color="white">mdi-chevron-down</v-icon>
-        </v-btn>
-        <v-expand-panels  v-if="confP" class="changepsw">
-            <v-card
-                v-show="expand"
-                height="500"
-                width="00"
-                class="mx-auto"
-            >
-                <input type="password" v-model="password" name="" id="" placeholder="Введіть новий пароль">
-                <input type="password" v-model="repassword" name="" id="" placeholder="Підтвердіть новий пароль">
-                <v-btn class="changeP" :disabled="(!password && !repassword ) || password !== repassword" :loading="isLoading" @click="changePassword">Зберегти</v-btn>
-                <v-icon color="white" size="40px" @click="configuratePassword">mdi-chevron-up</v-icon>
-            </v-card>   
-        </v-expand-panels>
-    </div> -->
 
     <template>
         <v-expansion-panels width="400" dark>

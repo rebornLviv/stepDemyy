@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import Star from './Stars'
+import Star from './subComponents/Stars'
 export default {
     data() {
         return {}

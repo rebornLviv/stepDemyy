@@ -4,7 +4,8 @@ import firebase from 'firebase'
 export const courseResolver = async  (to, from, next) => {
     let course =   to.params.id
     store.dispatch('setLoading',true)
-    store.dispatch('setCourse',course)
+  await  store.dispatch('setCourse',course)
+  await  store.dispatch('getJoined',course)
     store.dispatch('setLoading',false)
       next()
     

@@ -8,7 +8,9 @@ const calculateOveralRating = async(cid,videoUrl) => {
     let ratings = null;
     let allRates = [];
  let lessons =  await  coursesCollection.doc(cid).collection('Lessons').where("videoUrl","==",videoUrl).get();
- lessons.forEach( l => ratings = l.data().raitings )
+ console.log('rLessons',lessons)
+ lessons.forEach( l => ratings = l.data().ratings )
+ console.log(ratings)
  for(let key in ratings ){
     allRates.push(ratings[key]) 
     console.log('key',key) 
@@ -22,7 +24,7 @@ const calculateCourseRating = async (category) => {
     let all = [] 
 let rating = 0;
 let lessons = await  db.collectionGroup('Lessons').where("course","==",category).get()
-lessons.forEach( l=> l.data().rating !== 0 ? all.push(l.data().raitings): '' )
+lessons.forEach( l=> l.data().rating !== 0 ? all.push(l.data().rating): '' )
 rating =   all.reduce((a ,b)  =>  a+b,0) / all.length
 return rating;
 }
@@ -182,7 +184,7 @@ export default{
 
                 },
               async   rateLesson({commit},payload){
-                    console.log('payload',payload)
+                    console.log('payloadR',payload)
                     let email = auth.currentUser.email
                     let cid = await getCourseId(payload.category)
                     let lid = await getLessonId(cid,payload.videoUrl)
@@ -198,7 +200,8 @@ export default{
                         console.log("error",e)
                     }
                       
-                 overalRating = await calculateOveralRating(cid,payload.videoUrl);                            
+                 overalRating = await calculateOveralRating(cid,payload.videoUrl);   
+                 console.log(overalRating)                         
               await   coursesCollection.doc(cid).collection('Lessons').doc(lid).set({
                                     rating:overalRating
                                     },{merge:true})                    

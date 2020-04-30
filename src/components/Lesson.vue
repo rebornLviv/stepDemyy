@@ -14,10 +14,14 @@
                         <v-icon size="35px">mdi-account</v-icon>
                     </div>
                 </div>
-                <div>
-                    <v-rating class="rte" ref="stats" v-model="rating" background-color="black" half-increments dark size="30px" ripple color="#4E5256" @input="rateStars"></v-rating>
-
-                </div>
+               
+                    <div class="rdiv" v-if="!rateIt" @mouseover="rateIt = !rateIt">
+                    <star  :rating = rating  size="50px" />
+                    </div>
+                    <div  class="rdiv" v-if="rateIt"  @mouseout="rateIt = !rateIt">
+                    <v-rating   class="rte" ref="stats"  v-model="rating" background-color="black" half-increments dark size="40px" ripple color="#4E5256" @input="rateStars($event)"></v-rating>
+</div>
+                
                 <div class="description">
                     Lorem ipsum dolor, sit amet consectetur adipisicing elit. Officia odio deleniti quod voluptatibus quasi, iure accusamus corrupti blanditiis aliquid ratione, necessitatibus amet vel magnam unde numquam esse illo! Architecto nulla quibusdam ad officiis, illum vero, fugit iusto officia perspiciatis odio exercitationem impedit beatae explicabo minima deserunt vel. Voluptatibus, consequuntur fugit necessitatibus tempore fuga, eligendi voluptates ab nostrum delectus dolor ut rem? Perferendis hic iure deserunt debitis aspernatur et asperiores ipsam minima vero fuga praesentium voluptatibus, libero esse consequuntur sequi maxime eveniet quam expedita maiores. Id nobis vel maiores labore? Nesciunt repudiandae provident architecto ratione, dignissimos vel nobis voluptatem assumenda quam?
 
@@ -56,6 +60,7 @@
 
 <script>
 import * as fb from 'firebase'
+import star from './subComponents/Stars'
 import {
     Hooper,
     Slide
@@ -67,15 +72,18 @@ export default {
         return {
             clesson: null,
             flessons: [],
-            rating: 0,
+            rating: this.$store.getters.getLessons[this.$store.getters.getCurrentLesson].rating,
             src:'',
             title:'',
-            description:''
+            description:'',
+            rateIt:false,
+            rateN:0
         }
     },
     components: {
         Hooper,
-        Slide
+        Slide,
+        star
     },
 
     methods: {
@@ -84,7 +92,7 @@ export default {
             this.clesson = index
             this.$refs.source.src = lesson.videoUrl
             console.log("srrrc", this.$refs.source)
-            this.rating = lesson.rating
+             this.rating = lesson.rating
             this.$refs.titl.textContent = lesson.title
         },
         getLesson(index) {
@@ -115,8 +123,10 @@ export default {
             )
 
         },
-        async rateStars() {
+        async rateStars(event) {
+            console.log("eveeent",event)
             console.log('stars', this.rating)
+            console.log(this.rating)
             let rating = this.rating
             console.log('videoUrl', this.$refs.source.src)
             let videoUrl = this.$refs.source.src
@@ -134,6 +144,7 @@ export default {
                 course,
                 lesson
             })
+            this.rating = this.$store.getters.getLessons[this.$store.getters.getCurrentLesson].rating;
         }
 
     },
@@ -206,6 +217,11 @@ export default {
 </script>
 
 <style scoped>
+.rdiv{
+    width:260px;
+    height: 55px;
+    display: flex;
+}
 .row {
     justify-content: space-evenly !important;
 }

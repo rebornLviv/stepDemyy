@@ -4,7 +4,7 @@
         <v-col class="vd">
             <div class="videoCont">
                 <div>
-                    <video class="uroc" ref="source" @ended="setFlessons" :src="lessons[this.$store.getters.getCurrentLesson].videoUrl " type="video/mp4" controls>
+                    <video class="uroc" ref="source" @ended="setFlessons" :src="lessons[currentLesson].videoUrl " type="video/mp4" controls>
                     </video>
                 </div>
                 <div class="title">
@@ -157,7 +157,7 @@ export default {
     },
 
     updated() {
-        if (this.$refs.source) {
+        if (this.$refs.source && !this.rating) {
             this.$refs.source.currentTime = this.$store.getters.getCurrentTime;
         }
 

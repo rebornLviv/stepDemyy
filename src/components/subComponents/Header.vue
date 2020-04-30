@@ -94,7 +94,9 @@ export default {
             .catch(error => {
                 console.log(error);
             });
-            this.$router.push("/");
+            if(this.$route.path !== '/'){
+                             this.$router.push('/')   
+                            }
         },
         async setCourses(cat) {
             console.log('asss', cat)

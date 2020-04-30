@@ -173,8 +173,12 @@ export default {
         commit('setUserName',payload)        
         },
     async  setUserPhoto({commit},payload){
+        let  photo ='' 
       let userPhotos  = storage.ref('userPhotos/' + payload.name)
-      let photo =  await  userPhotos.put(payload)
+   await  userPhotos.put(payload)
+   photo = await userPhotos.getDownloadURL()
+   console.log(photo)
+     
       await   usersCollection.doc(auth.currentUser.uid).set({userPhoto:photo},{merge:true})
       commit('setUserPhoto',photo)
         },

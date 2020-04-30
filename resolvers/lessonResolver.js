@@ -7,8 +7,10 @@ export const lessonResolver = async  (to, from, next) => {
    let course = to.params.cid
    let lesson = to.params.lid
    console.log(course,lesson)
-    store.dispatch('setLessons',{course,lesson})
+  await  store.dispatch('setLessons',{course,lesson})
+  await  store.dispatch('getCurrentLesson',course)
     store.dispatch('setLoading',false)
+    
     next()
 
     

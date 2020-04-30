@@ -52,9 +52,6 @@ export default {
   async  created(){
  await this.$store.dispatch('setCat');
 
-    },
-    updated() {
-        console.log("Signed?", this.isUserLoggedIn)
     }
 };
 </script>

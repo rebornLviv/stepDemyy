@@ -139,8 +139,6 @@ OnLogin() {
                     .dispatch("loginUser", user)
                     .then(() => {
                         this.dialog = !this.dialog;
-
-                        this.$router.push("/");
                     })
                     .catch(err => console.log(err));
             }
@@ -150,7 +148,10 @@ OnLogin() {
                 this.$store.dispatch('recoverUser', this.email)
                     .then(
                         () => {
-                            this.$router.push('/')
+                            if(this.$route.path !== '/'){
+                             this.$router.push('/')   
+                            }
+                            
                         }
                     )
                     .catch(
@@ -172,6 +173,13 @@ OnLogin() {
                 this.$store.dispatch('setInitialState')
                 this.$store
                     .dispatch("registerUser", reguser)
+                    .then(
+                        ()=>{
+                            if(this.$route.path !== '/'){
+                             this.$router.push('/')   
+                            }
+                        }
+                    )
                     .catch(
                         (err)=>{
                             console.log('err reg',err)

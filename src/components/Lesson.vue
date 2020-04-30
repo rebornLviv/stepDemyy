@@ -4,7 +4,7 @@
         <v-col class="vd">
             <div class="videoCont">
                 <div>
-                    <video class="uroc" ref="source" @ended="setFlessons" :src="lessons[currentLesson].videoUrl " type="video/mp4" controls>
+                    <video class="uroc" ref="source" @ended="setFlessons(currentLesson)" :src="lessons[currentLesson].videoUrl " type="video/mp4" controls>
                     </video>
                 </div>
                 <div class="title">
@@ -82,22 +82,22 @@ export default {
         changeVideo(lesson, index) {
             console.log(index)
             this.clesson = index
-            console.log("Staaarref", this.$refs.stars)
             this.$refs.source.src = lesson.videoUrl
             console.log("srrrc", this.$refs.source)
-            // this.$refs.desc.textContent= lesson.description ? lesson.description : ''
             this.rating = lesson.rating
             this.$refs.titl.textContent = lesson.title
         },
         getLesson(index) {
             this.clesson = index
         },
-        setFlessons() {
+        setFlessons(currentLesson) {
 
             let crs = this.$route.path.split('/')[2]
             console.log("Crrrs", crs)
-            console.log('thisFlessons', this.flessons.includes(this.clesson))
-            this.flessons.push(this.clesson)
+            let lessonToAdd = this.clesson || currentLesson;
+            console.log('thisFlessons', this.flessons.includes(lessonToAdd))
+            
+            this.flessons.push(lessonToAdd)
             console.log(this.flessons)
             let res = this.flessons
             console.log('fired')
@@ -170,7 +170,7 @@ export default {
         let course = this.$route.path.split('/')[2];
         let finished = this.$refs.source.ended
         let currentTime = this.$refs.source.currentTime
-        let currentLesson = this.clesson
+        let currentLesson = this.clesson || this.currentLesson
         let amount = this.lessons.length
         let courseprogress = ((finished ? currentLesson + 1 : 0) * (100 / amount)) + '%'
         let flessons = []

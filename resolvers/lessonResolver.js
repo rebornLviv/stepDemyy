@@ -1,6 +1,4 @@
 import store from "../src/store"
-import firebase from 'firebase'
-
 export const lessonResolver = async  (to, from, next) => {
     store.dispatch('setLoading',true)
     console.log(to.params)

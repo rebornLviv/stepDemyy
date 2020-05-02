@@ -4,22 +4,29 @@
         <v-container>
             <v-row justify="center" align="center">
                 <v-col cols="4">
-                    <v-autocomplete class=" sbox" placeholder="Пошук.." rounded>
+                   
+                    <input style="display" v-model="query" class=" sbox" type="text" placeholder="Пошук.."> 
+                    <p>By rating</p>
+                    <v-btn @click="byRatingAsc">Asc</v-btn>
+                    <v-btn @click="byRatingDesc">Desc</v-btn>
+                    <p>By name</p>
+                     <v-btn @click="byNameAsc">Asc</v-btn>
+                    <v-btn @click="byNameDesc">Desc</v-btn>
+                    <p>Max results</p>
+                        <v-btn  @click ="showMax(6)">6</v-btn>
+                        <v-btn @click ="showMax(12)" >  12</v-btn>
+                        <v-btn  @click ="showMax(20)">20</v-btn>                      
 
-                    </v-autocomplete>
-                    <v-text-field style="display:none" placeholder="Dense" class=" sbox"></v-text-field>
-                    <input style="display:none" class=" sbox" type="text" placeholder="Пошук..">
                 </v-col>
             </v-row>
         </v-container>
         <hr>
     </v-form>
     <v-container class="mb-12">
-        <p v-if="isLoading">Loading......</p>
         <v-row class="courses " v-if="!isLoading">
             <v-col cols="3" v-for="x in topLessons" :key="x.videoUrl" class="mb-7">
                 <v-card class="card">
-                    <div>
+                    <div  @click="goToLesson(x)">
                         <svg xmlns="http://www.w3.org/2000/svg" width="65" height="85" viewBox="0 0 99 135" >
                             <g id="Polygon_2" data-name="Polygon 2" transform="translate(99) rotate(90)" fill="#fff">
                                 <path d="M 106.617919921875 96.5 L 28.38208389282227 96.5 C 25.95551681518555 96.5 23.72024917602539 95.86758422851563 21.73836708068848 94.62030029296875 C 19.89376640319824 93.45940399169922 18.36956596374512 91.80667114257813 17.3305835723877 89.84075164794922 C 16.29159927368164 87.87483978271484 15.78468322753906 85.68447113037109 15.86464977264404 83.50642395019531 C 15.95058345794678 81.16630554199219 16.6872673034668 78.96320343017578 18.05423355102539 76.95829010009766 L 57.17214965820313 19.58535385131836 C 58.37675094604492 17.818603515625 59.93083190917969 16.44108772277832 61.79123306274414 15.49102020263672 C 63.53856658935547 14.59870338439941 65.51263427734375 14.12705421447754 67.5 14.12705421447754 C 69.48736572265625 14.12705421447754 71.46143341064453 14.59870338439941 73.20876312255859 15.49102020263672 C 75.06916809082031 16.44108772277832 76.62325286865234 17.818603515625 77.82785034179688 19.58535385131836 L 116.9457702636719 76.95830535888672 C 118.3127517700195 78.96320343017578 119.049430847168 81.16630554199219 119.1353530883789 83.50640106201172 C 119.2153167724609 85.68445587158203 118.7084197998047 87.87483978271484 117.66943359375 89.84073638916016 C 116.6304321289063 91.80665588378906 115.1062469482422 93.45940399169922 113.2616348266602 94.62030029296875 C 111.2797698974609 95.86758422851563 109.0445022583008 96.5 106.617919921875 96.5 Z" stroke="none" />
@@ -53,11 +60,65 @@ import Star from './subComponents/Stars'
 
 export default {
     data() {
-        return {}
+        return {
+            query:'',
+            limit:12,
+            by:'rating',
+            option:'desc'
+        }
+    },
+    methods:{
+        byRatingAsc(){
+            this.$store.dispatch('getTopLessons',{by:'rating',option:'asc',limit:this.limit})
+            this.by = 'rating'
+            this.option ='asc'
+        },
+        byRatingDesc(){
+            this.$store.dispatch('getTopLessons',{by:'rating',option:'desc',limit:this.limit})
+             this.by = 'rating'
+            this.option ='desc'
+        },
+        byNameAsc(){
+
+            this.$store.dispatch('getTopLessons',{by:'title',option:'asc'})
+             this.by = 'title'
+            this.option ='asc'
+        },
+        byNameDesc(){
+
+            this.$store.dispatch('getTopLessons',{by:'title',option:'desc'})
+             this.by = 'title'
+            this.option ='desc'
+        },
+        showMax(num){
+            this.limit = num;
+            this.$store.dispatch('getTopLessons',{by: this.by,option : this.option,limit:num})
+
+        },
+        
+        goToLesson(x){
+          console.log(x)
+           this.$store.dispatch('addCourse',{course:x.course,title:x.cat})
+           .then(
+               ()=>{
+                   this.$store.dispatch('setClesson',{course:x.course,lesson:x.id})
+                   .then(
+                       ()=>{
+                        this.$router.push({path:`/courses/${x.course}/${x.cat}`})
+                       }
+                   )
+                   
+               }
+           )
+      }
+
     },
     computed: {
+
         topLessons() {
-            return this.$store.getters.getTopLessons
+            
+           if (!this.query) return this.$store.getters.getTopLessons
+           else  return this.$store.getters.getTopLessons.filter( l => l.title.toLowerCase().includes(this.query.toLowerCase()))
         },
         isLoading() {
             return this.$store.getters.loading

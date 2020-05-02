@@ -222,9 +222,12 @@ export default{
           commit('setLoading',false)
                         },
                      async   getTopLessons({commit},payload){
+                        let sortBy  = payload && payload.option ? payload.by : 'rating';
+                        let sortOption = payload && payload.option ? payload.option : 'desc'
+                        let limit = payload && payload.limit ? payload.limit :12;
                             let top = [] 
                             commit('setLoading',true)
-                   let lessons =     await  db.collectionGroup('Lessons').orderBy('rating','desc').limit(12).get()
+                   let lessons =     await  db.collectionGroup('Lessons').orderBy(sortBy,sortOption).limit(limit).get()
                    lessons.forEach( l => top.push(l.data()))
                    commit('setTopLessons',top)
                    commit('setLoading',false)
@@ -234,6 +237,20 @@ export default{
 
 
                         },
+                        async setCL({commit},payload){
+                     await   usersCollection.doc(auth.currentUser.uid).set({
+                            courses:{
+                                [payload.course] :{
+                                 currentlesson : payload.current   
+
+
+                                } 
+                            }
+                        },{merge:true})
+                        commit('setCurrentLesson',payload.current)
+                        
+                        },
+
                       async  setClesson({commit},payload){
                             console.log('Settt',payload)
                         

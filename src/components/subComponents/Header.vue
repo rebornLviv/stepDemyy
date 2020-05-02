@@ -52,10 +52,11 @@
                             <auth-modal v-if="!isUserLoggedIn" />
                             
                         <!-- Register -->
-                        <v-list-item-title>
-
+                        <v-list-item-title >
+                            <div class="userPanel">
                             <v-btn v-if="isUserLoggedIn" to="/" text @click="onLogout" class="black--text">Вийти</v-btn>
                             <v-btn v-if="isUserLoggedIn" to="/profile/settings">Профіль </v-btn>
+                            </div>
                         </v-list-item-title>
                     </v-list-item>
                 </v-list>
@@ -135,6 +136,14 @@ export default {
 </script>
 
 <style scoped>
+    .userPanel{
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
+    .userPanel > a:first-child{
+        margin-bottom: 10px;
+    }
 .v-btn__content .v-icon--left, .v-btn__content .v-icon--right {
     font-size: 34px;
 }

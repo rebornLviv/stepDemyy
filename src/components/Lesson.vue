@@ -4,11 +4,11 @@
         <v-col class="vd">
             <div class="videoCont">
                 <div>
-                    <video class="uroc" ref="source" @ended="setFlessons(currentLesson)" :src="lessons[currentLesson].videoUrl " type="video/mp4" controls>
+                    <video class="uroc" ref="source" @ended="setFlessons(currentLesson)" :src="this.$store.getters.getLessons[this.$store.getters.getCurrentLesson].videoUrl " type="video/mp4" controls>
                     </video>
                 </div>
                 <div class="title">
-                    <p ref="titl">{{lessons[currentLesson].title}}</p>
+                    <p ref="titl">{{this.$store.getters.getLessons[this.$store.getters.getCurrentLesson].title}}</p>
                     <div class="author">
                         <p>{{author}}</p>
                         <v-icon size="35px">mdi-account</v-icon>
@@ -88,6 +88,8 @@ export default {
 
     methods: {
         changeVideo(lesson, index) {
+            let crs = this.$route.path.split('/')[2]
+            this.$store.dispatch('setCL',{course:crs,current:index})
             console.log(index)
             this.clesson = index
             this.$refs.source.src = lesson.videoUrl

@@ -31,6 +31,7 @@ state.joined = payload;
 async  addCourse({commit},payload){
  console.log('Adding a course')
  if(!auth.currentUser){
+    commit('setError', 'You must be loged in to attend a course')
 return;
 
  }

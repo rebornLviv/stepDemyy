@@ -8,11 +8,14 @@
         </v-row>
         <v-row>
             <v-col align="middle">
-                <v-autocomplete class=" sbox" placeholder="Пошук.." rounded>
-
+                <v-autocomplete class=" sbox" 
+                v-model="query"
+                :items="courses"
+                no-data-text="No courses found"
+                placeholder="Пошук.."
+                 rounded>
                 </v-autocomplete>
-                <v-text-field style="display:none" placeholder="Dense & Rounded" rounded class=" sbox"></v-text-field>
-                <input style="display:none" class=" sbox" type="text" placeholder="Пошук..">
+
             </v-col>
         </v-row>
 
@@ -118,7 +121,7 @@ import Star from './subComponents/Stars'
 export default {
     data() {
         return {
-            
+            query:null
         }
     },
     methods:{
@@ -136,7 +139,15 @@ export default {
                    
                }
            )
-      }
+      },
+    },
+    watch:{
+
+     query(val){
+         console.log("ddd",val)
+         if(this.courses.includes(val)) this.$router.push({path:`/courses/${val}`})
+          
+     }
     },
     computed:{
 
@@ -146,6 +157,10 @@ export default {
         },
         isLoading(){
             return this.$store.getters.loading
+        },
+        courses(){
+            return this.$store.getters.getCat
+
         }
 
     },

@@ -80,7 +80,7 @@ router.beforeEach((to, from, next) => {
 
   if (requiresAuth && !currentUser) {
       next('/')
-      router.app.$store.dispatch('setError', 'You must be loged in to attend a course');
+      router.app.$store.dispatch('setError', 'You must be loged in !');
   } else if (requiresAuth && currentUser) {
       next()
   } else {

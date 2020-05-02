@@ -1,58 +1,56 @@
 <template>
-    <v-col cols="8" class="userData">
-                <p class="txtp">Мої курси</p>
- 
-                <div class="courseCont">
-                    <v-card    class="course" v-for="x in userCourses " :key="x.title"   >
-                        <p>{{x.title}}</p>
-                        <p>Поточний урок : {{x.clesson+1}}</p>
+<v-col cols="8" class="userData">
+    <p class="txtp">Мої курси</p>
 
-                        <v-progress-circular
-      :rotate="360"
-      :size="100"
-      :width="15"
-      :value="x.progress"
-      :color="parseInt(x.progress) >= 0 && parseInt(x.progress) < 25 ? 'red' : parseInt(x.progress) >= 25 && parseInt(x.progress) < 50 ? 'yellow' : parseInt(x.progress) >= 50 && parseInt(x.progress) < 75 ? 'orange': parseInt(x.progress) >= 75 ? 'green' : ''   "
-      
-    >
-      {{ parseInt(x.progress) + '%' }}
-    </v-progress-circular>
-  
-                        <v-btn @click="goToCourse(x.title,x.ctitle)">Продовжити</v-btn>
-                    </v-card>
-                </div>
-            </v-col>
+    <div class="courseCont">
+        <v-card class="course d-flex flex-column" align="center" justify="center"  v-for="x in userCourses " :key="x.title">
+            <p class="current-lesson">{{x.title}}</p>
+            <p>Поточний урок : {{x.clesson+1}}</p>
+
+            <v-progress-circular
+                :rotate="360"
+                :size="100"
+                :width="15"
+                :value="x.progress"
+                :color="parseInt(x.progress) >= 0 && parseInt(x.progress) < 25 ? 'red' : parseInt(x.progress) >= 25 && parseInt(x.progress) < 50 ? 'yellow' : parseInt(x.progress) >= 50 && parseInt(x.progress) < 75 ? 'orange': parseInt(x.progress) >= 75 ? 'green' : ''   ">
+                {{ parseInt(x.progress) + '%' }}
+            </v-progress-circular>
+
+            <v-btn class="continue" @click="goToCourse(x.title,x.ctitle)">Продовжити</v-btn>
+        </v-card>
+    </div>
+</v-col>
 </template>
-
-
 
 <script>
 export default {
-    data: ()=> ({
+    data: () => ({
 
-        confP:false
+        confP: false
 
     }),
 
-    methods:{
+    methods: {
 
-   goToCourse(course,lesson){
+        goToCourse(course, lesson) {
 
-       this.$router.push({path:`/courses/${course}/${lesson}`})
+            this.$router.push({
+                path: `/courses/${course}/${lesson}`
+            })
 
-   }
+        }
 
     },
-    computed:{
-        userCourses(){
-            return  this.$store.getters.getMyCourses
+    computed: {
+        userCourses() {
+            return this.$store.getters.getMyCourses
         }
     }
 }
 </script>
 
 <style scoped>
-.changepsw{
+.changepsw {
     display: flex;
     flex-direction: column;
     width: 400px;
@@ -63,28 +61,31 @@ export default {
     transition-duration: 5000ms;
 }
 
-.chP{
+.chP {
     width: 400px !important;
 
 }
-.changepsw>input{
+
+.changepsw>input {
     border-bottom: 1px solid white;
     padding: 10px;
     color: white;
     width: 70%;
     padding-bottom: 7px;
-    
+
 }
-.cc{
+
+.cc {
     display: flex;
     justify-content: flex-start;
     height: 100%;
 }
-.iblc{
+
+.iblc {
 
     width: 272px;
     height: 272px;
-    border:1px solid black;
+    border: 1px solid black;
     margin-top: 20px;
     border-radius: 50%;
     display: flex;
@@ -92,47 +93,76 @@ export default {
     align-items: center;
     margin-top: 5px;
 }
-.wrapper{
- width: 70%;
- height: 100%;
+
+.wrapper {
+    width: 70%;
+    height: 100%;
 }
-.inp{
-    border-bottom: 1px solid black ;
+
+.inp {
+    border-bottom: 1px solid black;
     margin-right: 5px;
 }
-.inpC{
+
+.inpC {
     padding: 10px;
 }
-.userData{
-    display:flex;
+
+.userData {
+    display: flex;
     flex-direction: column;
     align-items: center;
 }
-.btns{
-    
+
+.btns {
+
     display: flex;
     flex-direction: column;
     justify-content: center;
 
 }
-.btns>button{
+
+.btns>button {
     margin: 10px;
     width: 200px;
 }
-.userImgContainer{
-    display:flex;
+
+.userImgContainer {
+    display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     height: 100%;
     border-right: 2px solid black;
 }
-.txtp{
+
+.txtp {
     font-size: 50px;
-    padding:0px;
+    padding: 0px;
     margin: 1px;
 }
-.edit:hover{
+
+.edit:hover {
     color: black;
 }
+
+.course {
+    padding: 30px;
+    margin-right: 20px;
+}
+
+
+.continue {
+    margin-top: 15px;
+}
+
+.current-lesson {
+    font-size: 26px;
+}
+
+.courseCont {
+    display: flex;
+}
+
+
 </style>

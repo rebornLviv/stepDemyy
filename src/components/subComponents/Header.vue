@@ -51,7 +51,7 @@
                     <v-list-item>
                             <auth-modal v-if="!isUserLoggedIn" />
                             
-                        <!-- Register -->
+                        <!-- Profile -->
                         <v-list-item-title >
                             <div class="userPanel">
                             <v-btn v-if="isUserLoggedIn" to="/" text @click="onLogout" class="black--text">Вийти</v-btn>

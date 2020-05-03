@@ -14,14 +14,14 @@
                         <v-icon size="35px">mdi-account</v-icon>
                     </div>
                 </div>
-               
-                    <div class="rdiv" v-if="!rateIt" @mouseover="rateIt = !rateIt">
-                    <star  :rating = rating  size="50px" />
-                    </div>
-                    <div  class="rdiv" v-if="rateIt"  @mouseout="rateIt = !rateIt">
-                    <v-rating   class="rte" ref="stats"  v-model="rating" background-color="black" half-increments dark size="40px" ripple color="#4E5256" @input="rateStars($event)"></v-rating>
-</div>
-                
+
+                <div class="rdiv" v-if="!rateIt" @mouseover="rateIt = !rateIt">
+                    <star :rating=rating size="56px" />
+                </div>
+                <div class="rdiv" v-if="rateIt" @mouseout="rateIt = !rateIt">
+                    <v-rating class="rte" ref="stats" v-model="rating" background-color="black" half-increments dark size="40px" ripple color="#4E5256" @input="rateStars($event)"></v-rating>
+                </div>
+
                 <div class="description">
                     Lorem ipsum dolor, sit amet consectetur adipisicing elit. Officia odio deleniti quod voluptatibus quasi, iure accusamus corrupti blanditiis aliquid ratione, necessitatibus amet vel magnam unde numquam esse illo! Architecto nulla quibusdam ad officiis, illum vero, fugit iusto officia perspiciatis odio exercitationem impedit beatae explicabo minima deserunt vel. Voluptatibus, consequuntur fugit necessitatibus tempore fuga, eligendi voluptates ab nostrum delectus dolor ut rem? Perferendis hic iure deserunt debitis aspernatur et asperiores ipsam minima vero fuga praesentium voluptatibus, libero esse consequuntur sequi maxime eveniet quam expedita maiores. Id nobis vel maiores labore? Nesciunt repudiandae provident architecto ratione, dignissimos vel nobis voluptatem assumenda quam?
 
@@ -44,9 +44,8 @@
                         <div class="inform">
                             {{lesson.title}}
                         </div>
-                        
+
                     </slide>
-                    
 
                 </hooper>
 
@@ -54,9 +53,7 @@
         </v-col>
     </div>
 </div>
-
 </template>
-
 
 <script>
 import * as fb from 'firebase'
@@ -73,11 +70,11 @@ export default {
             clesson: null,
             flessons: [],
             rating: this.$store.getters.getLessons[this.$store.getters.getCurrentLesson].rating,
-            src:'',
-            title:'',
-            description:'',
-            rateIt:false,
-            rateN:0
+            src: '',
+            title: '',
+            description: '',
+            rateIt: false,
+            rateN: 0
         }
     },
     components: {
@@ -89,12 +86,15 @@ export default {
     methods: {
         changeVideo(lesson, index) {
             let crs = this.$route.path.split('/')[2]
-            this.$store.dispatch('setCL',{course:crs,current:index})
+            this.$store.dispatch('setCL', {
+                course: crs,
+                current: index
+            })
             console.log(index)
             this.clesson = index
             this.$refs.source.src = lesson.videoUrl
             console.log("srrrc", this.$refs.source)
-             this.rating = lesson.rating
+            this.rating = lesson.rating
             this.$refs.titl.textContent = lesson.title
         },
         getLesson(index) {
@@ -106,7 +106,7 @@ export default {
             console.log("Crrrs", crs)
             let lessonToAdd = this.clesson || currentLesson;
             console.log('thisFlessons', this.flessons.includes(lessonToAdd))
-            
+
             this.flessons.push(lessonToAdd)
             console.log(this.flessons)
             let res = this.flessons
@@ -126,7 +126,7 @@ export default {
 
         },
         async rateStars(event) {
-            console.log("eveeent",event)
+            console.log("eveeent", event)
             console.log('stars', this.rating)
             console.log(this.rating)
             let rating = this.rating
@@ -176,8 +176,6 @@ export default {
 
     },
 
-
-
     beforeRouteLeave(to, from, next) {
         //console.log("Current time",this.$refs.source.currentTime)
         let course = this.$route.path.split('/')[2];
@@ -219,11 +217,12 @@ export default {
 </script>
 
 <style scoped>
-.rdiv{
-    width:260px;
+.rdiv {
+    width: 315px;
     height: 55px;
     display: flex;
 }
+
 .row {
     justify-content: space-evenly !important;
 }
@@ -253,10 +252,9 @@ export default {
     text-align: right;
 }
 
-.rte>i {
-
-    font-size: 35px;
-}
+/* .rte>i {
+    font-size: 22px;
+} */
 
 .author {
     width: 200px;

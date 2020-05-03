@@ -149,6 +149,9 @@ export default {
 .course {
     padding: 30px;
     margin-right: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 

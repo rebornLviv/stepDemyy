@@ -111,6 +111,7 @@ export default{
                    let  uid=""
                    let finished=[]
                    let flessons=[]
+                   console.log("to update",payload)
                    console.log("payload finished",payload.flessons.length);
                    console.log("payload Currles",payload.currentLesson);
                   
@@ -222,16 +223,51 @@ export default{
           commit('setLoading',false)
                         },
                      async   getTopLessons({commit},payload){
-                        let sortBy  = payload && payload.option ? payload.by : 'rating';
-                        let sortOption = payload && payload.option ? payload.option : 'desc'
-                        let limit = payload && payload.limit ? payload.limit :12;
-                            let top = [] 
-                            commit('setLoading',true)
-                   let lessons =     await  db.collectionGroup('Lessons').orderBy(sortBy,sortOption).limit(limit).get()
-                   lessons.forEach( l => top.push(l.data()))
-                   commit('setTopLessons',top)
-                   commit('setLoading',false)
-                  
+                         console.log(payload)
+                        let top = [] 
+                        let lessons =null;
+                        commit('setLoading',true)
+                        if(!payload) {
+                            lessons =     await  db.collectionGroup('Lessons')
+                            .orderBy('rating','desc')
+                            .limit(12).get()
+                            
+                    
+                            lessons.forEach( l => top.push(l.data()))
+                            commit('setTopLessons',top)
+                            commit('setLoading',false)
+                            return;
+
+
+                        }
+                        if(payload.byName && payload.byRating){
+                            console.log('payload.byName && payload.byRating')
+                            lessons =     await  db.collectionGroup('Lessons')
+                            .orderBy(payload.byRating,payload.optionRating)
+                            .orderBy(payload.byName,payload.optionName)
+                            .limit(payload.limit).get()
+
+                        }
+                        else if( payload.byRating && !payload.byName){
+                            console.log('payload.byRating && !payload.byName')
+                            lessons =     await  db.collectionGroup('Lessons')
+                            .orderBy(payload.byRating,payload.optionRating)
+                            .limit(payload.limit).get()
+
+                        }
+                        else if (!payload.byRating && payload.byName) {
+                            console.log('!payload.byRating && payload.byName')
+                            console.log(payload.byName,payload.optionName)
+                            lessons =     await  db.collectionGroup('Lessons')
+                            .orderBy(payload.byName,payload.optionName)
+                            .limit(payload.limit).get()
+                        }
+                      
+                            
+                            
+                        lessons.forEach( l => top.push(l.data()))
+                        commit('setTopLessons',top)
+                        commit('setLoading',false)
 
 
 

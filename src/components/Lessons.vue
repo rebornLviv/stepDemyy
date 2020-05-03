@@ -6,16 +6,6 @@
                 <v-col cols="4">
 
                     <input style="display" v-model="query" class=" sbox" type="text" placeholder="Пошук..">
-                    <p>By rating</p>
-                    <v-btn @click="byRatingAsc">Asc</v-btn>
-                    <v-btn @click="byRatingDesc">Desc</v-btn>
-                    <p>By name</p>
-                    <v-btn @click="byNameAsc">Asc</v-btn>
-                    <v-btn @click="byNameDesc">Desc</v-btn>
-                    <p>Max results</p>
-                    <v-btn @click="showMax(6)">6</v-btn>
-                    <v-btn @click="showMax(12)"> 12</v-btn>
-                    <v-btn @click="showMax(20)">20</v-btn>
 
                 </v-col>
             </v-row>
@@ -64,19 +54,19 @@
                 <v-card-text>
                     <v-row align="center" justify="center">
                         <v-col class="" align="center" justify="center" cols="12" sm="6">
-                            <span class="max">Max results</span>
-                            <v-select :items="items" label="Max" dense solo></v-select>
+                            <span class="max">Максимум</span>
+                            <v-select :items="items" v-model="limit" label="Max" dense solo></v-select>
 
-                            <p>By rating</p>
-                            <v-btn-toggle v-model="toggle_exclusive_rate" mandatory>
-                                <v-btn @click="byRatingAsc">Asc</v-btn>
-                                <v-btn @click="byRatingDesc">Desc</v-btn>
+                            <p>По рейтингу</p>
+                            <v-btn-toggle v-model="toggle_exclusive_rate" >
+                                <v-btn text @click="byRatingAsc"><v-icon>mdi-arrow-up-bold-circle-outline</v-icon></v-btn>
+                                <v-btn text  @click="byRatingDesc"><v-icon>mdi-arrow-down-bold-circle-outline</v-icon></v-btn>
                             </v-btn-toggle>
 
-                            <p class="by-name">By name</p>
+                            <p class="by-name">По імені</p>
                             <v-btn-toggle v-model="toggle_exclusive_name">
-                                <v-btn @click="byNameAsc">Asc</v-btn>
-                                <v-btn @click="byNameDesc">Desc</v-btn>
+                                <v-btn text @click="byNameAsc"><v-icon>mdi-arrow-up-bold-circle-outline</v-icon></v-btn>
+                                <v-btn  text @click="byNameDesc"><v-icon>mdi-arrow-down-bold-circle-outline</v-icon></v-btn>
                             </v-btn-toggle>
 
                         </v-col>
@@ -85,6 +75,9 @@
                 </v-card-text>
 
                 <v-card-actions>
+                    <v-btn color="green darken-1" text @click="applyFilters">
+                        Підтвердити
+                    </v-btn>
                     <v-spacer></v-spacer>
 
                     <v-btn color="green darken-1" text @click="dialog = false">
@@ -105,8 +98,10 @@ export default {
         return {
             query: '',
             limit: 12,
-            by: 'rating',
-            option: 'desc',
+            byRating: null,
+            optionRating: null,
+            byName: null,
+            optionName: null,
             dialog: false,
             items: [6, 12, 20],
             toggle_exclusive_name: undefined,
@@ -114,50 +109,73 @@ export default {
         }
     },
     methods: {
-        byRatingAsc() {
-            this.$store.dispatch('getTopLessons', {
-                by: 'rating',
-                option: 'asc',
-                limit: this.limit
+        applyFilters(){
+            if(!this.byRating && !this.byName ){
+                this.dialog = false;
+                return;
+            }           
+             this.$store.dispatch('getTopLessons', {
+                byRating: this.byRating,
+                byName: this.byName,
+                optionRating: this.optionRating,
+                optionName:this.optionName,
+                limit: this.limit ? this.limit : 12
             })
-            this.by = 'rating'
-            this.option = 'asc'
+             this.toggle_exclusive_name = undefined;
+         this.toggle_exclusive_rate = undefined;
+            this.byRating = null;
+            this.byName = null;
+            this.optionRating = null;
+            this.optionName = null;
+            this.dialog = false
+            
+            
+
+        },
+        byRatingAsc() {
+            // this.$store.dispatch('getTopLessons', {
+            //     by: 'rating',
+            //     option: 'asc',
+            //     limit: this.limit
+            // })
+            this.byRating = 'rating'
+            this.optionRating = 'asc'
             
         },
         byRatingDesc() {
-            this.$store.dispatch('getTopLessons', {
-                by: 'rating',
-                option: 'desc',
-                limit: this.limit
-            })
-            this.by = 'rating'
-            this.option = 'desc'
+            // this.$store.dispatch('getTopLessons', {
+            //     by: 'rating',
+            //     option: 'desc',
+            //     limit: this.limit
+            // })
+            this.byRating = 'rating'
+            this.optionRating = 'desc'
         },
         byNameAsc() {
 
-            this.$store.dispatch('getTopLessons', {
-                by: 'title',
-                option: 'asc'
-            })
-            this.by = 'title'
-            this.option = 'asc'
+            // this.$store.dispatch('getTopLessons', {
+            //     by: 'title',
+            //     option: 'asc'
+            // })
+            this.byName = 'title'
+            this.optionName = 'asc'
         },
         byNameDesc() {
 
-            this.$store.dispatch('getTopLessons', {
-                by: 'title',
-                option: 'desc'
-            })
-            this.by = 'title'
-            this.option = 'desc'
+            // this.$store.dispatch('getTopLessons', {
+            //     by: 'title',
+            //     option: 'desc'
+            // })
+            this.byName = 'title'
+            this.optionName = 'desc'
         },
         showMax(num) {
             this.limit = num;
-            this.$store.dispatch('getTopLessons', {
-                by: this.by,
-                option: this.option,
-                limit: num
-            })
+            // this.$store.dispatch('getTopLessons', {
+            //     by: this.by,
+            //     option: this.option,
+            //     limit: num
+            // })
 
         },
 

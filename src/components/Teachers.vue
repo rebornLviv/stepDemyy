@@ -1,7 +1,6 @@
 
 <template>
 <v-container class="mb-12">
-    <p v-if="isLoading">Loading......</p>
     <v-row class="courses " v-if="!isLoading" justify="center" align="center">
         <v-col cols="3" v-for="x in topLessons" :key="x.videoUrl" class="mb-7" align="center" justify="center">
             <div class="card">

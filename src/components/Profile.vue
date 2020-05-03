@@ -10,7 +10,7 @@
                     <div class="upload-btn-wrapper">
                         <!-- <v-btn class="btn">Upload a file</v-btn> -->
                         <v-btn color="primary btn" dark @click.stop="dialog = true">
-                            Upload a File
+                           Завантажити фото
                         </v-btn>
 
                         <v-dialog v-model="dialog" max-width="590">
@@ -19,7 +19,7 @@
 
                                 <v-card-text>
                                     <v-file-input
-                                        label="File input"
+                                        label="Файл..."
                                         filled
                                         ref="file"
                                         @change="selectFile"
@@ -31,11 +31,11 @@
                                 </v-card-text>
 
                                 <v-card-actions>
-                                    <v-btn class="btn-photo" color="green darken-1" text @click="dialog = false">
+                                    <v-btn class="btn-photo" light text  @click="dialog = false">
                                         Відміна
                                     </v-btn>
 
-                                    <v-btn class="btn-photo" color="green darken-1" text @click="updatePhoto" name="myfile" ref="file">
+                                    <v-btn class="btn-photo" light text  @click="updatePhoto" name="myfile" ref="file">
                                         Зберегти
                                     </v-btn>
                                 </v-card-actions>

@@ -169,8 +169,8 @@ export default {
 
     },
 
-    updated() {
-        if (this.$refs.source && !this.rating) {
+    mounted() {
+        if (this.$refs.source) {
             this.$refs.source.currentTime = this.$store.getters.getCurrentTime;
         }
 

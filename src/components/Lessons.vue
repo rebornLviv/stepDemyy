@@ -105,14 +105,27 @@ export default {
             dialog: false,
             items: [6, 12, 20],
             toggle_exclusive_name: undefined,
-            toggle_exclusive_rate: undefined
+            toggle_exclusive_rate: undefined,
+            prevlimit:12
         }
     },
     methods: {
         applyFilters(){
+            
             if(!this.byRating && !this.byName ){
-                this.dialog = false;
+                if(this.limit !== this.prevlimit) {
+                 this.$store.dispatch('getTopLessons', {
+                limit: this.limit ? this.limit : 12
+            })
+            this.dialog = false;
+            this.prevlimit = this.limit
                 return;
+                }
+                else if (this.limit === this.prevlimit){
+                    this.dialog = false;
+                    return;
+                }
+                
             }           
              this.$store.dispatch('getTopLessons', {
                 byRating: this.byRating,
@@ -379,7 +392,7 @@ export default {
 
 .courses {
     display: flex;
-    justify-content: space-between;
+    justify-content: start;
 }
 
 .comp {

@@ -262,7 +262,10 @@ export default{
                             .orderBy(payload.byName,payload.optionName)
                             .limit(payload.limit).get()
                         }
-                      
+                        else if (!payload.byRating && !payload.byName && payload.limit) {
+                            console.log('only limit')
+                            lessons =    await  db.collectionGroup('Lessons').limit(payload.limit).get()
+                        }
                             
                             
                         lessons.forEach( l => top.push(l.data()))

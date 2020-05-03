@@ -392,7 +392,7 @@ export default {
 
 .courses {
     display: flex;
-    justify-content: space-between;
+    justify-content: start;
 }
 
 .comp {

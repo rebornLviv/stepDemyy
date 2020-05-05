@@ -3,23 +3,25 @@
     <div class="row">
         <v-col class="vd">
             <div class="videoCont">
+                <div class="title-video">
+                    <p justify="center" ref="titl">{{this.$store.getters.getLessons[this.$store.getters.getCurrentLesson].title}}</p>
+                </div>
                 <div>
                     <video class="uroc" ref="source" @ended="setFlessons(currentLesson)" :src="this.$store.getters.getLessons[this.$store.getters.getCurrentLesson].videoUrl " type="video/mp4" controls>
                     </video>
                 </div>
-                <div class="title">
-                    <p ref="titl">{{this.$store.getters.getLessons[this.$store.getters.getCurrentLesson].title}}</p>
+                <div class="main">
                     <div class="author">
                         <p>{{author}}</p>
                         <v-icon size="35px">mdi-account</v-icon>
                     </div>
-                </div>
 
-                <div class="rdiv" v-if="!rateIt" @mouseover="rateIt = !rateIt">
-                    <star :rating=rating size="56px" />
-                </div>
-                <div class="rdiv" v-if="rateIt" @mouseout="rateIt = !rateIt">
-                    <v-rating class="rte" ref="stats" v-model="rating" background-color="black" half-increments dark size="40px" ripple color="#4E5256" @input="rateStars($event)"></v-rating>
+                    <div class="rdiv" v-if="!rateIt" @mouseover="rateIt = !rateIt">
+                        <star :rating=rating size="56px" />
+                    </div>
+                    <div class="rdiv" v-if="rateIt" @mouseout="rateIt = !rateIt">
+                        <v-rating class="rte" ref="stats" v-model="rating" background-color="black" half-increments dark size="40px" ripple color="#4E5256" @input="rateStars($event)"></v-rating>
+                    </div>
                 </div>
 
                 <div class="description">
@@ -257,19 +259,18 @@ export default {
 } */
 
 .author {
-    width: 200px;
-    height: 70px;
-    border: 1px solid #4E5256;
+    /* border: 1px solid #4E5256; */
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 10px;
-
 }
 
 .author>p {
     margin-bottom: 0px !important;
     margin-right: 8px;
+    font-size: 22px;
+    text-decoration: underline;
 }
 
 .author>i {
@@ -312,7 +313,6 @@ export default {
 }
 
 .lesson {
-
     width: 384px;
     height: 114px !important;
     margin-bottom: 25px;
@@ -346,5 +346,16 @@ export default {
 
 .inform {
     width: 245px;
+}
+
+.title-video {
+    font-size: 40px;
+}
+
+.main {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    margin-bottom: 20px;
 }
 </style>

@@ -1,182 +1,166 @@
 <template>
+<v-container class="fill-height" fluid>
+    <v-row class="wrapper">
+        <v-col class="cont">
+            <div>
+                <img class="photo" :src="course.imageSrc" alt="">
+            </div>
+            <div class="inform">
+                <p class="courseName">{{course.title}}</p>
+                <div class="preinfo">
+                    <star class="stars" :size="'45px'" :rating="course.rating"></star>
+                    <div class="authorD">
+                        <p>{{new Date().toLocaleString().substring(1,10)}}</p>
+                        <div class="author">
+                            <p>{{course.author}}</p>
+                            <v-icon size="35px">mdi-account</v-icon>
+                        </div>
 
- <v-container
-        class="fill-height"
-        fluid
-      >
+                    </div>
+                </div>
+                <p class="desc">{{course.description}}</p>
 
-<v-row class="wrapper">
-<v-col class="cont">
-<div >
+                <v-row>
+                    <v-col>
+                        <v-btn dark class="mt-5 courseBtn" @click="manageCourse">{{ joined ? 'Продовжити' : 'Приєднатися до курсу'}}</v-btn>
+                    </v-col>
 
-<img class="photo"  :src="course.imageSrc"  alt="">
-</div >
-<div class="inform">
-  
-<p class="courseName">{{course.title}}</p>
-<div class="preinfo">
+                </v-row>
 
-  <star class="stars" :size="'45px'" :rating ="course.rating"></star>
-  <div class="authorD">
-    <p>{{new Date().toLocaleString().substring(1,10)}}</p>
-    <div class="author">
-      
-<p>{{course.author}}</p>  <v-icon size="35px" >mdi-account</v-icon>
-    </div>
-    
-  </div>
-</div>
-<p class="desc">{{course.description}}</p>
+            </div>
 
-<v-row>
-  <v-col>
-    <v-btn  dark class="mt-5 courseBtn"   @click="manageCourse">{{ joined ? 'Продовжити' : 'Приєднатися до курсу'}}</v-btn>
-  </v-col>
+        </v-col>
 
+    </v-row>
 
-</v-row>
-
-</div>
-
-
-
-</v-col>
-
-
-</v-row>
-
-
-
-
-
-
-
-
-
-
-
-
-      </v-container>
-
-
-
+</v-container>
 </template>
-
-
 
 <script>
 import Star from './subComponents/Stars'
 export default {
-  
+
     data() {
         return {
-            name: this.$route.path.replace('/courses/',''),
-            id:this.$route.params['id'], 
-            rating:0
-            
+            name: this.$route.path.replace('/courses/', ''),
+            id: this.$route.params['id'],
+            rating: 0
+
         }
     },
-    components:{
-      star:Star
+    components: {
+        star: Star
     },
     methods: {
-    async  manageCourse(){
-      
-      console.log('manage')
- let course=this.$route.path.replace('/courses/','')
-let title = this.course.title.split(' ').join('')
+        async manageCourse() {
 
-await     this.$store.dispatch('addCourse',{course,title})
-this.$router.push({path:'/courses/'+this.$route.path.split('/')[2]+'/' + title})
-   
-     
-      }
-    },
-    computed :{
-      userId(){
-        return this.$store.getters.user.id;
-      },
-course(){
+            console.log('manage')
+            let course = this.$route.path.replace('/courses/', '')
+            let title = this.course.title.split(' ').join('')
 
-  return  this.$store.getters.getCourse
-},
-joined(){
-  return this.$store.getters.getJoined
-}
+            await this.$store.dispatch('addCourse', {
+                course,
+                title
+            })
+            this.$router.push({
+                path: '/courses/' + this.$route.path.split('/')[2] + '/' + title
+            })
 
-
-    },
- 
-    watch:{
-
-        $route(to){
-            console.log('parid',to.params['id'])
-  this.$store.dispatch('setCourse',this.$route.path.replace('/courses/',''))
-this.id=to.params['id']
         }
-        
+    },
+    computed: {
+        userId() {
+            return this.$store.getters.user.id;
+        },
+        course() {
+
+            return this.$store.getters.getCourse
+        },
+        joined() {
+            return this.$store.getters.getJoined
+        }
+
+    },
+
+    watch: {
+
+        $route(to) {
+            console.log('parid', to.params['id'])
+            this.$store.dispatch('setCourse', this.$route.path.replace('/courses/', ''))
+            this.id = to.params['id']
+        }
+
     },
 
 }
 </script>
 
-
 <style scoped>
-.courseBtn{
-  width: 100%;
+.courseBtn {
+    width: 100%;
 }
-.authorD{
-  height: 90px;
-  display:flex;
-  flex-direction: column;
-}
-.authorD > p{
-  margin-bottom: 0px !important;
-  text-align: right;
-}
-.author{
-  width: 200px;
-  height: 70px;
-  border: 1px solid  #4E5256;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 10px;
- 
-}
-.author > p {
-margin-bottom: 0px !important;
-margin-right: 8px;
-}
-.author > i {
-  width: 42px;
-  height: 42px;
-border: 1px solid #4E5256;
-border-radius: 100%;
-}
-.cont{
 
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+.authorD {
+    height: 90px;
+    display: flex;
+    flex-direction: column;
 }
-    .photo{
 
-      width: 800px;
-      height: 500px;
-      border:1px solid  #4E5256;
-    }
-    .preinfo{
-      height: 90px;
-      display: flex;
-      justify-content: space-between;
-    }
-    .inform{
- width: 800px;
-  height: 639px;
-    }
-    .courseName{
-      font-size: 70px;
-      color:#4E5256 ;
-    }
+.authorD>p {
+    margin-bottom: 0px !important;
+    text-align: right;
+}
+
+.author {
+    width: 200px;
+    height: 70px;
+    border: 1px solid #4E5256;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+
+}
+
+.author>p {
+    margin-bottom: 0px !important;
+    margin-right: 8px;
+}
+
+.author>i {
+    width: 42px;
+    height: 42px;
+    border: 1px solid #4E5256;
+    border-radius: 100%;
+}
+
+.cont {
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.photo {
+
+    width: 800px;
+    height: 500px;
+    border: 1px solid #4E5256;
+}
+
+.preinfo {
+    height: 90px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.inform {
+    width: 800px;
+    height: 639px;
+}
+
+.courseName {
+    font-size: 70px;
+    color: #4E5256;
+}
 </style>

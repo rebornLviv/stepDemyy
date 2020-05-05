@@ -1,70 +1,97 @@
 <template>
-<v-app-bar app color="white" dark class="barrr">
-        <div class="black--text font-italic mr-5 logo">
-            <router-link to="/" tag="h2" class="font-weight-regular logo">Stepdemy</router-link>
-        </div>
-        <div class="navitems">
-            <div>
-                <v-menu offset-y>
-                    <template v-slot:activator="{on}">
-                        <v-btn text v-on="on">
-                            <span class="black--text  navText">Предмети
-                                <i aria-hidden="true" class="v-icon notranslate hidden-md-and-down v-icon--right mdi mdi-menu-down theme--light"></i>
-                            </span>
-                        </v-btn>
-                    </template>
-                    <v-list>
-                        <v-list-item v-for="cat in categories" :key="cat" @click="setCourses(cat)">{{cat}}</v-list-item>
-                    </v-list>
-                </v-menu>
-            </div>
-
-            <div>
-                <v-btn text to="/lessons" >
-                    <span class="black--text navText">
-                        Уроки
-                    </span>
-                </v-btn>
-            </div>
-
-            <div>
-                <v-btn text to="/teachers">
-                    <span class="black--text navText">Викладачі</span>
-                </v-btn>
-            </div>
-        </div>
-
-        <div class="userSearch">
-            <v-spacer></v-spacer>
-            <v-btn text class="grey--text srch">
+<v-app-bar app color="white" class="barrr">
+    <div class="black--text font-italic mr-5 logo">
+        <router-link to="/" tag="h2" class="font-weight-regular logo">Stepdemy</router-link>
+    </div>
+    <div>
+        <v-col column="4" align="center" justify="center">
+            <!-- <v-autocomplete class="sbox" v-model="query" :items="courses" no-data-text="No courses found" placeholder="Пошук.." rounded>
                 <v-icon>mdi-magnify</v-icon>
-            </v-btn>
-            <v-menu bottom origin="center center" transition="scale-transition" :absolute="absolute">
+            </v-autocomplete> -->
+            <!-- <v-autocomplete
+                v-model="query"
+                :loading="loading"
+                :items="courses"
+                :search-input.sync="search"
+                cache-items
+                hide-no-data
+                hide-details
+                label="Пошук"
+                solo-inverted
+                mdi-magnify
+            ></v-autocomplete> -->
+            <v-text-field
+                class="sbox" 
+                v-model="query" 
+                :items="courses" 
+                no-data-text="No courses found" 
+                label="Пошук"
+                solo-inverted>
+            </v-text-field>
+            <v-icon class="icon">mdi-magnify</v-icon>
 
-                <template v-slot:activator="{ on }">
-                    <v-btn fab dark icon v-on="on">
-                        <v-icon>mdi-account</v-icon>
+        </v-col>
+    </div>
+    <div class="navitems">
+        <div>
+            <v-menu offset-y>
+                <template v-slot:activator="{on}">
+                    <v-btn text v-on="on">
+                        <span class="black--text  navText">Предмети
+                            <i aria-hidden="true" class="v-icon notranslate hidden-md-and-down v-icon--right mdi mdi-menu-down theme--light"></i>
+                        </span>
                     </v-btn>
                 </template>
-
                 <v-list>
-                    <v-list-item>
-                            <auth-modal v-if="!isUserLoggedIn" />
-                            
-                        <!-- Profile -->
-                        <v-list-item-title >
-                            <div class="userPanel">
-                            <v-btn v-if="isUserLoggedIn" to="/" text @click="onLogout" class="black--text">Вийти</v-btn>
-                            <v-btn v-if="isUserLoggedIn" to="/profile/settings">Профіль </v-btn>
-                            </div>
-                        </v-list-item-title>
-                    </v-list-item>
+                    <v-list-item v-for="cat in categories" :key="cat" @click="setCourses(cat)">{{cat}}</v-list-item>
                 </v-list>
             </v-menu>
         </div>
 
-    </v-app-bar>
-    </template>
+        <div>
+            <v-btn text to="/lessons">
+                <span class="black--text navText">
+                    Уроки
+                </span>
+            </v-btn>
+        </div>
+
+        <div>
+            <v-btn text to="/teachers">
+                <span class="black--text navText">Викладачі</span>
+            </v-btn>
+        </div>
+    </div>
+
+    <div class="userSearch">
+        <v-spacer></v-spacer>
+        <v-menu bottom origin="center center" transition="scale-transition" :absolute="absolute">
+
+            <template v-slot:activator="{ on }">
+                <v-btn fab dark icon v-on="on">
+                    <v-icon>mdi-account</v-icon>
+                </v-btn>
+            </template>
+
+            <v-list>
+                <v-list-item>
+                    <auth-modal v-if="!isUserLoggedIn" />
+
+                    <!-- Profile -->
+                    <v-list-item-title>
+                        <div class="userPanel">
+                            <v-btn v-if="isUserLoggedIn" to="/" text @click="onLogout" class="black--text">Вийти</v-btn>
+                            <v-btn v-if="isUserLoggedIn" to="/profile/settings">Профіль </v-btn>
+                        </div>
+                    </v-list-item-title>
+                </v-list-item>
+            </v-list>
+        </v-menu>
+    </div>
+
+</v-app-bar>
+</template>
+
 <script>
 import AuthModals from './AuthModals'
 export default {
@@ -74,11 +101,12 @@ export default {
         idef: "mdi-menu-down",
         idw: "mdi-menu-down",
         iup: "mdi-menu-up",
-        absolute: false
+        absolute: false,
+        query: null
     }),
-    components:{
+    components: {
         authModal: AuthModals,
-        
+
     },
 
     methods: {
@@ -89,15 +117,15 @@ export default {
             console.log(this.isUserLoggedIn);
             this.$store.dispatch('setInitialState')
             this.$store.dispatch("logoutUser")
-            .then(()=>{
-                console.log('successfuly loged out')
-            })
-            .catch(error => {
-                console.log(error);
-            });
-            if(this.$route.path !== '/'){
-                             this.$router.push('/')   
-                            }
+                .then(() => {
+                    console.log('successfuly loged out')
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+            if (this.$route.path !== '/') {
+                this.$router.push('/')
+            }
         },
         async setCourses(cat) {
             console.log('asss', cat)
@@ -119,6 +147,9 @@ export default {
         },
         isLoading() {
             return this.$store.getters.loading
+        },
+        courses() {
+            return this.$store.getters.getCat
         }
     },
     watch: {
@@ -129,22 +160,32 @@ export default {
             setTimeout(() => (this[l] = false), 3000);
 
             this.loader = null;
+        },
+        query(val) {
+            console.log("ddd", val)
+            if (this.courses.includes(val)) this.$router.push({
+                path: `/courses/${val}`
+            })
+
         }
     },
- 
+
 };
 </script>
 
 <style scoped>
-    .userPanel{
-        display: flex;
-        flex-direction: column;
-        height: 100%;
-    }
-    .userPanel > a:first-child{
-        margin-bottom: 10px;
-    }
-.v-btn__content .v-icon--left, .v-btn__content .v-icon--right {
+.userPanel {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.userPanel>a:first-child {
+    margin-bottom: 10px;
+}
+
+.v-btn__content .v-icon--left,
+.v-btn__content .v-icon--right {
     font-size: 34px;
 }
 
@@ -414,5 +455,19 @@ export default {
 
 .srch+div {
     display: none;
+}
+
+.sbox {
+    background: none;
+    margin-top: 20px;
+    max-width: 450px;
+}
+
+.v-select-list .v-card {
+    height: 100px;
+}
+
+.icon {
+    margin-left: 20px;
 }
 </style>

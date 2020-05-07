@@ -4,7 +4,7 @@
         <v-col class="vd">
             <div class="videoCont">
                 <div class="title-video">
-                    <p justify="center" ref="titl">{{this.$store.getters.getLessons[this.$store.getters.getCurrentLesson].title}}</p>
+                    <p  justify="center" ref="titl">{{   this.$store.getters.getLessons[this.$store.getters.getCurrentLesson].title}}</p>
                 </div>
                 <div>
                     <video class="uroc" ref="source" @ended="setFlessons(currentLesson)" :src="this.$store.getters.getLessons[this.$store.getters.getCurrentLesson].videoUrl " type="video/mp4" controls>

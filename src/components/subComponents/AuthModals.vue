@@ -2,9 +2,9 @@
 <div>
             <v-list-item-title >
                             <v-row justify="center">
-                                <v-dialog v-model="dialog" max-width="500px">
+                                <v-dialog v-model="dialog" max-width="500px" @click:outside="logSm">
                                     <template v-slot:activator="{ on }">
-                                        <v-btn text class="black--text" color="primary" dark v-on="on" @click.stop="dialog = false">Увійти</v-btn>
+                                        <v-btn text class="black--text" color="primary" dark v-on="on"  @click.stop="dialog = false,logSm">Увійти</v-btn>
                                     </template>
 
                                     <!-- Модалка Вхід  -->
@@ -117,7 +117,7 @@
     data: () => ({
         loader: null,
         loading: false,
-        dialog: false,
+        dialog:  false,
         dialog3: false,
         email: "",
         password: "",
@@ -127,6 +127,13 @@
         recoverDialog:false
     }),
     methods:{
+        invokeCmp(){
+            console.log('invokeCmp')
+        },
+        logSm(){
+            console.log('change trigger')
+            this.$store.dispatch('setTrigger',false)
+        },
 OnLogin() {
 
             if (this.$refs.form.validate()) {
@@ -219,9 +226,26 @@ emailRules() {
                 v => v === this.password || "Passwords didn`t match"
             ];
         },
-
-
+        trigger : {
+    get () {
+      return this.$store.getters.trigger
     },
+    set (value) {
+      this.$store.commit('setTrigger',value)
+    }
+  },
+    },
+ watch:{
+          trigger: function(val){
+             console.log("dia")
+             this.dialog = this.trigger ? true : false
+             
+          }
+    },
+    mounted(){
+        this.dialog = this.trigger ? true : false
+       
+    }
 }
 
 </script>

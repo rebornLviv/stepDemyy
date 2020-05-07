@@ -3,7 +3,8 @@ export default {
 
 state:{
     register:false,
-    login:false
+    login:true,
+    trigger:false
 
 },  
 mutations:{
@@ -12,6 +13,9 @@ setRegister(state){
 },
 setLogin(state){
     state.login = !state.login
+},
+setTrigger(state,payload){
+    state.trigger = payload
 }
 
 },  
@@ -26,6 +30,11 @@ setLogin({commit}){
     commit('setLogin')
 
 },
+setTrigger({commit},payload){
+    console.log('trigger')
+    commit('setTrigger',payload)
+
+},
 swap({commit}){
     commit('setLogin')
     commit('setRegister')
@@ -33,11 +42,14 @@ swap({commit}){
 
 },
 getters:{
-    loginD(state){
+    dialog(state){
         return state.login
     },
     registerD(state){
         return state.register
+    },
+    trigger(state){
+        return state.trigger
     }
 
 

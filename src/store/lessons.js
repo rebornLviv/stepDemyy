@@ -133,14 +133,14 @@ export default{
                     },{merge:true})
        let userD =await  usersCollection.doc(auth.currentUser.uid).get()
        finished=userD.data().courses[payload.course].flessons
-                
+       let progress = (finished.length * (100/payload.amount)) ? (finished.length * (100/payload.amount)) : 0
              await    usersCollection.doc(auth.currentUser.uid).set({
                     courses:{
                             [payload.course]:
                                         {
                                             currentlesson:payload.currentLesson,
                                             lprogress:payload.currentTime,
-                                            cprogress:(finished.length * (100/payload.amount)) +"%" ,
+                                            cprogress:progress +"%" ,
                                 }
                             }
                             },{merge:true})     
@@ -172,11 +172,12 @@ export default{
                   let  finished = []
            const userData =     await    usersCollection.doc(auth.currentUser.uid).get()
            finished = userData.data().courses[payload.course].flessons
+           let progress = (finished.length * (100/payload.amount)) ? (finished.length * (100/payload.amount)) : 0
             await   usersCollection.doc(auth.currentUser.uid).set({
 
                         courses:{
                             [payload.course]:{
-                                cprogress:(finished.length * (100/payload.amount)) +"%",
+                                cprogress:progress +"%",
                                 
                             }
                         }
@@ -216,7 +217,8 @@ export default{
                 async getAllLessons({commit},payload){
                     let all = [] 
                     commit('setLoading',true)
-          let  lessons =     await    db.collectionGroup('Lessons').get()
+          let  lessons =     await    db.collectionGroup('Lessons').orderBy('rating','desc').limit(12) 
+          .get()
           console.log(lessons.docs)
           lessons.docs.forEach( l => all.push(l.data()));
           commit('setAllLessons',all)
@@ -230,7 +232,7 @@ export default{
                         if(!payload) {
                             lessons =     await  db.collectionGroup('Lessons')
                             .orderBy('rating','desc')
-                            .limit(12).get()
+                            .limit(20).get()
                             
                     
                             lessons.forEach( l => top.push(l.data()))
@@ -292,11 +294,15 @@ export default{
 
                       async  setClesson({commit},payload){
                             console.log('Settt',payload)
-                        
+                        if( !auth.currentUser){
+                            console.log('no users')
+                            return            
+                        }
                            await  usersCollection.doc(auth.currentUser.uid).set({
                                     courses:{
                                         [payload.course]:{
-                                            currentlesson: payload.lesson
+                                            currentlesson: payload.lesson,
+                                            lprogress:0
                                         }
                                     }
 

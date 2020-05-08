@@ -1,119 +1,118 @@
 <template>
 <div>
-            <v-list-item-title >
-                            <v-row justify="center">
-                                <v-dialog v-model="dialog" max-width="500px">
-                                    <template v-slot:activator="{ on }">
-                                        <v-btn text class="black--text" color="primary" dark v-on="on" @click.stop="dialog = false">Увійти</v-btn>
-                                    </template>
+    <v-list-item-title>
+        <v-row justify="center">
+            <v-dialog v-model="dialog" max-width="500px">
+                <template v-slot:activator="{ on }">
+                    <v-btn text class="black--text" color="primary" dark v-on="on" @click.stop="dialog = false">Увійти</v-btn>
+                </template>
 
-                                    <!-- Модалка Вхід  -->
-                                    <v-card>
-                                        <v-btn icon dark @click="dialog  = false">
-                                            <v-icon>mdi-close</v-icon>
-                                        </v-btn>
-                                        <v-card-title>
-                                            <strong class="headline">Вхід</strong>
-                                        </v-card-title>
-                                        <v-card-text>
-                                            <v-container>
-                                                <v-row align="center" justify="center">
-                                                    <v-col cols="12">
-                                                        <v-form v-model="valid" lazy-validation ref="form">
-                                                            <v-text-field color="secondary" name="login" v-model="email" type="text" placeholder="Email" :rules="emailRules" required />
-                                                            <v-text-field class="pa" v-model="password" color="secondary" id="password" placeholder="Password" name="password" type="password" :rules="passwordRules" required />
-                                                            <v-card-actions>
-
-                                                                <v-btn tag="a" outlined class="secondary--text sz ma-2" to="/" text @click="dialog3 = !dialog3, dialog = !dialog">Зареєструватися</v-btn>
-
-                                                                <v-btn class="ma-2 bg-black"  color="white-text" text @click="OnLogin"  depressed to="/">Вхід</v-btn>
-
-                                                            </v-card-actions>
-                                                            <div class="pr">
-                                                                <v-btn tag="a" class="secondary--text sz" to="/" @click="recoverDialog = !recoverDialog, dialog = !dialog" text>Забули логін або пароль?</v-btn>
-                                                            </div>
-                                                        </v-form>
-                                                    </v-col>
-                                                </v-row>
-                                            </v-container>
-                                        </v-card-text>
-                                    </v-card>
-                                    <!--Модалка Вхід  -->
-                                </v-dialog>
-                            </v-row>
-
-                            <!-- Recover Dialog -->
-                            <v-row justify="center" align="center">
-                                <v-dialog v-model="recoverDialog" persistent max-width="600px">
-                                    <v-card class="recover-dialog">
-                                        <v-card-title class="card-title">
-                                            <span class="headline">Введіть свій емейл</span>
-                                        </v-card-title>
-                                        <v-card-text>
-                                            <v-container>
-                                                <v-row align="center" justify="center">
-                                                    <v-col cols="12" sm="8" md="4">
-                                                        <v-form v-model="valid" lazy-validation ref="form">
-                                                            <v-text-field color="secondary" name="login" v-model="email" type="text" placeholder="Email" :rules="emailRules" />
-                                                        </v-form>
-
-                                                        <v-card-actions class="mt-4 bts">
-                                                            <v-btn class="nr ml-2" text to="/" color="secondary" @click="recoverDialog = false">Закрити</v-btn>
-                                                            <v-btn class="nr elevation-0 mr-2 disabled white--text" @click="recover"  depressed color="rgb(20, 19, 19)" :disabled="valid===false">Продовжити</v-btn>
-                                                        </v-card-actions>
-                                                    </v-col>
-                                                </v-row>
-                                            </v-container>
-                                        </v-card-text>
-                                    </v-card>
-                                </v-dialog>
-                            </v-row>
-                            <!-- Recover Dialog -->
-                        </v-list-item-title>
-<v-list-item-title >
-                            <v-row>
-                                <v-dialog v-model="dialog3" max-width="600px">
-                                    <template v-slot:activator="{ on }">
-                                        <v-btn text class="black--text" color="primary" dark v-on="on" @click.stop="dialog = false">Зареєструватись</v-btn>
-                                    </template>
-
-                                    <v-card class="register-wrap">
-                                        <v-btn icon dark @click="dialog3 = false">
-                                            <v-icon>mdi-close</v-icon>
-                                        </v-btn>
-                                        <v-card-title>
-                                            <span>Реєстрація</span>
-                                        </v-card-title>
+                <!-- Модалка Вхід  -->
+                <v-card>
+                    <v-btn icon dark @click="dialog  = false"> 
+                        <v-icon>mdi-close</v-icon>
+                    </v-btn>
+                    <v-card-title>
+                        <strong class="headline">Вхід</strong>
+                    </v-card-title>
+                    <v-card-text>
+                        <v-container>
+                            <v-row align="center" justify="center">
+                                <v-col cols="12">
+                                    <v-form v-model="valid" lazy-validation ref="form">
+                                        <v-text-field color="secondary" name="login" v-model="email" type="text" placeholder="Email" :rules="emailRules" required />
+                                        <v-text-field class="pa" v-model="password" color="secondary" id="password" placeholder="Password" name="password" type="password" :rules="passwordRules" required />
                                         <v-card-actions>
-                                            <v-icon size="50">mdi-account</v-icon>
+
+                                            <v-btn tag="a" outlined class="secondary--text sz ma-2" to="/" text @click="dialog3 = !dialog3, dialog = !dialog">Зареєструватися</v-btn>
+
+                                            <v-btn class="ma-2 bg-black" color="white-text" text @click="OnLogin" depressed to="/">Вхід</v-btn>
+
                                         </v-card-actions>
-                                        <v-row align="center" justify="center">
-                                            <v-col cols="12" sm="8" md="8">
-                                                <v-form v-model="valid" lazy-validation ref="form">
-                                                    <v-text-field v-model="email" color="secondary" name="login" :rules="emailRules" type="text" placeholder="Email" />
-
-                                                    <v-text-field class="pa" color="secondary" v-model="password" id="password" :rules="passwordRules" placeholder="Password" name="password" type="password" />
-                                                    <v-text-field class="pa" color="secondary" id="password" v-model="repassword" :rules="rePasswordRules" placeholder="Confirm password" name="password" type="password" />
-                                                    <v-card-actions class="mt-4 bts">
-                                                        <v-btn class="nr ml-2" text color="secondary" @click="dialog3 = false">Закрити</v-btn>
-                                                        <v-btn @click="OnRegister"  class="nr elevation-0 mr-2" dark>Далі</v-btn>
-                                                    </v-card-actions>
-                                                </v-form>
-                                            </v-col>
-                                        </v-row>
-                                    </v-card>
-                                </v-dialog>
-
+                                        <div class="pr">
+                                            <v-btn tag="a" class="secondary--text sz" to="/" @click="recoverDialog = !recoverDialog, dialog = !dialog" text>Забули логін або пароль?</v-btn>
+                                        </div>
+                                    </v-form>
+                                </v-col>
                             </v-row>
-                        </v-list-item-title>
-</div>
+                        </v-container>
+                    </v-card-text>
+                </v-card>
+                <!--Модалка Вхід  -->
+            </v-dialog>
+        </v-row>
 
-                        </template> 
+        <!-- Recover Dialog -->
+        <v-row justify="center" align="center">
+            <v-dialog v-model="recoverDialog" persistent max-width="600px">
+                <v-card class="recover-dialog">
+                    <v-card-title class="card-title">
+                        <span class="headline">Введіть свій емейл</span>
+                    </v-card-title>
+                    <v-card-text>
+                        <v-container>
+                            <v-row align="center" justify="center">
+                                <v-col cols="12" sm="8" md="4">
+                                    <v-form v-model="valid" lazy-validation ref="form">
+                                        <v-text-field color="secondary" name="login" v-model="email" type="text" placeholder="Email" :rules="emailRules" />
+                                    </v-form>
+
+                                    <v-card-actions class="mt-4 bts">
+                                        <v-btn class="nr ml-2" text to="/" color="secondary" @click="recoverDialog = false">Закрити</v-btn>
+                                        <v-btn class="nr elevation-0 mr-2 disabled white--text" @click="recover" depressed color="rgb(20, 19, 19)" :disabled="valid===false">Продовжити</v-btn>
+                                    </v-card-actions>
+                                </v-col>
+                            </v-row>
+                        </v-container>
+                    </v-card-text>
+                </v-card>
+            </v-dialog>
+        </v-row>
+        <!-- Recover Dialog -->
+    </v-list-item-title>
+    <v-list-item-title>
+        <v-row>
+            <v-dialog v-model="dialog3" max-width="600px">
+                <template v-slot:activator="{ on }">
+                    <v-btn text class="black--text" color="primary" dark v-on="on" @click.stop="dialog = false">Зареєструватись</v-btn>
+                </template>
+
+                <v-card class="register-wrap">
+                    <v-btn icon dark @click="dialog3 = false">
+                        <v-icon>mdi-close</v-icon>
+                    </v-btn>
+                    <v-card-title>
+                        <span>Реєстрація</span>
+                    </v-card-title>
+                    <v-card-actions>
+                        <v-icon size="50">mdi-account</v-icon>
+                    </v-card-actions>
+                    <v-row align="center" justify="center">
+                        <v-col cols="12" sm="8" md="8">
+                            <v-form v-model="valid" lazy-validation ref="form">
+                                <v-text-field v-model="email" color="secondary" name="login" :rules="emailRules" type="text" placeholder="Email" />
+
+                                <v-text-field class="pa" color="secondary" v-model="password" id="password" :rules="passwordRules" placeholder="Password" name="password" type="password" />
+                                <v-text-field class="pa" color="secondary" id="password" v-model="repassword" :rules="rePasswordRules" placeholder="Confirm password" name="password" type="password" />
+                                <v-card-actions class="mt-4 bts">
+                                    <v-btn class="nr ml-2" text color="secondary" @click="dialog3 = false">Закрити</v-btn>
+                                    <v-btn @click="OnRegister" class="nr elevation-0 mr-2" dark>Далі</v-btn>
+                                </v-card-actions>
+                            </v-form>
+                        </v-col>
+                    </v-row>
+                </v-card>
+            </v-dialog>
+
+        </v-row>
+    </v-list-item-title>
+</div>
+</template>
 
 <script>
-    export default {
-    name:'auth-models',
-    props:['registermode'],
+export default {
+    name: 'auth-models',
+    props: ['registermode'],
     data: () => ({
         loader: null,
         loading: false,
@@ -124,10 +123,10 @@
         valid: false,
         repassword: "",
         absolute: false,
-        recoverDialog:false
+        recoverDialog: false
     }),
-    methods:{
-OnLogin() {
+    methods: {
+        OnLogin() {
 
             if (this.$refs.form.validate()) {
                 const user = {
@@ -148,10 +147,10 @@ OnLogin() {
                 this.$store.dispatch('recoverUser', this.email)
                     .then(
                         () => {
-                            if(this.$route.path !== '/'){
-                             this.$router.push('/')   
+                            if (this.$route.path !== '/') {
+                                this.$router.push('/')
                             }
-                            
+
                         }
                     )
                     .catch(
@@ -159,7 +158,7 @@ OnLogin() {
             }
         },
         OnRegister() {
-            
+
             if (this.$refs.form.validate()) {
                 const reguser = {
                     email: this.email,
@@ -174,30 +173,26 @@ OnLogin() {
                 this.$store
                     .dispatch("registerUser", reguser)
                     .then(
-                        ()=>{
-                            if(this.$route.path !== '/'){
-                             this.$router.push('/')   
+                        () => {
+                            if (this.$route.path !== '/') {
+                                this.$router.push('/')
                             }
                         }
                     )
                     .catch(
-                        (err)=>{
-                            console.log('err reg',err)
+                        (err) => {
+                            console.log('err reg', err)
                         }
                     )
             }
         },
 
-
-
-
-
     },
-    computed:{
-        getModel(){
-        return this.registermode ? this.dialog3 : this.dialog
+    computed: {
+        getModel() {
+            return this.registermode ? this.dialog3 : this.dialog
         },
-emailRules() {
+        emailRules() {
             return [
                 v => !!v || "E-mail is required",
                 v =>
@@ -220,14 +215,13 @@ emailRules() {
             ];
         },
 
-
     },
 }
-
 </script>
 
 <style scoped>
-.v-btn__content .v-icon--left, .v-btn__content .v-icon--right {
+.v-btn__content .v-icon--left,
+.v-btn__content .v-icon--right {
     font-size: 34px;
 }
 

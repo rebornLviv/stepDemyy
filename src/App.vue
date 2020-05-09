@@ -1,24 +1,35 @@
 <template>
 <v-app>
-   <Header />
+    <Header />
     <v-progress-linear v-if="isLoading" class="pb" indeterminate color="black"></v-progress-linear>
     <v-content>
 
         <router-view></router-view>
     </v-content>
+
     <template v-if="error">
         <v-snackbar color="dark" :timeout="30000" :multi-line="true" @input="closeError" :value="true">
             {{ error}}
             <v-btn text dark @click.native="closeError">Close</v-btn>
         </v-snackbar>
     </template>
+    <template v-if="error">
+        <v-snackbar color="dark" :timeout="30000" :multi-line="true" @input="closeError" :value="true">
+            {{ error}}
+            <v-btn text dark @click.native="closeError">Close</v-btn>
+        </v-snackbar>
+    </template>
+    <!-- <template v-if="logOut">
+        <v-snackbar color="dark" :timeout="30000" :multi-line="true" @input="setError" :value="true">
+            You are logged out
+        </v-snackbar>
+    </template> -->
+
     <Footer />
 </v-app>
 </template>
 
 <script>
-
-
 import {
     mdiAccount
 } from "@mdi/js";
@@ -29,17 +40,15 @@ import Header from './components/subComponents/Header.vue';
 
 export default {
     name: "App",
-    data: () => ({
-    }),
-    components:{
+    data: () => ({}),
+    components: {
         Footer,
         Header
     },
-
     methods: {
         closeError() {
             this.$store.dispatch("clearError");
-        },
+        }
     },
     computed: {
         error() {
@@ -49,15 +58,16 @@ export default {
             return this.$store.getters.loading
         }
     },
-  async  created(){
- await this.$store.dispatch('setCat');
+    async created() {
+        await this.$store.dispatch('setCat');
 
     }
 };
 </script>
 
 <style scoped>
-.v-btn__content .v-icon--left, .v-btn__content .v-icon--right {
+.v-btn__content .v-icon--left,
+.v-btn__content .v-icon--right {
     font-size: 34px;
 }
 

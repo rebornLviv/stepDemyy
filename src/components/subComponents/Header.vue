@@ -5,30 +5,9 @@
     </div>
     <div>
         <v-col column="4" align="center" justify="center">
-            <!-- <v-autocomplete class="sbox" v-model="query" :items="courses" no-data-text="No courses found" placeholder="Пошук.." rounded>
-                <v-icon>mdi-magnify</v-icon>
-            </v-autocomplete> -->
-            <!-- <v-autocomplete
-                v-model="query"
-                :loading="loading"
-                :items="courses"
-                :search-input.sync="search"
-                cache-items
-                hide-no-data
-                hide-details
-                label="Пошук"
-                solo-inverted
-                mdi-magnify
-            ></v-autocomplete> -->
-            <v-text-field
-                class="sbox" 
-                v-model="query" 
-                :items="courses" 
-                no-data-text="No courses found" 
-                label="Пошук"
-                solo-inverted>
+            <v-text-field class="sbox" v-model="query" no-data-text="No courses found" label="Пошук" solo-inverted>
             </v-text-field>
-            <v-icon class="icon">mdi-magnify</v-icon>
+            <v-icon class="icon" @click="searchFor()">mdi-magnify</v-icon>
 
         </v-col>
     </div>
@@ -65,10 +44,9 @@
 
     <div class="userSearch">
         <v-spacer></v-spacer>
-        <v-menu bottom origin="center center" transition="scale-transition" :absolute="absolute">
-
+        <v-menu bottom origin="center center" transition="scale-transition" @click:outside="triggerF" :absolute="absolute">
             <template v-slot:activator="{ on }">
-                <v-btn fab dark icon v-on="on">
+                <v-btn ref="btnA" @click="faketoggle" fab dark icon v-on="on">
                     <v-icon>mdi-account</v-icon>
                 </v-btn>
             </template>
@@ -76,7 +54,6 @@
             <v-list>
                 <v-list-item>
                     <auth-modal v-if="!isUserLoggedIn" />
-
                     <!-- Profile -->
                     <v-list-item-title>
                         <div class="userPanel">
@@ -102,20 +79,28 @@ export default {
         idw: "mdi-menu-down",
         iup: "mdi-menu-up",
         absolute: false,
-        query: null
+        query: null,
+        show: true,
+        toggleCnt: 0
     }),
     components: {
         authModal: AuthModals,
-
     },
-
     methods: {
+        faketoggle() {
+            console.log('toggle')
+        },
+        triggerF() {
+            this.$store.dispatch('setTrigger', false)
+        },
+
         closeError() {
             this.$store.dispatch("clearError");
         },
         onLogout() {
             console.log(this.isUserLoggedIn);
             this.$store.dispatch('setInitialState')
+            this.$store.dispatch('setError')
             this.$store.dispatch("logoutUser")
                 .then(() => {
                     console.log('successfuly loged out')
@@ -133,6 +118,17 @@ export default {
             this.$router.push({
                 path: '/courses/' + cat
             })
+        },
+        searchFor() {
+            if (!this.query) return
+            this.$router.push({
+                path: '/lessons',
+                query: {
+                    filter: this.query
+                }
+            })
+            this.query = '';
+
         }
     },
     computed: {
@@ -150,7 +146,15 @@ export default {
         },
         courses() {
             return this.$store.getters.getCat
-        }
+        },
+        trigger: {
+            get() {
+                return this.$store.getters.trigger
+            },
+            set(value) {
+                this.$store.commit('setTrigger', value)
+            }
+        },
     },
     watch: {
         loader() {
@@ -161,12 +165,17 @@ export default {
 
             this.loader = null;
         },
-        query(val) {
-            console.log("ddd", val)
-            if (this.courses.includes(val)) this.$router.push({
-                path: `/courses/${val}`
-            })
+        trigger: function () {
+            if (!this.isUserLoggedIn) {
+                console.log(this.$refs.btnA);
+                if (this.toggleCnt < 1) {
+                    let e = '';
+                    this.$refs.btnA.listeners$.click(event);
+                    this.toggleCnt++;
+                }
+                console.log('trr')
 
+            }
         }
     },
 
@@ -215,6 +224,10 @@ export default {
 
 .navitems>div {
     width: 200px !important;
+}
+
+.navitems>div:nth-child(2) {
+    justify-content: center;
 }
 
 .log {

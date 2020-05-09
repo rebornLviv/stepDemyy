@@ -10,7 +10,6 @@
                 <div class="preinfo">
                     <star class="stars" :size="'45px'" :rating="course.rating"></star>
                     <div class="authorD">
-                        <p>{{new Date().toLocaleString().substring(1,10)}}</p>
                         <div class="author">
                             <p>{{course.author}}</p>
                             <v-icon size="35px">mdi-account</v-icon>
@@ -22,11 +21,14 @@
 
                 <v-row>
                     <v-col>
-                        <v-btn dark class="mt-5 courseBtn" @click="manageCourse">{{ joined ? 'Продовжити' : 'Приєднатися до курсу'}}</v-btn>
+                        <v-btn
+                            dark 
+                            class="mt-5 courseBtn" 
+                            @click="manageCourse">{{ joined ? 'Продовжити' : 'Приєднатися до курсу'}}
+                        </v-btn>
                     </v-col>
 
                 </v-row>
-
             </div>
 
         </v-col>

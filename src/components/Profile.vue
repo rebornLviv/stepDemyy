@@ -126,7 +126,7 @@ console.log(this.$store.getters.getUserPhoto)
 }
 
 .miniCont {
-    height: 92%;
+    height: 100%;
     margin-top: 0px;
 
 }
@@ -159,7 +159,7 @@ console.log(this.$store.getters.getUserPhoto)
 .cc {
     display: flex;
     justify-content: flex-start;
-    height: 100%;
+    height: 100vh;
 }
 
 .iblc {

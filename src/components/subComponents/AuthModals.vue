@@ -2,14 +2,13 @@
 <div>
     <v-list-item-title>
         <v-row justify="center">
-            <v-dialog v-model="dialog" max-width="500px">
+            <v-dialog v-model="dialog" max-width="500px" @click:outside="logSm">
                 <template v-slot:activator="{ on }">
-                    <v-btn text class="black--text" color="primary" dark v-on="on" @click.stop="dialog = false">Увійти</v-btn>
+                    <v-btn text class="black--text" color="primary" dark v-on="on" @click.stop="dialog = false,logSm">Увійти</v-btn>
                 </template>
-
                 <!-- Модалка Вхід  -->
                 <v-card>
-                    <v-btn icon dark @click="dialog  = false"> 
+                    <v-btn icon dark @click="dialog  = false">
                         <v-icon>mdi-close</v-icon>
                     </v-btn>
                     <v-card-title>
@@ -23,7 +22,7 @@
                                         <v-text-field color="secondary" name="login" v-model="email" type="text" placeholder="Email" :rules="emailRules" required />
                                         <v-text-field class="pa" v-model="password" color="secondary" id="password" placeholder="Password" name="password" type="password" :rules="passwordRules" required />
                                         <v-card-actions>
-
+                                            
                                             <v-btn tag="a" outlined class="secondary--text sz ma-2" to="/" text @click="dialog3 = !dialog3, dialog = !dialog">Зареєструватися</v-btn>
 
                                             <v-btn class="ma-2 bg-black" color="white-text" text @click="OnLogin" depressed to="/">Вхід</v-btn>
@@ -126,6 +125,13 @@ export default {
         recoverDialog: false
     }),
     methods: {
+        invokeCmp() {
+            console.log('invokeCmp')
+        },
+        logSm() {
+            console.log('change trigger')
+            this.$store.dispatch('setTrigger', false)
+        },
         OnLogin() {
 
             if (this.$refs.form.validate()) {
@@ -214,8 +220,26 @@ export default {
                 v => v === this.password || "Passwords didn`t match"
             ];
         },
-
+        trigger: {
+            get() {
+                return this.$store.getters.trigger
+            },
+            set(value) {
+                this.$store.commit('setTrigger', value)
+            }
+        },
     },
+    watch: {
+        trigger: function (val) {
+            console.log("dia")
+            this.dialog = this.trigger ? true : false
+
+        }
+    },
+    mounted() {
+        this.dialog = this.trigger ? true : false
+        this.$message('Test')
+    }
 }
 </script>
 
@@ -492,3 +516,4 @@ export default {
     display: none;
 }
 </style>
+<V-карты название>

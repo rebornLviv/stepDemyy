@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import Home from '@/components/Home'
 import Settings from '@/components/Settings'
 import UserCoures from '@/components/UserCourses'
+import UserLessons from '@/components/UserLessons'
 import firebase from 'firebase'
 import { homeResolver } from '../../resolvers/homeResolver'
 import profileResolver from '../../resolvers/profileResolver'
@@ -22,7 +23,7 @@ const routes = [{
   {
     path: '/courses/:id',
     name: 'course',
-     beforeEnter:courseResolver,
+    beforeEnter: courseResolver,
     component: () => import('@/components/Course'),
   },
   {
@@ -31,7 +32,7 @@ const routes = [{
     },
     path: '/courses/:cid/:lid',
     name: 'lesson',
-    beforeEnter:lessonResolver,
+    beforeEnter: lessonResolver,
     component: () => import('@/components/Lesson'),
    
   },
@@ -42,7 +43,8 @@ const routes = [{
     path: '/profile',
     name: 'profile',
     component: () => import('@/components/Profile'),
-    children: [{
+    children: [
+      {
         path: '/profile/settings',
         component: Settings,
         beforeEnter:profileResolver
@@ -50,6 +52,11 @@ const routes = [{
       {
         path: '/profile/courses',
         component: UserCoures,
+        beforeEnter: profileResolver
+      },
+      {
+        path: '/profile/lessons',
+        component: UserLessons,
         beforeEnter: profileResolver
       }
     ]
@@ -74,6 +81,8 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes
 })
+
+
 router.beforeEach((to, from, next) => {
   const requiresAuth = to.matched.some(x => x.meta.requiresAuth)
   const currentUser = firebase.auth().currentUser

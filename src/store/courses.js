@@ -114,7 +114,6 @@ export default {
             return state.course
         },
         getCat(state) {
-
             return state.categories
         },
         getJoined(state) {

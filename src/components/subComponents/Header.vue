@@ -7,7 +7,7 @@
         <v-col column="4" align="center" justify="center">
             <v-text-field class="sbox" v-model="query" no-data-text="No courses found" label="Пошук" solo-inverted>
             </v-text-field>
-            <v-icon class="icon" @click="searchFor()">mdi-magnify</v-icon>
+            <v-icon class="icon" icon @click="searchFor()">mdi-magnify</v-icon>
 
         </v-col>
     </div>
@@ -57,8 +57,8 @@
                     <!-- Profile -->
                     <v-list-item-title>
                         <div class="userPanel">
-                            <v-btn v-if="isUserLoggedIn" to="/" text @click="onLogout" class="black--text">Вийти</v-btn>
                             <v-btn v-if="isUserLoggedIn" to="/profile/settings">Профіль </v-btn>
+                            <v-btn v-if="isUserLoggedIn" to="/" text @click="onLogout" class="black--text">Вийти</v-btn>
                         </div>
                     </v-list-item-title>
                 </v-list-item>
@@ -100,7 +100,7 @@ export default {
         onLogout() {
             console.log(this.isUserLoggedIn);
             this.$store.dispatch('setInitialState')
-            this.$store.dispatch('setError')
+            this.$store.dispatch('setError', 'You are logged out')
             this.$store.dispatch("logoutUser")
                 .then(() => {
                     console.log('successfuly loged out')

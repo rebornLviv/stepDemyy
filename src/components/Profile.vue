@@ -5,45 +5,87 @@
             <v-col cols="4" class="userImgContainer">
                 <p class="txtp">Профіль</p>
                 <v-icon v-if="!this.$store.getters.getUserPhoto" class="iblc" size="240px">mdi-account</v-icon>
-                <img v-if="this.$store.getters.getUserPhoto" class="iblc" :src="this.$store.getters.getUserPhoto" alt="">
+                <img v-if="this.$store.getters.getUserPhoto" class="iblc" :src="this.$store.getters.getUserPhoto" alt />
                 <div class="btns">
                     <div class="upload-btn-wrapper">
                         <!-- <v-btn class="btn">Upload a file</v-btn> -->
-                        <v-btn color="primary btn" dark @click.stop="dialog = true">
-                           Завантажити фото
-                        </v-btn>
+                        <v-btn color="primary btn" dark @click.stop="dialog = true">Завантажити фото</v-btn>
 
                         <v-dialog v-model="dialog" max-width="590">
                             <v-card>
                                 <v-card-title class="headline" justify="center">Змінити фото</v-card-title>
 
                                 <v-card-text>
-                                    <v-file-input
-                                        label="Файл..."
-                                        filled
-                                        ref="file"
-                                        @change="selectFile"
-                                        prepend-icon="mdi-camera"
-                                        class="innp"
-                                        show-size counter multiple
-                                        name="myfile"
-                                    ></v-file-input>
+                                    <v-file-input label="Файл..." filled ref="file" @change="selectFile" prepend-icon="mdi-camera" class="innp" show-size counter multiple name="myfile"></v-file-input>
                                 </v-card-text>
 
                                 <v-card-actions>
-                                    <v-btn class="btn-photo" light text  @click="dialog = false">
-                                        Відміна
-                                    </v-btn>
+                                    <v-btn class="btn-photo" light text @click="dialog = false">Відміна</v-btn>
 
-                                    <v-btn class="btn-photo" light text  @click="updatePhoto" name="myfile" ref="file">
-                                        Зберегти
-                                    </v-btn>
+                                    <v-btn class="btn-photo" light text @click="updatePhoto" name="myfile" ref="file">Зберегти</v-btn>
                                 </v-card-actions>
                             </v-card>
                         </v-dialog>
                     </div>
                     <v-btn class="mb-3 mt-2" to="courses">Мої курси</v-btn>
-                    <v-btn class="sett" to="settings">Налаштування </v-btn>
+
+                    <template>
+                        <v-row justify="center">
+                            <v-dialog v-model="dialog" persistent max-width="600px">
+                                <template v-slot:activator="{ on }">
+                                    <v-btn color="primary" dark v-on="on">Open Dialog</v-btn>
+                                </template>
+                                <v-card>
+                                    <v-card-title>
+                                        <span class="headline">User Profile</span>
+                                    </v-card-title>
+                                    <v-card-text>
+                                        <v-container>
+                                            <v-row>
+                                                <v-col cols="12" sm="6" md="4">
+                                                    <v-text-field label="Legal first name*" required></v-text-field>
+                                                </v-col>
+                                                <v-col cols="12" sm="6" md="4">
+                                                    <v-text-field label="Legal middle name" hint="example of helper text only on focus"></v-text-field>
+                                                </v-col>
+                                                <v-col cols="12" sm="6" md="4">
+                                                    <v-text-field label="Legal last name*" hint="example of persistent helper text" persistent-hint required></v-text-field>
+                                                </v-col>
+                                                <v-col cols="12">
+                                                    <v-text-field label="Email*" required></v-text-field>
+                                                </v-col>
+                                                <v-col cols="12">
+                                                    <v-text-field label="Password*" type="password" required></v-text-field>
+                                                </v-col>
+                                                <v-col cols="12" sm="6">
+                                                    <v-select :items="['0-17', '18-29', '30-54', '54+']" label="Age*" required></v-select>
+                                                </v-col>
+                                                <v-col cols="12" sm="6">
+                                                    <v-autocomplete :items="['Skiing', 'Ice hockey', 'Soccer', 'Basketball', 'Hockey', 'Reading', 'Writing', 'Coding', 'Basejump']" label="Interests" multiple></v-autocomplete>
+                                                </v-col>
+                                            </v-row>
+                                        </v-container>
+                                        <small>*indicates required field</small>
+                                    </v-card-text>
+                                    <v-card-actions>
+                                        <v-spacer></v-spacer>
+                                        <v-btn color="blue darken-1" text @click="dialog = false">Close</v-btn>
+                                        <v-btn color="blue darken-1" text @click="dialog = false">Save</v-btn>
+                                    </v-card-actions>
+                                </v-card>
+                            </v-dialog>
+                        </v-row>
+                    </template>
+
+                    <script>
+                        export default {
+                            data: () => ({
+                                dialog: false,
+                            }),
+                        }
+                    </script>
+
+                    <v-btn class="sett" to="settings">Налаштування</v-btn>
                 </div>
             </v-col>
             <router-view></router-view>
@@ -54,46 +96,39 @@
 
 <script>
 export default {
-    data: () => ({
-        confP: false,
-        file: null,
-        userImage: '',
-        dialog: false
-    }),
-    created(){
-console.log(this.$store.getters.getUserPhoto) 
+  data: () => ({
+    confP: false,
+    file: null,
+    userImage: "",
+    dialog: false
+  }),
+  created() {
+    console.log(this.$store.getters.getUserPhoto);
+  },
 
+  methods: {
+    selectFile(file) {
+      this.file = file[0];
+
+      console.log(this.file);
     },
-
-    methods: {
-        selectFile(file) {
-            this.file = file[0]
-           
-            console.log(this.file)
-        },
-        updatePhoto(){
-            console.log('updatePhoto')
- this.$store.dispatch('setUserPhoto', this.file).then(
-     ()=>{
- this.file = null;
- this.dialog = false;
-     }
- )
-
-        },
-        configuratePassword() {
-            this.confP = !this.confP
-
-        },
-        computed: {
-
-            userPhoto() {
-                return this.$store.getters.getUserPhoto
-            }
-        }
-
+    updatePhoto() {
+      console.log("updatePhoto");
+      this.$store.dispatch("setUserPhoto", this.file).then(() => {
+        this.file = null;
+        this.dialog = false;
+      });
+    },
+    configuratePassword() {
+      this.confP = !this.confP;
+    },
+    computed: {
+      userPhoto() {
+        return this.$store.getters.getUserPhoto;
+      }
     }
-}
+  }
+};
 </script>
 
 <style scoped>
@@ -114,10 +149,9 @@ console.log(this.$store.getters.getUserPhoto)
 
     display: inline-block;
     cursor: pointer;
-
 }
 
-.upload-btn-wrapper input[type=file] {
+.upload-btn-wrapper input[type="file"] {
     font-size: 100px;
     position: absolute;
     left: 0;
@@ -128,7 +162,6 @@ console.log(this.$store.getters.getUserPhoto)
 .miniCont {
     height: 100%;
     margin-top: 0px;
-
 }
 
 .changepsw {
@@ -144,7 +177,6 @@ console.log(this.$store.getters.getUserPhoto)
 
 .chP {
     width: 400px !important;
-
 }
 
 .changepsw>input {
@@ -153,7 +185,6 @@ console.log(this.$store.getters.getUserPhoto)
     color: white;
     width: 70%;
     padding-bottom: 7px;
-
 }
 
 .cc {
@@ -163,7 +194,6 @@ console.log(this.$store.getters.getUserPhoto)
 }
 
 .iblc {
-
     width: 272px;
     height: 272px;
     border: 1px solid black;
@@ -201,7 +231,6 @@ console.log(this.$store.getters.getUserPhoto)
     display: flex;
     flex-direction: column;
     justify-content: center;
-
 }
 
 .btns>button {

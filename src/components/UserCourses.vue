@@ -1,12 +1,11 @@
 <template>
 <v-col cols="8" class="userData">
     <p class="txtp">Мої курси</p>
-
-    <div class="courseCont">
-        <v-card class="course d-flex flex-column" align="center" justify="center"  v-for="x in userCourses " :key="x.title">
+    <div class="courseCont" v-if="userCourses.length">
+        <v-card class="course d-flex flex-column" align="center" justify="center"  v-for="x in userCourses "
+                :key="x.title">
             <p class="current-lesson">{{x.title}}</p>
             <p>Поточний урок : {{x.clesson+1}}</p>
-
             <v-progress-circular
                 :rotate="360"
                 :size="100"
@@ -15,9 +14,11 @@
                 :color="parseInt(x.progress) >= 0 && parseInt(x.progress) < 25 ? 'red' : parseInt(x.progress) >= 25 && parseInt(x.progress) < 50 ? 'yellow' : parseInt(x.progress) >= 50 && parseInt(x.progress) < 75 ? 'orange': parseInt(x.progress) >= 75 ? 'green' : ''   ">
                 {{ parseInt(x.progress) + '%' }}
             </v-progress-circular>
-
             <v-btn class="continue" @click="goToCourse(x.title,x.ctitle)">Продовжити</v-btn>
         </v-card>
+    </div>
+    <div v-else-if="!userCourses.length">
+        <h1>Учитесь, блеат!</h1>
     </div>
 </v-col>
 </template>
@@ -25,21 +26,15 @@
 <script>
 export default {
     data: () => ({
-
         confP: false
-
     }),
 
     methods: {
-
         goToCourse(course, lesson) {
-
             this.$router.push({
                 path: `/courses/${course}/${lesson}`
             })
-
         }
-
     },
     computed: {
         userCourses() {

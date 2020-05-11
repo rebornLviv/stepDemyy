@@ -3,10 +3,7 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import vuetify from './plugins/vuetify';
-import messagePlugin from '@/plugins/message'
 import 'video.js/dist/video-js.css'
-
-Vue.use(messagePlugin)
 
 const fb = require('./firebase/firebaseConfig')
 Vue.config.productionTip = false

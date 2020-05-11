@@ -2,14 +2,7 @@
 <v-col cols="8" class="userData">
     <p class="txtp">Налаштування профілю</p>
     <div class="inpC">
-        <v-text-field
-            v-model="name"
-            label="Ім'я"
-            outlined
-            single-line
-            class="inpt"
-            v-if="editName"
-        >
+        <v-text-field v-model="name" label="Ім'я" outlined single-line class="inpt" v-if="editName">
         </v-text-field>
         <p v-if="!editName" class="uName">Ім'я : {{userName}}</p>
         <v-spacer></v-spacer>
@@ -38,10 +31,7 @@
 
     <template>
         <v-expansion-panels width="400" dark>
-            <v-expansion-panel 
-            v-for="(item,i) in 1"
-            :key="i"
-            >
+            <v-expansion-panel v-for="(item,i) in 1" :key="i">
                 <v-expansion-panel-header v-if="!confP" @click="configuratePassword, expand = !expand">
                     <span justify="center" align="center" class="title-pass">Налаштування паролю</span>
                 </v-expansion-panel-header>
@@ -84,8 +74,6 @@ export default {
         },
         configuratePassword() {
             this.confP = !this.confP
-
-            
 
         },
         changeName() {
@@ -150,11 +138,10 @@ export default {
     font-size: 22px;
 }
 
- .chP {
+.chP {
     width: 400px !important;
     margin-top: 20px;
 }
-
 
 .cc {
     display: flex;

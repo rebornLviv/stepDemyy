@@ -4,7 +4,7 @@
         <v-row justify="center">
             <v-dialog v-model="dialog" max-width="500px" @click:outside="logSm">
                 <template v-slot:activator="{ on }">
-                    <v-btn text class="black--text" color="primary" dark v-on="on" @click.stop="dialog = false,logSm">Увійти</v-btn>
+                    <v-btn text class="black--text" color="primary" dark v-on="on" @click="dialog = false,logSm">Увійти</v-btn>
                 </template>
                 <!-- Модалка Вхід  -->
                 <v-card>
@@ -133,7 +133,6 @@ export default {
             this.$store.dispatch('setTrigger', false)
         },
         OnLogin() {
-
             if (this.$refs.form.validate()) {
                 const user = {
                     email: this.email,
@@ -146,6 +145,8 @@ export default {
                         this.dialog = !this.dialog;
                     })
                     .catch(err => console.log(err));
+                this.$store.dispatch('setError', 'You are Log In')
+
             }
         },
         recover() {
@@ -164,7 +165,6 @@ export default {
             }
         },
         OnRegister() {
-
             if (this.$refs.form.validate()) {
                 const reguser = {
                     email: this.email,
@@ -190,6 +190,7 @@ export default {
                             console.log('err reg', err)
                         }
                     )
+                this.$store.dispatch('setError', 'Welcome! You are registered')
             }
         },
 
@@ -238,7 +239,6 @@ export default {
     },
     mounted() {
         this.dialog = this.trigger ? true : false
-        this.$message('Test')
     }
 }
 </script>

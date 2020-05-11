@@ -50,13 +50,8 @@ export default {
             }
 
         },
-        async loginUser({
-            commit
-        }, {
-            email,
-            password
-        }) {
-            commit('clearError')
+        async loginUser({commit}, {email,password}) {
+            commit('clearError')  // ! commit - викликає мутацію ?
             commit('setLoading', true)
             try {
                 const user = await auth.signInWithEmailAndPassword(email, password)
@@ -105,10 +100,7 @@ export default {
                     commit('setLoading', false)
                     commit('setError', error.message)
                 })
-
-
         },
-
         async   getMyCourses({ commit }) {
             let courses = []
             const userData = await usersCollection.doc(auth.currentUser.uid).get()
@@ -189,7 +181,8 @@ export default {
         },
         getUserBirthDay(state) {
             return state.userBirthDay
-        }, getUserPhoto(state) {
+        },
+        getUserPhoto(state) {
             return state.userPhoto
         },
         isUserLoggedIn(state) {

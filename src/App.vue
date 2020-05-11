@@ -9,21 +9,10 @@
 
     <template v-if="error">
         <v-snackbar color="dark" :timeout="30000" :multi-line="true" @input="closeError" :value="true">
-            {{ error}}
+            {{ error }}
             <v-btn text dark @click.native="closeError">Close</v-btn>
         </v-snackbar>
     </template>
-    <template v-if="error">
-        <v-snackbar color="dark" :timeout="30000" :multi-line="true" @input="closeError" :value="true">
-            {{ error}}
-            <v-btn text dark @click.native="closeError">Close</v-btn>
-        </v-snackbar>
-    </template>
-    <!-- <template v-if="logOut">
-        <v-snackbar color="dark" :timeout="30000" :multi-line="true" @input="setError" :value="true">
-            You are logged out
-        </v-snackbar>
-    </template> -->
 
     <Footer />
 </v-app>
@@ -60,12 +49,12 @@ export default {
     },
     async created() {
         await this.$store.dispatch('setCat');
-
     }
 };
 </script>
 
-<style scoped>
+<style scoped >
+
 .v-btn__content .v-icon--left,
 .v-btn__content .v-icon--right {
     font-size: 34px;

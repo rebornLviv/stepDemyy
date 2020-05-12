@@ -20,6 +20,7 @@
                                 <v-col cols="12">
                                     <v-form v-model="valid" lazy-validation ref="form">
                                         <v-text-field color="secondary" name="login" v-model="email" type="text" placeholder="Email" :rules="emailRules" required />
+
                                         <v-text-field class="pa" v-model="password" color="secondary" id="password" placeholder="Password" name="password" type="password" :rules="passwordRules" required />
                                         <v-card-actions>
                                             
@@ -28,6 +29,7 @@
                                             <v-btn class="ma-2 bg-black" color="white-text" text @click="OnLogin" depressed to="/">Вхід</v-btn>
 
                                         </v-card-actions>
+                                        
                                         <div class="pr">
                                             <v-btn tag="a" class="secondary--text sz" to="/" @click="recoverDialog = !recoverDialog, dialog = !dialog" text>Забули логін або пароль?</v-btn>
                                         </div>
@@ -92,7 +94,9 @@
                                 <v-text-field v-model="email" color="secondary" name="login" :rules="emailRules" type="text" placeholder="Email" />
 
                                 <v-text-field class="pa" color="secondary" v-model="password" id="password" :rules="passwordRules" placeholder="Password" name="password" type="password" />
+
                                 <v-text-field class="pa" color="secondary" id="password" v-model="repassword" :rules="rePasswordRules" placeholder="Confirm password" name="password" type="password" />
+
                                 <v-card-actions class="mt-4 bts">
                                     <v-btn class="nr ml-2" text color="secondary" @click="dialog3 = false">Закрити</v-btn>
                                     <v-btn @click="OnRegister" class="nr elevation-0 mr-2" dark>Далі</v-btn>
@@ -139,8 +143,7 @@ export default {
                     password: this.password
                 };
                 this.$store.dispatch('setInitialState')
-                this.$store
-                    .dispatch("loginUser", user)
+                this.$store.dispatch("loginUser", user)
                     .then(() => {
                         this.dialog = !this.dialog;
                     })
@@ -166,6 +169,7 @@ export default {
         },
         OnRegister() {
             if (this.$refs.form.validate()) {
+
                 const reguser = {
                     email: this.email,
                     password: this.password

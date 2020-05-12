@@ -38,13 +38,6 @@ export default {
                 catch (error) {
                     console.log(error)
                 }
-                // commit('setError', 'You must be loged in to attend a course')
-                // setTimeout(
-                //     ()=>{
-                //         commit('setTrigger')
-                //     },2000
-                // )
-
                 return;
 
             }

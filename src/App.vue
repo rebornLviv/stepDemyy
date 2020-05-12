@@ -29,7 +29,6 @@ import Header from './components/subComponents/Header.vue';
 
 export default {
     name: "App",
-    data: () => ({}),
     components: {
         Footer,
         Header

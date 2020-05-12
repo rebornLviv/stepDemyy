@@ -76,15 +76,6 @@
                             </v-dialog>
                         </v-row>
                     </template>
-
-                    <script>
-                        export default {
-                            data: () => ({
-                                dialog: false,
-                            }),
-                        }
-                    </script>
-
                     <v-btn class="sett" to="settings">Налаштування</v-btn>
                 </div>
             </v-col>

@@ -2,9 +2,12 @@
 <v-col cols="8" class="userData">
     <p class="txtp">Налаштування профілю</p>
     <div class="inpC">
+
         <v-text-field v-model="name" label="Ім'я" outlined single-line class="inpt" v-if="editName">
         </v-text-field>
+
         <p v-if="!editName" class="uName">Ім'я : {{userName}}</p>
+        
         <v-spacer></v-spacer>
         <v-icon v-if="!editName" class="edit" @click="()=>{ editName = ! editName,name=userName}">mdi-lead-pencil</v-icon>
         <v-icon v-if="editName" class="edit" @click="changeName">mdi-check</v-icon>
@@ -79,7 +82,6 @@ export default {
         changeName() {
             this.$store.dispatch('setUserName', this.name)
             this.editName = false;
-
         },
         changeBday() {
             this.$store.dispatch('setUserBirthDay', this.date)

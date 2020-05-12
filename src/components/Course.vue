@@ -18,7 +18,6 @@
                     </div>
                 </div>
                 <p class="desc">{{course.description}}</p>
-
                 <v-row>
                     <v-col>
                         <v-btn
@@ -27,14 +26,10 @@
                             @click="manageCourse">{{ joined ? 'Продовжити' : 'Приєднатися до курсу'}}
                         </v-btn>
                     </v-col>
-
                 </v-row>
             </div>
-
         </v-col>
-
     </v-row>
-
 </v-container>
 </template>
 
@@ -47,7 +42,6 @@ export default {
             name: this.$route.path.replace('/courses/', ''),
             id: this.$route.params['id'],
             rating: 0
-
         }
     },
     components: {
@@ -55,7 +49,6 @@ export default {
     },
     methods: {
         async manageCourse() {
-
             console.log('manage')
             let course = this.$route.path.replace('/courses/', '')
             let title = this.course.title.split(' ').join('')
@@ -75,7 +68,6 @@ export default {
             return this.$store.getters.user.id;
         },
         course() {
-
             return this.$store.getters.getCourse
         },
         joined() {
@@ -85,7 +77,6 @@ export default {
     },
 
     watch: {
-
         $route(to) {
             console.log('parid', to.params['id'])
             this.$store.dispatch('setCourse', this.$route.path.replace('/courses/', ''))

@@ -175,6 +175,7 @@ export default {
     },
 
     mounted() {
+        console.log("LEsson",this.$store.getters.getLessons)
         if (this.$refs.source) {
             this.$refs.source.currentTime = this.$store.getters.getCurrentTime;
         }

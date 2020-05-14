@@ -22,7 +22,7 @@
                     </v-btn>
                 </template>
                 <v-list>
-                    <v-list-item v-for="cat in categories" :key="cat" @click="setCourses(cat)">{{cat}}</v-list-item>
+                    <v-list-item v-for="cat in categories" :key="cat" @click="setCourses(cat.category)">{{cat.category}}</v-list-item>
                 </v-list>
             </v-menu>
         </div>

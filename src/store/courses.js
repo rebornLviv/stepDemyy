@@ -77,8 +77,10 @@ export default {
             console.log('settingCourses', payload)
             var tcourse = null;
             commit('setLoading', true)
-            let course = await coursesCollection.get()
-            course.forEach(c => console.log(c.data()))
+            let course = await coursesCollection.where("category","==",payload).get()
+            course.forEach(c => tcourse = c.data())
+            console.log('currenEmail',auth.currentUser.email)
+            console.log("Cooursse",tcourse)
             // console.log('Returned data', tcourse)
             commit("setCourse", tcourse)
             commit('setLoading', false)

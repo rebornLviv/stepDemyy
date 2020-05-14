@@ -79,10 +79,19 @@ export default {
             let lessons = []
             commit('setLoading', true)
             let id = await getCourseId(payload.course)
-
-            let catlessons = await coursesCollection.doc(id).collection('Lessons').where('cat', '==', payload.lesson).get()
-            catlessons.forEach(les => lessons.push(les.data()))
-            console.log("Course Lessons", lessons)
+            console.log('id',id)
+            let allLes = await coursesCollection.doc(id).collection('Lessons').get()
+            allLes.forEach(
+                el=>{
+                    lessons.push(el.data())
+                }
+            )
+            // let catlessons = await coursesCollection.doc(id).collection('Lessons').where('cat', '==', payload.lesson).get()
+            // catlessons.forEach(les => {
+            //     console.log('leees',les.data())
+            //     lessons.push(les.data())})
+            // console.log('catLessons',catlessons.docs)
+            console.log("Course LessonsD", lessons)
             commit('setLessons', lessons)
             commit('setLoading', false)
 
@@ -94,6 +103,8 @@ export default {
             console.log('CurrentLessonPayload', payload)
 
             let userData = await usersCollection.doc(auth.currentUser.uid).get()
+                console.log("Getclpay", payload)
+                console.log(userData.data().courses[payload])
             if (userData.data().courses[payload]) {
                 current = userData.data().courses[payload].currentlesson
                 currentTime = userData.data().courses[payload].lprogress

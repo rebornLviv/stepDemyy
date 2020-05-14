@@ -13,7 +13,9 @@
     <v-container class="mb-12">
         <v-row class="courses " v-if="!isLoading">
             <v-col cols="3" v-for="x in topLessons" :key="x.videoUrl" class="mb-7">
-                <v-card class="card" :style="{backgroundImage: x.course === 'Typescript' ?`url(${typescript})` : `url(${angular})`}" @click="goToLesson(x)">
+                <v-card 
+                    class="card" 
+                    :style="{backgroundImage: x.course === 'Typescript' ?`url(${typescript})` : `url(${angular})`}" @click="goToLesson(x)">
                 </v-card>
                 <div class="play-data" align="center">
                     <p class="urok">{{x.title}}</p>
@@ -212,7 +214,6 @@ export default {
 
     },
     computed: {
-
         topLessons() {
 
             if (!this.query) return this.$store.getters.getTopLessons

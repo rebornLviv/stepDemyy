@@ -70,7 +70,6 @@ export default {
         title: '',
         course: '',
         description: '',
-        items: ['Angular', 'TypeScript']
     }),
     computed: {
         formIsValid() {

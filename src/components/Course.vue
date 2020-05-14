@@ -35,8 +35,8 @@
 
 <script>
 import Star from './subComponents/Stars'
-export default {
 
+export default {
     data() {
         return {
             name: this.$route.path.replace('/courses/', ''),
@@ -83,7 +83,7 @@ export default {
             this.id = to.params['id']
         }
 
-    },
+    }
 
 }
 </script>

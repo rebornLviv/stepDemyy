@@ -36,6 +36,14 @@
         </div>
 
         <div>
+            <v-btn text to="/pageCourses">
+                <span class="black--text navText">
+                    Курси
+                </span>
+            </v-btn>
+        </div>
+
+        <div>
             <v-btn text to="/teachers">
                 <span class="black--text navText">Викладачі</span>
             </v-btn>

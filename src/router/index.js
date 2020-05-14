@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import Home from '@/components/Home'
 import Settings from '@/components/Settings'
 import UserCoures from '@/components/UserCourses'
+// import PageCourses from '@/components/PageCourses'
 import UserLessons from '@/components/UserLessons'
 import firebase from 'firebase'
 import { homeResolver } from '../../resolvers/homeResolver'
@@ -25,6 +26,28 @@ const routes = [{
     name: 'course',
     beforeEnter: courseResolver,
     component: () => import('@/components/Course'),
+  },
+
+  {
+    path: '/pageCourses',
+    name: 'pageCourses',
+    // beforeEnter: courseResolver,
+    component: () => import('@/components/PageCourses'),
+  },
+  {
+    path: '/pageCourses/:cid/:lid',
+    name: 'pageCourses',
+    beforeEnter: lessonResolver,
+    component: () => import('@/components/PageCourses'),
+  },
+  {
+    meta: {
+      requiresAuth: true
+    },
+    path: '/pageCourses/:cid/:lid',
+    name: 'lesson',
+    beforeEnter: lessonResolver,
+    component: () => import('@/components/Lesson'),
   },
   {
     meta: {

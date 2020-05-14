@@ -68,7 +68,7 @@ export default {
         async setCat({ commit }, payload) {
             let cats = []
             let courses = await coursesCollection.get()
-            courses.forEach(course => cats.push(course.data().category))
+            courses.forEach(course => cats.push(course.data()))
             commit("setCat", cats)
 
         },
@@ -77,12 +77,11 @@ export default {
             console.log('settingCourses', payload)
             var tcourse = null;
             commit('setLoading', true)
-            let course = await coursesCollection.where("category", "==", payload).get()
-            course.forEach(c => tcourse = c.data())
-            console.log('Returned data', tcourse)
+            let course = await coursesCollection.get()
+            course.forEach(c => console.log(c.data()))
+            // console.log('Returned data', tcourse)
             commit("setCourse", tcourse)
             commit('setLoading', false)
-
         },
 
         async getJoined({ commit }, payload) {

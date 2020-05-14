@@ -6,7 +6,7 @@
                 <p class="txtp">Профіль</p>
                 <v-icon v-if="!this.$store.getters.getUserPhoto" class="iblc" size="240px">mdi-account</v-icon>
                 <img v-if="this.$store.getters.getUserPhoto" class="iblc" :src="this.$store.getters.getUserPhoto" alt />
-                <div class="btns">
+                <div class="btns mt-5">
                     <div class="upload-btn-wrapper">
                         <!-- <v-btn class="btn">Upload a file</v-btn> -->
                         <v-btn color="primary btn" dark @click.stop="dialog = true">Завантажити фото</v-btn>
@@ -33,39 +33,47 @@
                         <v-row justify="center">
                             <v-dialog v-model="dialog" persistent max-width="600px">
                                 <template v-slot:activator="{ on }">
-                                    <v-btn color="primary" dark v-on="on">Open Dialog</v-btn>
+                                    <v-btn color="primary" dark v-on="on">Створити курс</v-btn>
                                 </template>
                                 <v-card>
                                     <v-card-title>
-                                        <span class="headline">User Profile</span>
+                                        <span class="headline">Додати курс</span>
                                     </v-card-title>
                                     <v-card-text>
                                         <v-container>
-                                            <v-row>
-                                                <v-col cols="12" sm="6" md="4">
-                                                    <v-text-field label="Legal first name*" required></v-text-field>
-                                                </v-col>
-                                                <v-col cols="12" sm="6" md="4">
-                                                    <v-text-field label="Legal middle name" hint="example of helper text only on focus"></v-text-field>
-                                                </v-col>
-                                                <v-col cols="12" sm="6" md="4">
-                                                    <v-text-field label="Legal last name*" hint="example of persistent helper text" persistent-hint required></v-text-field>
-                                                </v-col>
-                                                <v-col cols="12">
-                                                    <v-text-field label="Email*" required></v-text-field>
-                                                </v-col>
-                                                <v-col cols="12">
-                                                    <v-text-field label="Password*" type="password" required></v-text-field>
-                                                </v-col>
-                                                <v-col cols="12" sm="6">
-                                                    <v-select :items="['0-17', '18-29', '30-54', '54+']" label="Age*" required></v-select>
-                                                </v-col>
-                                                <v-col cols="12" sm="6">
-                                                    <v-autocomplete :items="['Skiing', 'Ice hockey', 'Soccer', 'Basketball', 'Hockey', 'Reading', 'Writing', 'Coding', 'Basejump']" label="Interests" multiple></v-autocomplete>
+                                            <v-row justify="center">
+                                                <v-col cols="12" class="userData">
+                                                    <div>
+                                                        <form>
+                                                            <v-text-field name="title" label="Title course" id="title" v-model="title" required>
+                                                            </v-text-field>
+                                                            <!-- <v-select
+                                                                :items="items"
+                                                                label="Outlined style"
+                                                                outlined
+                                                                v-model="course"
+                                                            ></v-select> -->
+                                                            <v-textarea outlined name="Description" label="Description" id="description" v-model="description">
+                                                            </v-textarea>
+                                                            <v-file-input v-model="files" color="deep-purple accent-4" counter label="File input" multiple placeholder="Select your files" prepend-icon="mdi-paperclip" outlined :show-size="1000">
+                                                                <template v-slot:selection="{ index, text }">
+                                                                    <v-chip v-if="index < 2" color="deep-purple accent-4" dark label small>
+                                                                        {{ text }}
+                                                                    </v-chip>
+
+                                                                    <span v-else-if="index === 2" class="overline grey--text text--darken-3 mx-2">
+                                                                        +{{ files.length - 2 }} File(s)
+                                                                    </span>
+                                                                </template>
+                                                            </v-file-input>
+                                                            <v-btn class="primary" :disabled="!formIsValid">
+                                                                Add Course
+                                                            </v-btn>
+                                                        </form>
+                                                    </div>
                                                 </v-col>
                                             </v-row>
                                         </v-container>
-                                        <small>*indicates required field</small>
                                     </v-card-text>
                                     <v-card-actions>
                                         <v-spacer></v-spacer>
@@ -87,38 +95,45 @@
 
 <script>
 export default {
-  data: () => ({
-    confP: false,
-    file: null,
-    userImage: "",
-    dialog: false
-  }),
-  created() {
-    console.log(this.$store.getters.getUserPhoto);
-  },
-
-  methods: {
-    selectFile(file) {
-      this.file = file[0];
-
-      console.log(this.file);
-    },
-    updatePhoto() {
-      console.log("updatePhoto");
-      this.$store.dispatch("setUserPhoto", this.file).then(() => {
-        this.file = null;
-        this.dialog = false;
-      });
-    },
-    configuratePassword() {
-      this.confP = !this.confP;
+    data: () => ({
+        confP: false,
+        file: null,
+        userImage: "",
+        dialog: false,
+        files: [],
+        title: '',
+        description: ''
+    }),
+    created() {
+        console.log(this.$store.getters.getUserPhoto);
     },
     computed: {
-      userPhoto() {
-        return this.$store.getters.getUserPhoto;
-      }
+        formIsValid() {
+            return this.title !== '' && this.files !== '' && this.description !== ''
+        }
+    },
+    methods: {
+        selectFile(file) {
+            this.file = file[0];
+
+            console.log(this.file);
+        },
+        updatePhoto() {
+            console.log("updatePhoto");
+            this.$store.dispatch("setUserPhoto", this.file).then(() => {
+                this.file = null;
+                this.dialog = false;
+            });
+        },
+        configuratePassword() {
+            this.confP = !this.confP;
+        },
+        computed: {
+            userPhoto() {
+                return this.$store.getters.getUserPhoto;
+            }
+        }
     }
-  }
 };
 </script>
 
